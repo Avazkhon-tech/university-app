@@ -34,7 +34,8 @@ public class SecurityConfig {
                                         "/api/auth/get-code-email/**",
                                         "/api/auth/verify-code-email/",
                                         "/api/auth/get-code-sms/",
-                                        "/api/auth/verify-code-sms/")
+                                        "/api/auth/verify-code-sms/",
+                                        "/src/**")
                                 .permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
