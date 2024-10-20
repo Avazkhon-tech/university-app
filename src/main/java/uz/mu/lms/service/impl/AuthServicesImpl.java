@@ -31,7 +31,6 @@ public class AuthServicesImpl implements AuthServices {
     private final UserRepository userRepository;
     private final TemporaryPasswordRepository temporaryPasswordRepository;
 
-
     @Override
     public ResponseDto<String> login(LoginDto loginDto) {
 
@@ -159,5 +158,4 @@ public class AuthServicesImpl implements AuthServices {
                 .build();
 
     }
-
 }
