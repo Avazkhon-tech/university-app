@@ -31,7 +31,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class NewsService {
 
-    private final ContentRepository attachmentRepository;
+    private final ContentRepository contentRepository;
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper = Mappers.getMapper(NewsMapper.class);
 
@@ -48,7 +48,7 @@ public class NewsService {
         String extension = getFileExtension(file.getOriginalFilename());
         String name = UUID.randomUUID() + "." + extension;
 
-        Content attachment = Content
+        Content content = Content
                 .builder()
                 .originalName(file.getOriginalFilename())
                 .fileName(name)
@@ -56,8 +56,9 @@ public class NewsService {
                 .fileType(file.getContentType())
                 .build();
 
-
-        attachmentRepository.save(attachment);
+        News news = newsMapper.toEntity(newsDto);
+        content.setNews(news);
+        Content savedContent = contentRepository.save(content);
 
         try {
             Path path = Paths.get(uploadFolder +  name);
@@ -66,11 +67,8 @@ public class NewsService {
             throw new FileStorageException("File could not be uploaded");
         }
 
-        News news = newsMapper.toEntity(newsDto);
-        News newsSaved = newsRepository.save(news);
-
-        NewsDto dto = newsMapper.toDto(newsSaved);
-        dto.setContentUrl(generateImageUrl(newsSaved.getId()));
+        NewsDto dto = newsMapper.toDto(savedContent.getNews());
+        dto.setContentUrl(generateImageUrl(savedContent.getNews().getId()));
 
         return ResponseDto.<NewsDto>builder()
                 .data(dto)

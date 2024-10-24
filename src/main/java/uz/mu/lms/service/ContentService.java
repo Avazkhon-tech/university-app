@@ -27,7 +27,7 @@ public class ContentService {
     }
 
     public ResponseEntity<byte[]> getImageNews(Long id) throws IOException {
-        Content content = contentRepository.findById(id).orElse(null);
+        Content content = contentRepository.findByNewsId(id).orElse(null);
         if (content == null) {
             return ResponseEntity.notFound().build();
         }
