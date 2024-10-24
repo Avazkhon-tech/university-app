@@ -1,45 +1,51 @@
 package uz.mu.lms.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import uz.mu.lms.model.Attachment;
-import uz.mu.lms.repository.AttachmentRepository;
+import uz.mu.lms.model.Content;
+import uz.mu.lms.repository.ContentRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
-public class ImageService {
+public class ContentService {
 
-    private final AttachmentRepository attachmentRepository;
+    @Value("${dir_images}")
+    private String dirImages;
 
-    public ImageService(AttachmentRepository attachmentRepository) {
-        this.attachmentRepository = attachmentRepository;
+    private final ContentRepository contentRepository;
+
+    public ContentService(ContentRepository contentRepository) {
+        this.contentRepository = contentRepository;
     }
 
-    public ResponseEntity<byte[]> getImage(Long id) throws IOException {
-        Attachment attachment = attachmentRepository.findById(id).orElse(null);
-        if (attachment == null) {
+    public ResponseEntity<byte[]> getImageNews(Long id) throws IOException {
+        Content content = contentRepository.findById(id).orElse(null);
+        if (content == null) {
             return ResponseEntity.notFound().build();
         }
 
-        String uploadDir = "uploads/";
-        Path filePath = Paths.get(uploadDir, attachment.getFileName());
+        Path filePath = Paths.get(dirImages, content.getFileName());
+        return getFile(filePath, content);
+    }
 
+
+
+    public ResponseEntity<byte[]> getFile(Path filePath, Content attachment) throws IOException {
         if (!Files.exists(filePath)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found");
         }
-
         String contentType = Files.probeContentType(filePath);
         if (contentType == null) {
             contentType = "application/octet-stream";
         }
-
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.parseMediaType(contentType))

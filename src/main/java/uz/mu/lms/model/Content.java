@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Attachment {
+public class Content {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
