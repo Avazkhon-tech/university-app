@@ -14,9 +14,9 @@ import uz.mu.lms.dto.NewsDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.FileStorageException;
-import uz.mu.lms.model.Attachment;
+import uz.mu.lms.model.Content;
 import uz.mu.lms.model.News;
-import uz.mu.lms.repository.AttachmentRepository;
+import uz.mu.lms.repository.ContentRepository;
 import uz.mu.lms.repository.NewsRepository;
 import uz.mu.lms.service.mapper.NewsMapper;
 
@@ -31,7 +31,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class NewsService {
 
-    private final AttachmentRepository attachmentRepository;
+    private final ContentRepository attachmentRepository;
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper = Mappers.getMapper(NewsMapper.class);
 
@@ -48,7 +48,7 @@ public class NewsService {
         String extension = getFileExtension(file.getOriginalFilename());
         String name = UUID.randomUUID() + "." + extension;
 
-        Attachment attachment = Attachment
+        Content attachment = Content
                 .builder()
                 .originalName(file.getOriginalFilename())
                 .fileName(name)
@@ -70,7 +70,7 @@ public class NewsService {
         News newsSaved = newsRepository.save(news);
 
         NewsDto dto = newsMapper.toDto(newsSaved);
-        dto.setImageUrl(generateImageUrl(newsSaved.getId()));
+        dto.setContentUrl(generateImageUrl(newsSaved.getId()));
 
         return ResponseDto.<NewsDto>builder()
                 .data(dto)
@@ -88,7 +88,7 @@ public class NewsService {
         List<NewsDto> dtoList = newsPage
                 .stream()
                 .map(newsMapper::toDto)
-                .peek(newsDto -> newsDto.setImageUrl(generateImageUrl(newsDto.getId())))
+                .peek(newsDto -> newsDto.setContentUrl(generateImageUrl(newsDto.getId())))
                 .toList();
 
         return PaginatedResponseDto

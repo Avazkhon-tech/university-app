@@ -1,7 +1,6 @@
 package uz.mu.lms.dto;
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
 
 @Getter
 @Setter
@@ -15,13 +14,5 @@ public class NewsDto {
     private String content;
     private String location;
     private String eventTime;
-
-    private String imageUrl = getImageUrl() + id;
-
-    public String getImageUrl() {
-        if (id != null) {
-            return "http://hostaddr/api/image/" + id;
-        }
-        return null;
-    }
+    private String contentUrl;
 }
