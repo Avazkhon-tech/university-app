@@ -22,4 +22,7 @@ public class Content {
     private String fileType;
 
     private Long size;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private News news;
 }
