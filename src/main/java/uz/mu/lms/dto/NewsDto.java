@@ -11,7 +11,7 @@ public class NewsDto {
 
     private Long id;
     private String title;
-    private String content;
+    private String body;
     private String location;
     private String eventTime;
     private String contentUrl;
