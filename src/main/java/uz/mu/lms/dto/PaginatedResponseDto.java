@@ -1,18 +1,13 @@
 package uz.mu.lms.dto;
 
-import lombok.*;
+import lombok.Builder;
 
-@Setter
-@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class PaginatedResponseDto<T>  {
-
-    private Integer code;
-    private String message;
-    private T data;
-    private boolean success;
-    private int page;
-    private int size;
-}
+public record PaginatedResponseDto<T>  (
+    Integer code,
+    String message,
+    T data,
+    boolean success,
+    int page,
+    int size
+) {}

@@ -1,7 +1,6 @@
 package uz.mu.lms.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,7 +35,7 @@ public class AuthServicesImpl implements AuthServices {
 
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+                    new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password()));
         } catch (BadCredentialsException e) {
             return ResponseDto.<String>builder()
                     .code(400)
@@ -47,7 +46,7 @@ public class AuthServicesImpl implements AuthServices {
         }
 
 
-        String generatedToken = jwtProvider.generateToken(loginDto.getUsername());
+        String generatedToken = jwtProvider.generateToken(loginDto.username());
         return ResponseDto.<String>builder()
                 .code(200)
                 .data(generatedToken)
@@ -84,13 +83,13 @@ public class AuthServicesImpl implements AuthServices {
 
     @Override
     public ResponseDto<String> verifyEmailCode(LoginDto loginDto) {
-        User user = userRepository.findByUsername(loginDto.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException(loginDto.getUsername()));
+        User user = userRepository.findByUsername(loginDto.username())
+                .orElseThrow(() -> new UsernameNotFoundException(loginDto.password()));
 
         TemporaryPassword temporaryPassword = tempPasswordRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new NoSuchElementException(loginDto.getUsername()));
+                .orElseThrow(() -> new NoSuchElementException(loginDto.username()));
 
-        if(!temporaryPassword.getGeneratedPassword().equals(loginDto.getPassword())){
+        if(!temporaryPassword.getGeneratedPassword().equals(loginDto.password())){
             return ResponseDto.<String>builder()
                     .code(400)
                     .message("password is incorrect")
@@ -98,7 +97,7 @@ public class AuthServicesImpl implements AuthServices {
                     .build();
         }
 
-        String generatedToken = jwtProvider.generateToken(loginDto.getUsername());
+        String generatedToken = jwtProvider.generateToken(loginDto.username());
         return ResponseDto.<String>builder()
                 .code(200)
                 .data(generatedToken)
@@ -136,13 +135,13 @@ public class AuthServicesImpl implements AuthServices {
 
     @Override
     public ResponseDto<String> verifySmsCode(LoginDto loginDto) {
-        User user = userRepository.findByPhoneNumber(loginDto.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException(loginDto.getUsername()));
+        User user = userRepository.findByPhoneNumber(loginDto.username())
+                .orElseThrow(() -> new UsernameNotFoundException(loginDto.username()));
 
         TemporaryPassword temporaryPassword = tempPasswordRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new NoSuchElementException(loginDto.getUsername()));
+                .orElseThrow(() -> new NoSuchElementException(loginDto.username()));
 
-        if(!temporaryPassword.getGeneratedPassword().equals(loginDto.getPassword())){
+        if(!temporaryPassword.getGeneratedPassword().equals(loginDto.password())){
             return ResponseDto.<String>builder()
                     .code(400)
                     .message("password is incorrect")
@@ -150,7 +149,7 @@ public class AuthServicesImpl implements AuthServices {
                     .build();
         }
 
-        String generatedToken = jwtProvider.generateToken(loginDto.getUsername());
+        String generatedToken = jwtProvider.generateToken(loginDto.username());
         return ResponseDto.<String>builder()
                 .code(200)
                 .data(generatedToken)
