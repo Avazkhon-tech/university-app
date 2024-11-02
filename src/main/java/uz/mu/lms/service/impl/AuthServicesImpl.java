@@ -1,7 +1,8 @@
 package uz.mu.lms.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +14,7 @@ import uz.mu.lms.model.TemporaryPassword;
 import uz.mu.lms.model.User;
 import uz.mu.lms.repository.TemporaryPasswordRepository;
 import uz.mu.lms.repository.UserRepository;
+import uz.mu.lms.resource.AuthResource;
 import uz.mu.lms.service.AuthServices;
 import uz.mu.lms.service.jwt.JwtProvider;
 import uz.mu.lms.service.verification.VerificationCodeService;
@@ -30,14 +32,16 @@ public class AuthServicesImpl implements AuthServices {
     private final TemporaryPasswordRepository tempPasswordRepository;
     private final UserRepository userRepository;
     private final TemporaryPasswordRepository temporaryPasswordRepository;
+    private static final Logger logger = LoggerFactory.getLogger(AuthResource.class);
+
 
     @Override
     public ResponseDto<String> login(LoginDto loginDto) {
-
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+                    new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password()));
         } catch (BadCredentialsException e) {
+            logger.info("Could not authenticate user: {}", loginDto.username());
             return ResponseDto.<String>builder()
                     .code(400)
                     .data(e.getMessage())
@@ -47,7 +51,8 @@ public class AuthServicesImpl implements AuthServices {
         }
 
 
-        String generatedToken = jwtProvider.generateToken(loginDto.getUsername());
+        logger.info("User {} logged in successfully", loginDto.username());
+        String generatedToken = jwtProvider.generateToken(loginDto.username());
         return ResponseDto.<String>builder()
                 .code(200)
                 .data(generatedToken)
@@ -84,13 +89,13 @@ public class AuthServicesImpl implements AuthServices {
 
     @Override
     public ResponseDto<String> verifyEmailCode(LoginDto loginDto) {
-        User user = userRepository.findByUsername(loginDto.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException(loginDto.getUsername()));
+        User user = userRepository.findByUsername(loginDto.username())
+                .orElseThrow(() -> new UsernameNotFoundException(loginDto.password()));
 
         TemporaryPassword temporaryPassword = tempPasswordRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new NoSuchElementException(loginDto.getUsername()));
+                .orElseThrow(() -> new NoSuchElementException(loginDto.username()));
 
-        if(!temporaryPassword.getGeneratedPassword().equals(loginDto.getPassword())){
+        if(!temporaryPassword.getGeneratedPassword().equals(loginDto.password())){
             return ResponseDto.<String>builder()
                     .code(400)
                     .message("password is incorrect")
@@ -98,7 +103,7 @@ public class AuthServicesImpl implements AuthServices {
                     .build();
         }
 
-        String generatedToken = jwtProvider.generateToken(loginDto.getUsername());
+        String generatedToken = jwtProvider.generateToken(loginDto.username());
         return ResponseDto.<String>builder()
                 .code(200)
                 .data(generatedToken)
@@ -136,13 +141,13 @@ public class AuthServicesImpl implements AuthServices {
 
     @Override
     public ResponseDto<String> verifySmsCode(LoginDto loginDto) {
-        User user = userRepository.findByPhoneNumber(loginDto.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException(loginDto.getUsername()));
+        User user = userRepository.findByPhoneNumber(loginDto.username())
+                .orElseThrow(() -> new UsernameNotFoundException(loginDto.username()));
 
         TemporaryPassword temporaryPassword = tempPasswordRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new NoSuchElementException(loginDto.getUsername()));
+                .orElseThrow(() -> new NoSuchElementException(loginDto.username()));
 
-        if(!temporaryPassword.getGeneratedPassword().equals(loginDto.getPassword())){
+        if(!temporaryPassword.getGeneratedPassword().equals(loginDto.password())){
             return ResponseDto.<String>builder()
                     .code(400)
                     .message("password is incorrect")
@@ -150,7 +155,7 @@ public class AuthServicesImpl implements AuthServices {
                     .build();
         }
 
-        String generatedToken = jwtProvider.generateToken(loginDto.getUsername());
+        String generatedToken = jwtProvider.generateToken(loginDto.username());
         return ResponseDto.<String>builder()
                 .code(200)
                 .data(generatedToken)

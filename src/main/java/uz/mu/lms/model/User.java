@@ -9,6 +9,7 @@ import lombok.*;
 @Entity(name = "users")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {

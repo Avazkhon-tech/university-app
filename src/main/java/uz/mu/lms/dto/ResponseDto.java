@@ -1,16 +1,11 @@
 package uz.mu.lms.dto;
 
-import lombok.*;
+import lombok.Builder;
 
-@Setter
-@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ResponseDto<T> {
-
-    private Integer code;
-    private String message;
-    private T data;
-    private boolean success;
-}
+public record ResponseDto<T> (
+    Integer code,
+    String message,
+    T data,
+    boolean success
+) {}
