@@ -27,12 +27,6 @@ public class NewsResource {
     public PaginatedResponseDto<List<NewsDto>> getNews(@PathVariable(value = "page") Integer page,
                                                        @PathVariable(value = "size") Integer size) {
 
-//        // Validate the page and size parameters
-//        if (page < 0 || size <= 0) {
-//            return ResponseEntity.badRequest()
-//                    .body(new PaginatedResponseDto<>(null, HttpStatus.BAD_REQUEST.value(), false, "Invalid page or size parameters"));
-//        }
-
         return newsService.getNews(page, size);
     }
 }
