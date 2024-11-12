@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.NewsDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.exceptions.FileStorageException;
 import uz.mu.lms.model.Content;
 import uz.mu.lms.model.News;
 import uz.mu.lms.repository.ContentRepository;
@@ -21,9 +20,6 @@ import uz.mu.lms.repository.NewsRepository;
 import uz.mu.lms.service.mapper.NewsMapper;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,8 +31,6 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper = Mappers.getMapper(NewsMapper.class);
 
-    @Value("${dir_images}")
-    private String uploadFolder;
     @Value("${host}")
     private String hostAddr;
 
@@ -53,22 +47,15 @@ public class NewsService {
                 .originalName(file.getOriginalFilename())
                 .fileName(name)
                 .size(file.getSize())
+                .bytes(file.getBytes())
                 .fileType(file.getContentType())
                 .build();
 
         News news = newsMapper.toEntity(newsDto);
-        content.setNews(news);
-        Content savedContent = contentRepository.save(content);
-
-        try {
-            Path path = Paths.get(uploadFolder +  name);
-            Files.copy(file.getInputStream(), path);
-        } catch (IOException e) {
-            throw new FileStorageException("File could not be uploaded");
-        }
-
-        NewsDto dto = newsMapper.toDto(savedContent.getNews());
-        dto.setContentUrl(generateImageUrl(savedContent.getNews().getId()));
+        news.setContent(content);
+        News savedNews = newsRepository.save(news);
+        NewsDto dto = newsMapper.toDto(savedNews);
+        dto.setContentUrl(hostAddr + "/api/image/" + dto.getId());
 
         return ResponseDto.<NewsDto>builder()
                 .data(dto)
@@ -76,7 +63,7 @@ public class NewsService {
                 .success(true)
                 .message("News created")
                 .build();
-    };
+    }
 
     public PaginatedResponseDto<List<NewsDto>> getNews(Integer page, Integer size) {
 
