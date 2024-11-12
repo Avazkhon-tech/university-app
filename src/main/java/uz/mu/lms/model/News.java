@@ -2,7 +2,6 @@ package uz.mu.lms.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Entity(name = "news")
 @Getter
@@ -18,9 +17,12 @@ public class News {
 
     private String title;
 
-    private String content;
+    private String body;
 
     private String location;
 
     private String eventTime;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Content content;
 }

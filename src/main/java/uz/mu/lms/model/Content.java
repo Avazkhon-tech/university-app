@@ -23,6 +23,5 @@ public class Content {
 
     private Long size;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private News news;
+    private byte[] bytes;
 }
