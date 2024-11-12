@@ -24,6 +24,7 @@ public class NewsResource {
     }
 
     @GetMapping("/get-events/{page}/{size}")
+
     public PaginatedResponseDto<List<NewsDto>> getNews(@PathVariable(value = "page") Integer page, @PathVariable(value = "size") Integer size) {
         return newsService.getNews(page, size);
     }

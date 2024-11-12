@@ -4,9 +4,7 @@ import uz.mu.lms.dto.LoginDto;
 import uz.mu.lms.dto.ResponseDto;
 
 public interface AuthServices {
-    ResponseDto<String>
-
-    login(LoginDto loginDto);
+    ResponseDto<String>login(LoginDto loginDto);
 
     ResponseDto<String> loginByEmailCode(String email);
 
