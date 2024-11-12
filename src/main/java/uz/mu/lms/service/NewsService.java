@@ -31,8 +31,6 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper = Mappers.getMapper(NewsMapper.class);
 
-    @Value("${dir_images}")
-    private String uploadFolder;
     @Value("${host}")
     private String hostAddr;
 
