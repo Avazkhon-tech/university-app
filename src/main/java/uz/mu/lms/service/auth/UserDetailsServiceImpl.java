@@ -1,4 +1,4 @@
-package uz.mu.lms.service.impl;
+package uz.mu.lms.service.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +10,7 @@ import uz.mu.lms.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
-public class MyUserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 

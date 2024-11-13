@@ -3,38 +3,48 @@ package uz.mu.lms.resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.LoginDto;
+import uz.mu.lms.dto.ResetPasswordDto;
 import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.service.AuthServices;
+import uz.mu.lms.service.auth.IAuthService;
+import uz.mu.lms.service.verification.MethodOTP;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthResource {
 
-    private final AuthServices authServices;
+    private final IAuthService IAuthService;
 
     @PostMapping("/login")
     public ResponseDto<String> login(@RequestBody LoginDto loginDto) {
-        return authServices.login(loginDto);
+        return IAuthService.login(loginDto);
     }
 
-    @PostMapping("/get-code-email/{email}")
-    public ResponseDto<String> loginByEmailCode(@PathVariable String email) {
-        return authServices.loginByEmailCode(email);
+    @PostMapping("/get-otp-email/{email}")
+    public ResponseDto<String> sendOTPbyEmail(@PathVariable String email) {
+        return IAuthService.SendOTP(email, MethodOTP.EMAIL);
     }
 
-    @PostMapping("/verify-code-email")
-    public ResponseDto<String> verifyEmailCode(@RequestBody LoginDto loginDto) {
-        return authServices.verifyEmailCode(loginDto);
+    @PostMapping("/verify-otp-email")
+    public ResponseDto<String> verifyOTPEmail(@RequestBody LoginDto loginDto) {
+        return IAuthService.verifyOTP(loginDto, MethodOTP.EMAIL);
     }
 
-    @PostMapping("/get-code-sms/{phoneNumber}")
-    public ResponseDto<String> getSmsCode(@PathVariable String phoneNumber) {
-        return authServices.getSmsCode(phoneNumber);
+    @PostMapping("/get-otp-sms/{phoneNumber}")
+    public ResponseDto<String> SendOTPbyPhoneNumber(@PathVariable String phoneNumber) {
+        return IAuthService.SendOTP(phoneNumber, MethodOTP.PHONE_NUMBER);
     }
 
-    @PostMapping("/verify-code-sms")
-    public ResponseDto<String> verifySmsCode(@RequestBody LoginDto loginDto) {
-        return authServices.verifySmsCode(loginDto);
+    @PostMapping("/verify-otp-sms")
+    public ResponseDto<String> verifyOTPPhoneNumber(@RequestBody LoginDto loginDto) {
+        return IAuthService.verifyOTP(loginDto, MethodOTP.PHONE_NUMBER);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseDto<String> resetPassword(
+            @RequestBody ResetPasswordDto resetPasswordDto,
+            @RequestHeader("Authorization") String token) {
+
+        return IAuthService.resetPassword(resetPasswordDto, token);
     }
 }

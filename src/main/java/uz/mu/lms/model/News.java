@@ -23,6 +23,5 @@ public class News {
 
     private String eventTime;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Content content;
+    private Long contentId;
 }
