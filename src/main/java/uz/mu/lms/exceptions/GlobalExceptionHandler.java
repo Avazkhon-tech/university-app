@@ -1,6 +1,7 @@
 package uz.mu.lms.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,6 +22,53 @@ public class GlobalExceptionHandler {
                         .data(null)
                         .success(false)
                         .build());
+    }
 
+    @ExceptionHandler(ContentDoesNotExistException.class)
+    public ResponseEntity<ResponseDto<?>> handleContentDoesNotExistException(ContentDoesNotExistException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ResponseDto
+                        .builder()
+                        .code(404)
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(ImageDoesNotExistException.class)
+    public ResponseEntity<ResponseDto<?>> handleImageDoesNotExistException(ImageDoesNotExistException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ResponseDto
+                        .builder()
+                        .code(404)
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(FileNotSupportedException.class)
+    public ResponseEntity<ResponseDto<?>> handleEmptyFileException(FileNotSupportedException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ResponseDto
+                        .builder()
+                        .code(400)
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(PasswordNotAcceptedException.class)
+    public ResponseEntity<ResponseDto<?>> handlePasswordExpiredException(PasswordNotAcceptedException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                ResponseDto
+                        .builder()
+                        .code(403)
+                        .message(e.getMessage())
+                        .build()
+        );
     }
 }

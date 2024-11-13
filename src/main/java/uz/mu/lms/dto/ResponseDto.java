@@ -6,6 +6,6 @@ import lombok.Builder;
 public record ResponseDto<T> (
     Integer code,
     String message,
-    T data,
-    boolean success
+    boolean success,
+    T data
 ) {}
