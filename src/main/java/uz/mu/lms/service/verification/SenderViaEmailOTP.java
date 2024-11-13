@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class EmailVerificationCodeSender implements VerificationCodeSender {
+public class SenderViaEmailOTP implements IAbstractSenderOTP {
 
     private final JavaMailSender mailSender;
 
     @Override
-    public void sendVerificationCode(String username, String code) {
+    public void sendOTP(String username, String code) {
         MimeMessage message = mailSender.createMimeMessage();
 
         try {

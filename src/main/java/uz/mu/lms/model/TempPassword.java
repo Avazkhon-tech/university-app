@@ -3,20 +3,20 @@ package uz.mu.lms.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
-public class TemporaryPassword {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class TempPassword {
 
     private String generatedPassword;
 
-    @OneToOne
-    private User user;
+    private LocalDateTime expirationDate;
+
+    @Id
+    private Long userId;
 }
