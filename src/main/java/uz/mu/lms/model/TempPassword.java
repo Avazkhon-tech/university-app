@@ -18,5 +18,5 @@ public class TempPassword {
     private LocalDateTime expirationDate;
 
     @Id
-    private Long userId;
+    private Integer userId;
 }

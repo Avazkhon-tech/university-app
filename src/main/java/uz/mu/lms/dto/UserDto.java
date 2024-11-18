@@ -16,8 +16,13 @@ import java.util.List;
 @NoArgsConstructor
 public class UserDto implements UserDetails {
 
+    private Integer id;
+
     private String username;
     private String password;
+
+    private String firstName;
+    private String lastName;
 
     // TODO add authorities later
     @Override

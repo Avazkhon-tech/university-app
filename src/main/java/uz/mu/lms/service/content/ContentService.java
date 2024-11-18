@@ -34,7 +34,7 @@ public class ContentService implements IContentService {
 
     public Long createContent(MultipartFile file) {
 
-        if (file == null || file.isEmpty() || file.getOriginalFilename() != null)
+        if (file == null || file.isEmpty() || file.getOriginalFilename() == null)
             throw new FileNotSupportedException("File can not be empty");
 
         String extension = getContentExtension(file.getOriginalFilename());

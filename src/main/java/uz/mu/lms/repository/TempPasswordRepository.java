@@ -6,9 +6,11 @@ import uz.mu.lms.model.TempPassword;
 import java.util.Optional;
 
 @Repository
-public interface TempPasswordRepository extends JpaRepository<TempPassword, Long> {
+public interface TempPasswordRepository extends JpaRepository<TempPassword, Integer> {
 
-    boolean existsByUserId(Long userId);
-    void deleteByUserId(Long userId);
-    Optional<TempPassword> findByUserId(Long userId);
+    boolean existsByUserId(Integer userId);
+    void deleteByUserId(Integer userId);
+    Optional<TempPassword> findByUserId(Integer userId);
+
+    void deleteById(Integer userId);
 }

@@ -17,17 +17,21 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) {
 
         User avaz = User.builder()
-                .id(1L)
+                .id(1)
                 .username("avazxonnazirov334@gmail.com")
                 .password("1234")
                 .phoneNumber("+998999928775")
+                .firstName("avazxon")
+                .lastName("nazirov")
                 .build();
 
         User user = User.builder()
-                .id(2L)
+                .id(2)
                 .username("tparizoda2004@gmail.com")
                 .password("1234")
                 .phoneNumber("+998901231805")
+                .firstName("parizoda")
+                .lastName("togaeva")
                 .build();
 
         try {
