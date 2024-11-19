@@ -24,9 +24,11 @@ public class NewsResource {
         return newsService.createEvent(file, newsDto);
     }
 
-    @GetMapping("/get-events/{page}/{size}")
+    @GetMapping("/get-events")
+    public PaginatedResponseDto<List<NewsDto>> getNews(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
 
-    public PaginatedResponseDto<List<NewsDto>> getNews(@PathVariable(value = "page") Integer page, @PathVariable(value = "size") Integer size) {
         return newsService.getNews(page, size);
     }
 

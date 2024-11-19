@@ -34,7 +34,7 @@ public class NewsService {
 
     public ResponseEntity<byte[]> getNewsImage(Integer id) {
         Integer contentId = newsRepository.findById(id)
-                .orElseThrow(() -> new ImageDoesNotExistException("Image with id " + id + " does not exists")).getContentId();
+                .orElseThrow(() -> new ImageDoesNotExistException("Image with id " + id + " does not exists")).getAttachmentId();
         return contentService.retrieveContent(contentId);
     }
 
@@ -65,7 +65,7 @@ public class NewsService {
 
         News news = newsMapper.toEntity(newsDto);
 
-        news.setContentId(contentId);
+        news.setAttachmentId(contentId);
         News savedNews = newsRepository.save(news);
         NewsDto dto = newsMapper.toDto(savedNews);
         dto.setContentUrl(generateImageUrl(savedNews.getId()));

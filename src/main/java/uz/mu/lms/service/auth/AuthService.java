@@ -12,9 +12,9 @@ import uz.mu.lms.dto.LoginDto;
 import uz.mu.lms.dto.ResetPasswordDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.PasswordNotAcceptedException;
-import uz.mu.lms.redis.TempPassword;
 import uz.mu.lms.model.User;
-import uz.mu.lms.repository.TempPasswordRepository;
+import uz.mu.lms.model.redis.TempPassword;
+import uz.mu.lms.repository.redis.TempPasswordRepository;
 import uz.mu.lms.repository.UserRepository;
 import uz.mu.lms.resource.AuthResource;
 import uz.mu.lms.service.jwt.JwtProvider;
@@ -22,6 +22,7 @@ import uz.mu.lms.service.verification.MethodOTP;
 import uz.mu.lms.service.verification.ServiceOTP;
 
 import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor

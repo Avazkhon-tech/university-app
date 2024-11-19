@@ -10,37 +10,37 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "news")
+@Entity
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class News {
+public class Attachment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_seq_generator")
-    @SequenceGenerator(name = "news_seq_generator", sequenceName = "news_seq", allocationSize = 1)
-    private Integer Id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "content_seq_generator")
+    @SequenceGenerator(name = "content_seq_generator", sequenceName = "content_seq", allocationSize = 1)
+    private Integer id;
 
-    private String title;
+    private String filename;
 
-    private String body;
+    private String fileType;
 
-    private String location;
+    private Long size;
 
-    private String eventTime;
-
-    private Integer attachmentId;
+    private byte[] bytes;
 
     @CreatedDate
     private LocalDateTime createdAt;
+
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @CreatedBy
     private Integer createdBy;
+
     @LastModifiedBy
     private Integer updatedBy;
 }

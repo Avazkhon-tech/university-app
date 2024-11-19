@@ -19,9 +19,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 @DynamicUpdate
-@ToString
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
     @Id

@@ -1,8 +1,11 @@
 package uz.mu.lms.service.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.UserDto;
 import uz.mu.lms.exceptions.DuplicateKeyValue;
@@ -83,7 +86,6 @@ public class UserService {
             user.setPersonal_email(user.getPersonal_email());
         }
 
-
         System.out.println(user);
         UserDto dto = userMapper.toDto(userRepository.save(user));
 
@@ -93,6 +95,35 @@ public class UserService {
                 .message("Updated successfully")
                 .data(dto)
                 .build();
+    }
+
+    public PaginatedResponseDto<List<UserDto>> getAllUsers(Integer page, Integer size) {
+        Pageable pageable =  PageRequest.of(page, size);
+
+        List<UserDto> list  = userRepository.findAll(pageable).stream().map(userMapper::toDto).toList();
+
+        return PaginatedResponseDto.<List<UserDto>>builder()
+                .success(true)
+                .code(200)
+                .message("Successfully retrieved")
+                .data(list)
+                .page(page)
+                .size(size)
+                .build();
+    }
+
+    public ResponseDto<UserDto> getUser(Integer id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new UsernameNotFoundException("User with id " + id + " not found")
+        );
+
+        return ResponseDto.<UserDto>builder()
+                .success(true)
+                .code(200)
+                .message("Successfully retrieved")
+                .data(userMapper.toDto(user))
+                .build();
+
     }
 }
 

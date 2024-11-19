@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.exceptions.ContentDoesNotExistException;
 import uz.mu.lms.exceptions.FileNotSupportedException;
-import uz.mu.lms.model.Content;
+import uz.mu.lms.model.Attachment;
 import uz.mu.lms.repository.ContentRepository;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class ContentService implements IContentService {
     private final ContentRepository contentRepository;
 
     public ResponseEntity<byte[]> retrieveContent(Integer id) {
-        Content byId = contentRepository.findById(id)
+        Attachment byId = contentRepository.findById(id)
                 .orElseThrow(() -> new ContentDoesNotExistException("Content with id " + id + " not found"));
 
         return ResponseEntity
@@ -41,14 +41,14 @@ public class ContentService implements IContentService {
         String name = UUID.randomUUID() + "." + extension;
 
         try {
-            Content content = Content
+            Attachment attachment = Attachment
                     .builder()
                     .filename(name)
                     .size(file.getSize())
                     .bytes(file.getBytes())
                     .fileType(file.getContentType())
                     .build();
-            return contentRepository.save(content).getId();
+            return contentRepository.save(attachment).getId();
 
         } catch (IOException e) {
             throw new FileNotSupportedException("File not supported");

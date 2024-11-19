@@ -1,11 +1,15 @@
 package uz.mu.lms.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -13,30 +17,32 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class Content {
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
+public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "content_seq_generator")
-    @SequenceGenerator(name = "content_seq_generator", sequenceName = "content_seq", allocationSize = 1)
     private Integer id;
 
-    private String filename;
+    private String bio;
 
-    private String fileType;
+    private String studentId;
 
-    private Long size;
+    @OneToOne
+    private User user;
 
-    private byte[] bytes;
+    private Integer attachmentId;
 
     @CreatedDate
     private LocalDateTime createdAt;
+
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @CreatedBy
     private Integer createdBy;
+
     @LastModifiedBy
     private Integer updatedBy;
 }

@@ -9,38 +9,39 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Entity(name = "news")
+@Entity
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class News {
+public class Teacher {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_seq_generator")
-    @SequenceGenerator(name = "news_seq_generator", sequenceName = "news_seq", allocationSize = 1)
-    private Integer Id;
+    private Integer id;
 
-    private String title;
+    private String bio;
 
-    private String body;
+    private String teacherId;
 
-    private String location;
+    @OneToOne
+    private User user;
 
-    private String eventTime;
-
-    private Integer attachmentId;
+    @OneToMany
+    private List<Degree> degrees;
 
     @CreatedDate
     private LocalDateTime createdAt;
+
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @CreatedBy
     private Integer createdBy;
+
     @LastModifiedBy
     private Integer updatedBy;
 }
