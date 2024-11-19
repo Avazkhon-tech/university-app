@@ -1,12 +1,14 @@
 package uz.mu.lms.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import uz.mu.lms.model.User;
+
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,25 +16,42 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@JsonIgnoreProperties(value = {"authorities", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"})
 public class UserDto implements UserDetails {
 
     private Integer id;
 
+    @NotBlank(message = "username field is mandatory")
+    @Email(message = "Username must be a valid email")
     private String username;
-    private String password;
 
+    @NotBlank(message = "phoneNumber field is mandatory")
+    private String phoneNumber;
+
+    @NotBlank(message = "firstName field is mandatory")
     private String firstName;
+
+    @NotBlank(message = "lastName field is mandatory")
     private String lastName;
 
-    // TODO add authorities later
+    @NotBlank(message = "password field is mandatory")
+    private String password;
+
+    @Past(message = "Birth date must be in the past")
+    private LocalDate birthDate;
+
+    private String gender;
+
+    @Email(message = "Invalid email format")
+    private String personal_email;
+
+    private String address;
+
+    private List<RoleDto> authorities;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
-
-    public UserDto(User user) {
-        this.username = user.getUsername();
-        this.password = user.getPassword();
+        return authorities;
     }
 }

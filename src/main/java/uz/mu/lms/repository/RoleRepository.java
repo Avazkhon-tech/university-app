@@ -2,8 +2,10 @@ package uz.mu.lms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import uz.mu.lms.model.Content;
+import uz.mu.lms.model.Role;
 
 @Repository
-public interface ContentRepository extends JpaRepository<Content, Integer> {
+public interface RoleRepository extends JpaRepository<Role, Integer> {
+
+    Role findByName(String name);
 }

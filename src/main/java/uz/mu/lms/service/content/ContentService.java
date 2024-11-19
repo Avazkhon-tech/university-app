@@ -20,7 +20,7 @@ public class ContentService implements IContentService {
 
     private final ContentRepository contentRepository;
 
-    public ResponseEntity<byte[]> retrieveContent(Long id) {
+    public ResponseEntity<byte[]> retrieveContent(Integer id) {
         Content byId = contentRepository.findById(id)
                 .orElseThrow(() -> new ContentDoesNotExistException("Content with id " + id + " not found"));
 
@@ -28,11 +28,11 @@ public class ContentService implements IContentService {
                 .ok()
                 .contentType(MediaType.parseMediaType(byId.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
-                        byId.getFileName().substring(byId.getFileName().indexOf('_') + 1) + "\"")
+                        byId.getFilename().substring(byId.getFilename().indexOf('_') + 1) + "\"")
                 .body(byId.getBytes());
     }
 
-    public Long createContent(MultipartFile file) {
+    public Integer createContent(MultipartFile file) {
 
         if (file == null || file.isEmpty() || file.getOriginalFilename() == null)
             throw new FileNotSupportedException("File can not be empty");
@@ -43,8 +43,7 @@ public class ContentService implements IContentService {
         try {
             Content content = Content
                     .builder()
-                    .originalName(file.getOriginalFilename())
-                    .fileName(name)
+                    .filename(name)
                     .size(file.getSize())
                     .bytes(file.getBytes())
                     .fileType(file.getContentType())

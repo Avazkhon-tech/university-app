@@ -1,7 +1,6 @@
 package uz.mu.lms.service.news;
 
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,13 +27,13 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
     private final ContentService contentService;
-    private final NewsMapper newsMapper = Mappers.getMapper(NewsMapper.class);
+    private final NewsMapper newsMapper;
 
     @Value("${host}")
     private String hostAddr;
 
-    public ResponseEntity<byte[]> getNewsImage(Long id) {
-        Long contentId = newsRepository.findById(id)
+    public ResponseEntity<byte[]> getNewsImage(Integer id) {
+        Integer contentId = newsRepository.findById(id)
                 .orElseThrow(() -> new ImageDoesNotExistException("Image with id " + id + " does not exists")).getContentId();
         return contentService.retrieveContent(contentId);
     }
@@ -62,7 +61,7 @@ public class NewsService {
 
     public ResponseDto<NewsDto> createEvent(MultipartFile file, NewsDto newsDto) throws IOException {
 
-        Long contentId = contentService.createContent(file);
+        Integer contentId = contentService.createContent(file);
 
         News news = newsMapper.toEntity(newsDto);
 
@@ -79,7 +78,7 @@ public class NewsService {
                 .build();
     }
 
-    public String generateImageUrl(Long id) {
+    public String generateImageUrl(Integer id) {
         return hostAddr + "/api/image/" + id;
     }
 }

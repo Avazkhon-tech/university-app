@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class NewsDto {
 
-    private Long id;
+    private Integer id;
     private String title;
     private String body;
     private String location;

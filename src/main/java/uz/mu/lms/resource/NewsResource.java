@@ -31,7 +31,7 @@ public class NewsResource {
     }
 
     @GetMapping("/image/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
+    public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
         return newsService.getNewsImage(id);
     }
 }

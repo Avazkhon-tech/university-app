@@ -4,6 +4,6 @@ import org.mapstruct.Mapper;
 import uz.mu.lms.dto.UserDto;
 import uz.mu.lms.model.User;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public abstract class UserMapper implements AbstractMapper<User, UserDto> {
 }

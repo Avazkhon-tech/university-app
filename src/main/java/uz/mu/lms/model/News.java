@@ -2,6 +2,12 @@ package uz.mu.lms.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 
 @Entity(name = "news")
 @Getter
@@ -12,8 +18,9 @@ import lombok.*;
 public class News {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_seq_generator")
+    @SequenceGenerator(name = "news_seq_generator", sequenceName = "news_seq", allocationSize = 1)
+    private Integer Id;
 
     private String title;
 
@@ -23,5 +30,15 @@ public class News {
 
     private String eventTime;
 
-    private Long contentId;
+    private Integer contentId;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    @CreatedBy
+    private Integer createdBy;
+    @LastModifiedBy
+    private Integer updatedBy;
 }

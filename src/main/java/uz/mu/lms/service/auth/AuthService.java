@@ -12,7 +12,7 @@ import uz.mu.lms.dto.LoginDto;
 import uz.mu.lms.dto.ResetPasswordDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.PasswordNotAcceptedException;
-import uz.mu.lms.model.TempPassword;
+import uz.mu.lms.redis.TempPassword;
 import uz.mu.lms.model.User;
 import uz.mu.lms.repository.TempPasswordRepository;
 import uz.mu.lms.repository.UserRepository;
@@ -21,7 +21,6 @@ import uz.mu.lms.service.jwt.JwtProvider;
 import uz.mu.lms.service.verification.MethodOTP;
 import uz.mu.lms.service.verification.ServiceOTP;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -72,10 +71,10 @@ public class AuthService implements IAuthService {
 
         String generatedCode = serviceOTP.generateOTP();
 
+
         TempPassword tempPassword = TempPassword
                 .builder()
-                .generatedPassword(generatedCode)
-                .expirationDate(LocalDateTime.now().plusMinutes(3))
+                .password(generatedCode)
                 .userId(user.getId())
                 .build();
 
@@ -102,14 +101,13 @@ public class AuthService implements IAuthService {
                     .orElseThrow(() -> new UsernameNotFoundException(loginDto.username()));
         }
 
-        Optional<TempPassword> tempPassword = tempPasswordRepository.findByUserId(user.getId());
+        Optional<TempPassword> tempPassword = tempPasswordRepository.findById(user.getId());
 
-
-       if (tempPassword.isEmpty() || tempPassword.get().getExpirationDate().isBefore(LocalDateTime.now())) {
+       if (tempPassword.isEmpty()) {
            throw new PasswordNotAcceptedException("password is expired");
        }
 
-        if (!tempPassword.get().getGeneratedPassword().equals(loginDto.password())) {
+        if (!tempPassword.get().getPassword().equals(loginDto.password())) {
             return ResponseDto.<String>builder()
                     .code(400)
                     .message("password is incorrect")
@@ -135,12 +133,12 @@ public class AuthService implements IAuthService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
         if (!resetPasswordDto.password().equals(resetPasswordDto.passwordConfirmation())) {
-            throw new PasswordNotAcceptedException("passwords do not match");
+            throw new PasswordNotAcceptedException("Passwords do not match");
         }
 
         String passwordRegex = "^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$";
         if (!resetPasswordDto.password().matches(passwordRegex)) {
-            throw new PasswordNotAcceptedException("password is not complex enough");
+            throw new PasswordNotAcceptedException("Password is not complex enough");
         }
 
         // TODO add encryption later

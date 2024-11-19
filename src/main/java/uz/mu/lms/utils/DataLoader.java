@@ -5,7 +5,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import uz.mu.lms.model.User;
 import uz.mu.lms.repository.UserRepository;
-
 import java.util.List;
 
 @Component
@@ -13,6 +12,7 @@ import java.util.List;
 public class DataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
+
     @Override
     public void run(String... args) {
 
@@ -41,6 +41,5 @@ public class DataLoader implements CommandLineRunner {
         } catch (Exception e) {
             System.out.println("Error while saving users");
         }
-
     }
 }

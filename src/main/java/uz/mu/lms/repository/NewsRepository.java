@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import uz.mu.lms.model.News;
 
 @Repository
-public interface NewsRepository extends JpaRepository<News, Long> {
+public interface NewsRepository extends JpaRepository<News, Integer> {
 
     Page<News> findAllByOrderByIdDesc(Pageable pageable);
 }
