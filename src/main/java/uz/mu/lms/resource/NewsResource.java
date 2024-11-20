@@ -9,7 +9,6 @@ import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.service.news.NewsService;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -20,7 +19,7 @@ public class NewsResource {
     private final NewsService newsService;
 
     @PostMapping("/upload-event")
-    public ResponseDto<NewsDto> uploadEvent(@RequestPart("file") MultipartFile file, @RequestPart NewsDto newsDto) throws IOException {
+    public ResponseDto<NewsDto> uploadEvent(@RequestPart("file") MultipartFile file, @RequestPart NewsDto newsDto) {
         return newsService.createEvent(file, newsDto);
     }
 

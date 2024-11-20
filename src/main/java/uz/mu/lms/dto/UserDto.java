@@ -16,7 +16,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @JsonIgnoreProperties(value = {"authorities", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"})
 public class UserDto implements UserDetails {
 

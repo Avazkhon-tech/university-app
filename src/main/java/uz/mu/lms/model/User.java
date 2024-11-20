@@ -9,8 +9,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity(name = "users")
@@ -43,7 +43,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private Date birthDate;
+    private LocalDate birthDate;
 
     private String gender;
 

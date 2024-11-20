@@ -32,7 +32,7 @@ public class News {
 
     private String eventTime;
 
-    private Integer attachmentId;
+    private String imageUrl;
 
     @CreatedDate
     private LocalDateTime createdAt;

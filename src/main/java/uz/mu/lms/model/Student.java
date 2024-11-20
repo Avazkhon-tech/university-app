@@ -1,9 +1,6 @@
 package uz.mu.lms.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -23,16 +20,18 @@ import java.time.LocalDateTime;
 public class Student {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_seq_generator")
+    @SequenceGenerator(name = "student_seq_generator", sequenceName = "student_seq", allocationSize = 1)
     private Integer id;
 
     private String bio;
 
     private String studentId;
 
-    @OneToOne
-    private User user;
+    private Integer photoAttachmentId;
 
-    private Integer attachmentId;
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private User user;
 
     @CreatedDate
     private LocalDateTime createdAt;
