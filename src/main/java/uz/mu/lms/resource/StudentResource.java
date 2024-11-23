@@ -2,32 +2,45 @@ package uz.mu.lms.resource;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.StudentDto;
-import uz.mu.lms.service.student.StudentService;
+import uz.mu.lms.service.student.IStudentService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/student")
 @RequiredArgsConstructor
 public class StudentResource {
 
-    private final StudentService studentService;
+    private final IStudentService studentService;
+
+    // ONLY FOR ADMINS
+    @GetMapping
+    public ResponseEntity<PaginatedResponseDto<List<StudentDto>>> getAllStudents(
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return studentService.getAllStudents(pageable);
+    }
 
     @PostMapping
-    public ResponseDto<StudentDto> addStudent(@Valid @RequestBody StudentDto studentDto) {
+    public ResponseEntity<ResponseDto<StudentDto>> addStudent(@Valid @RequestBody StudentDto studentDto) {
         return studentService.addStudent(studentDto);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseDto<StudentDto> partialUpdateStudent(@PathVariable Integer id, @RequestBody StudentDto studentDto) {
-        return studentService.partialUpdateStudent(id, studentDto);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<StudentDto>> deleteStudent(@PathVariable Integer id) {
+        return studentService.deleteStudent(id);
     }
 
+    // FOR ALL
     @PostMapping("/profile")
-    public ResponseDto<StudentDto> uploadProfileImage(@RequestParam MultipartFile file) {
+    public ResponseEntity<ResponseDto<StudentDto>> uploadProfileImage(@RequestParam MultipartFile file) {
         return studentService.uploadProfileImage(file);
     }
 
@@ -35,18 +48,4 @@ public class StudentResource {
     public ResponseEntity<byte[]> getProfileImage() {
         return studentService.getProfileImage();
     }
-
-
-
-//    @GetMapping
-//    public PaginatedResponseDto<List<UserDto>> getAllUsers(
-//            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
-//        return userService.getAllUsers(page, size);
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ResponseDto<UserDto> getUserById(@PathVariable Integer id) {
-//        return userService.getUser(id);
-//    }
-
 }

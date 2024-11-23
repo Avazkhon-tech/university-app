@@ -21,16 +21,18 @@ import java.util.List;
 public class Teacher {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teacher_seq_generator")
+    @SequenceGenerator(name = "teacher_seq_generator", sequenceName = "teacher_seq", allocationSize = 1)
     private Integer id;
 
     private String bio;
 
     private String teacherId;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private User user;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Degree> degrees;
 
     @CreatedDate

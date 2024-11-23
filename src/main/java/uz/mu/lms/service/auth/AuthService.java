@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.LoginDto;
 import uz.mu.lms.dto.ResetPasswordDto;
 import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.exceptions.AuthenticationFailure;
+import uz.mu.lms.exceptions.AuthenticationFailureException;
 import uz.mu.lms.exceptions.PasswordNotAcceptedException;
 import uz.mu.lms.model.User;
 import uz.mu.lms.model.redis.TempPassword;
@@ -44,7 +44,7 @@ public class AuthService implements IAuthService {
                     new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password()));
         } catch (BadCredentialsException e) {
             logger.info("Could not authenticate user: {}", loginDto.username());
-            throw new AuthenticationFailure("Username or password is incorrect");
+            throw new AuthenticationFailureException("Username or password is incorrect");
         }
 
         logger.info("User {} logged in successfully", loginDto.username());

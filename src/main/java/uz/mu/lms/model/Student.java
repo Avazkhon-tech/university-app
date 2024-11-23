@@ -26,6 +26,7 @@ public class Student {
 
     private String bio;
 
+    @Column(unique = true)
     private String studentId;
 
     private Integer photoAttachmentId;

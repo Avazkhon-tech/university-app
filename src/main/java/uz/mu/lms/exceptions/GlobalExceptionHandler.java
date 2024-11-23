@@ -17,16 +17,16 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(AuthenticationFailure.class)
-    public ResponseEntity<ResponseDto<?>> handleAuthenticationFailure(AuthenticationFailure authenticationFailure) {
-        log.error(authenticationFailure.getMessage());
+    @ExceptionHandler(AuthenticationFailureException.class)
+    public ResponseEntity<ResponseDto<?>> handleAuthenticationFailure(AuthenticationFailureException authenticationFailureException) {
+        log.error(authenticationFailureException.getMessage());
         return ResponseEntity
                 .status(401)
                 .body(ResponseDto
                         .builder()
                         .code(401)
                         .success(false)
-                        .message(authenticationFailure.getMessage())
+                        .message(authenticationFailureException.getMessage())
                         .build());
     }
 
@@ -45,10 +45,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ContentDoesNotExistException.class)
     public ResponseEntity<ResponseDto<?>> handleContentDoesNotExistException(ContentDoesNotExistException e) {
         log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                 ResponseDto
                         .builder()
-                        .code(404)
+                        .code(204)
                         .message(e.getMessage())
                         .build()
         );
@@ -90,8 +90,8 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(DuplicateKeyValue.class)
-    public ResponseEntity<ResponseDto<?>> handleDuplicateKey(DuplicateKeyValue e) {
+    @ExceptionHandler(DuplicateKeyValueException.class)
+    public ResponseEntity<ResponseDto<?>> handleDuplicateKey(DuplicateKeyValueException e) {
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ResponseDto
@@ -121,5 +121,17 @@ public class GlobalExceptionHandler {
             errors.put(error.getField(), error.getDefaultMessage());
         }
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ResponseDto<Object>> handleUserAlreadyExistsExceptions(UserAlreadyExistsException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                ResponseDto
+                        .builder()
+                        .code(409)
+                        .message(e.getMessage())
+                        .build()
+        );
     }
 }

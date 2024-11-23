@@ -3,7 +3,6 @@ package uz.mu.lms.service.news;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NewsService {
+public class NewsService implements INewsService{
 
     private final NewsRepository newsRepository;
     private final ContentService contentService;
@@ -34,9 +33,8 @@ public class NewsService {
         return contentService.retrieveContent(id);
     }
 
-    public PaginatedResponseDto<List<NewsDto>> getNews(Integer page, Integer size) {
+    public PaginatedResponseDto<List<NewsDto>> getNews(Pageable pageable) {
 
-        Pageable pageable = PageRequest.of(page, size);
         Page<News> newsPage = newsRepository.findAllByOrderByIdDesc(pageable);
 
         List<NewsDto> dtoList = newsPage
@@ -49,23 +47,24 @@ public class NewsService {
                 .code(HttpStatus.OK.value())
                 .success(true)
                 .data(dtoList)
-                .page(page)
-                .size(size)
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
                 .build();
     }
 
-    public ResponseDto<NewsDto> createEvent(MultipartFile file, NewsDto newsDto) {
+    public ResponseEntity<ResponseDto<NewsDto>> createEvent(MultipartFile file, NewsDto newsDto) {
 
         Integer contentId = contentService.createContent(file);
         News news = newsMapper.toEntity(newsDto);
         news.setImageUrl(hostAddr + "/api/image/" + contentId);
         NewsDto dto = newsMapper.toDto(newsRepository.save(news));
 
-        return ResponseDto.<NewsDto>builder()
+        ResponseDto<NewsDto> newsCreated = ResponseDto.<NewsDto>builder()
                 .data(dto)
                 .code(HttpStatus.OK.value())
                 .success(true)
                 .message("News created")
                 .build();
+        return ResponseEntity.ok(newsCreated);
     }
 }
