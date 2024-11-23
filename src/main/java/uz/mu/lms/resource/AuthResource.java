@@ -1,6 +1,7 @@
 package uz.mu.lms.resource;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.LoginDto;
 import uz.mu.lms.dto.ResetPasswordDto;
@@ -16,7 +17,7 @@ public class AuthResource {
     private final IAuthService IAuthService;
 
     @PostMapping("/login")
-    public ResponseDto<String> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<ResponseDto<String>> login(@RequestBody LoginDto loginDto) {
         return IAuthService.login(loginDto);
     }
 

@@ -12,6 +12,19 @@ import uz.mu.lms.dto.ResponseDto;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(AuthenticationFailure.class)
+    public ResponseEntity<ResponseDto<?>> handleAuthenticationFailure(AuthenticationFailure authenticationFailure) {
+        log.error(authenticationFailure.getMessage());
+        return ResponseEntity
+                .status(401)
+                .body(ResponseDto
+                        .builder()
+                        .code(401)
+                        .success(false)
+                        .message(authenticationFailure.getMessage())
+                        .build());
+    }
+
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ResponseDto<String>> handleUsernameNotFoundException(UsernameNotFoundException e) {
         log.error(e.getMessage());

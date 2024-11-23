@@ -3,6 +3,7 @@ package uz.mu.lms.service.auth;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.LoginDto;
 import uz.mu.lms.dto.ResetPasswordDto;
 import uz.mu.lms.dto.ResponseDto;
+import uz.mu.lms.exceptions.AuthenticationFailure;
 import uz.mu.lms.exceptions.PasswordNotAcceptedException;
 import uz.mu.lms.model.TempPassword;
 import uz.mu.lms.model.User;
@@ -36,28 +38,24 @@ public class AuthService implements IAuthService {
     private static final Logger logger = LoggerFactory.getLogger(AuthResource.class);
 
     @Override
-    public ResponseDto<String> login(LoginDto loginDto) {
+    public ResponseEntity<ResponseDto<String>> login(LoginDto loginDto) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password()));
         } catch (BadCredentialsException e) {
             logger.info("Could not authenticate user: {}", loginDto.username());
-            return ResponseDto.<String>builder()
-                    .code(400)
-                    .data(e.getMessage())
-                    .message("username or password is incorrect")
-                    .success(false)
-                    .build();
+            throw new AuthenticationFailure("Username or password is incorrect");
         }
-
 
         logger.info("User {} logged in successfully", loginDto.username());
         String generatedToken = jwtProvider.generateToken(loginDto.username());
-        return ResponseDto.<String>builder()
+        ResponseDto<String> responseDto = ResponseDto.<String>builder()
                 .code(200)
+                .message("Successfully logged in")
                 .data(generatedToken)
                 .success(true)
                 .build();
+        return ResponseEntity.ok(responseDto);
     }
     @Override
     public ResponseDto<String> SendOTP(String username, MethodOTP methodOTP) {
