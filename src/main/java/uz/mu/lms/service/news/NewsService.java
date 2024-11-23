@@ -58,7 +58,7 @@ public class NewsService {
 
         Integer contentId = contentService.createContent(file);
         News news = newsMapper.toEntity(newsDto);
-        news.setImageUrl(generateImageUrl(contentId));
+        news.setImageUrl(hostAddr + "/api/image/" + contentId);
         NewsDto dto = newsMapper.toDto(newsRepository.save(news));
 
         return ResponseDto.<NewsDto>builder()
@@ -67,9 +67,5 @@ public class NewsService {
                 .success(true)
                 .message("News created")
                 .build();
-    }
-
-    public String generateImageUrl(Integer id) {
-        return hostAddr + "/api/image/" + id;
     }
 }
