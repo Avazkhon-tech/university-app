@@ -27,7 +27,7 @@ public class AuthResource {
     }
 
     @PostMapping("/verify-otp-email")
-    public ResponseDto<String> verifyOTPEmail(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<ResponseDto<String>> verifyOTPEmail(@RequestBody LoginDto loginDto) {
         return IAuthService.verifyOTP(loginDto, MethodOTP.EMAIL);
     }
 
@@ -37,7 +37,7 @@ public class AuthResource {
     }
 
     @PostMapping("/verify-otp-sms")
-    public ResponseDto<String> verifyOTPPhoneNumber(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<ResponseDto<String>> verifyOTPPhoneNumber(@RequestBody LoginDto loginDto) {
         return IAuthService.verifyOTP(loginDto, MethodOTP.PHONE_NUMBER);
     }
 

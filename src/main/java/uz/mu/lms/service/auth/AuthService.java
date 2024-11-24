@@ -90,7 +90,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public ResponseDto<String> verifyOTP(LoginDto loginDto, MethodOTP methodOTP) {
+    public ResponseEntity<ResponseDto<String>> verifyOTP(LoginDto loginDto, MethodOTP methodOTP) {
         User user = null;
         if (methodOTP.equals(MethodOTP.EMAIL)) {
             user = userRepository.findByUsername(loginDto.username())
@@ -103,26 +103,20 @@ public class AuthService implements IAuthService {
         Optional<TempPassword> tempPassword = tempPasswordRepository.findByUserId(user.getId());
 
 
-       if (tempPassword.isEmpty() || tempPassword.get().getExpirationDate().isBefore(LocalDateTime.now())) {
-           throw new PasswordNotAcceptedException("password is expired");
+       if (tempPassword.isEmpty() || tempPassword.get().getExpirationDate().isBefore(LocalDateTime.now())
+               || !tempPassword.get().getGeneratedPassword().equals(loginDto.password())) {
+           throw new PasswordNotAcceptedException("Incorrect code");
        }
-
-        if (!tempPassword.get().getGeneratedPassword().equals(loginDto.password())) {
-            return ResponseDto.<String>builder()
-                    .code(400)
-                    .message("password is incorrect")
-                    .success(false)
-                    .build();
-        }
 
         tempPasswordRepository.deleteById(tempPassword.get().getUserId());
         String generatedToken = jwtProvider.generateToken(loginDto.username());
-        return ResponseDto.<String>builder()
+        return ResponseEntity.ok()
+                .body(ResponseDto.<String>builder()
                 .code(200)
                 .data(generatedToken)
                 .message("Successfully verified")
                 .success(true)
-                .build();
+                .build());
     }
 
     @Override

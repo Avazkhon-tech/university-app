@@ -11,7 +11,7 @@ public interface IAuthService {
 
     ResponseDto<String> SendOTP(String email, MethodOTP method);
 
-    ResponseDto<String> verifyOTP(LoginDto loginDto, MethodOTP method);
+    ResponseEntity<ResponseDto<String>> verifyOTP(LoginDto loginDto, MethodOTP method);
 
     ResponseDto<String> resetPassword(ResetPasswordDto resetPasswordDto, String token);
 }
