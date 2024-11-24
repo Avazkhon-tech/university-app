@@ -8,16 +8,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class SenderViaSmsOTP implements IAbstractSenderOTP {
 
-    private final String ACCOUNT_SID = "AC7f765a69adb5d20442154d382de253b0";
-    private final String AUTH_TOKEN = "3709472649cdaf6045163687fab50e7e";
-    private final String FROM_PHONE_NUMBER = "+13057482352";
-
     public SenderViaSmsOTP() {
+        String ACCOUNT_SID = "ACb4866d4925a8c88bebfc8e8a7d663426";
+        String AUTH_TOKEN = "d7e64ebc4ab975c9e57fa73c935f4356";
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
     }
 
     @Override
     public void sendOTP(String phoneNumber, String code) {
+        String FROM_PHONE_NUMBER = "+19789157685";
         Message.creator(
                 new PhoneNumber(phoneNumber),
                 new PhoneNumber(FROM_PHONE_NUMBER),

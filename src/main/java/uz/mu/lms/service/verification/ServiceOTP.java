@@ -26,7 +26,7 @@ public class ServiceOTP implements IServiceOTP {
 
     public String generateOTP() {
         SecureRandom rand = new SecureRandom();
-        return String.valueOf(rand.nextInt(900000) + 100000);
+        return String.valueOf(rand.nextInt(9000) + 999);
     }
 }
 

@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ResponseDto<String>> handleUsernameNotFoundException(UsernameNotFoundException e) {
         log.error(e.getMessage());
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(404)
                 .body(ResponseDto.<String>builder()
                         .code(404)
                         .message("User not found")
@@ -79,12 +79,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PasswordNotAcceptedException.class)
-    public ResponseEntity<ResponseDto<?>> handlePasswordExpiredException(PasswordNotAcceptedException e) {
+    public ResponseEntity<ResponseDto<?>> handlePasswordNotAcceptedException(PasswordNotAcceptedException e) {
         log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ResponseDto
                         .builder()
-                        .code(403)
+                        .code(400)
                         .message(e.getMessage())
                         .build()
         );

@@ -90,7 +90,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public ResponseDto<String> verifyOTP(LoginDto loginDto, MethodOTP methodOTP) {
+    public ResponseEntity<ResponseDto<String>> verifyOTP(LoginDto loginDto, MethodOTP methodOTP) {
         User user = null;
         if (methodOTP.equals(MethodOTP.EMAIL)) {
             user = userRepository.findByUsername(loginDto.username())
@@ -107,21 +107,18 @@ public class AuthService implements IAuthService {
        }
 
         if (!tempPassword.get().getPassword().equals(loginDto.password())) {
-            return ResponseDto.<String>builder()
-                    .code(400)
-                    .message("password is incorrect")
-                    .success(false)
-                    .build();
+            throw new PasswordNotAcceptedException("Incorrect code");
         }
 
         tempPasswordRepository.deleteById(tempPassword.get().getUserId());
         String generatedToken = jwtProvider.generateToken(loginDto.username());
-        return ResponseDto.<String>builder()
+        return ResponseEntity.ok()
+                .body(ResponseDto.<String>builder()
                 .code(200)
                 .data(generatedToken)
                 .message("Successfully verified")
                 .success(true)
-                .build();
+                .build());
     }
 
     @Override
