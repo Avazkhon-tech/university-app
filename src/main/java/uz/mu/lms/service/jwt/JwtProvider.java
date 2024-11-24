@@ -15,10 +15,8 @@ import java.util.function.Function;
 @Service
 public class JwtProvider {
 
-    // TODO find a way to do it the proper way
-    private String secretKey = "aslfkjaslkdnruioqenrkqndlvjdnavkjdsnfldkjsn";
-
     public String generateToken(String username) {
+        // can add claims later
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
                 .claims()
@@ -32,6 +30,8 @@ public class JwtProvider {
     }
 
     private SecretKey getKey() {
+        // TODO find a way to do it the proper way
+        String secretKey = "aslfkjaslkdnruioqenrkqndlvjdnavkjdsnfldkjsn";
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 

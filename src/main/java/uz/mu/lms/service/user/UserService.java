@@ -12,6 +12,7 @@ import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.UserDto;
 import uz.mu.lms.exceptions.DuplicateKeyValueException;
 import uz.mu.lms.model.User;
+import uz.mu.lms.model.enums.RoleName;
 import uz.mu.lms.repository.RoleRepository;
 import uz.mu.lms.repository.UserRepository;
 import uz.mu.lms.service.mapper.UserMapper;
@@ -29,7 +30,7 @@ public class UserService implements IUserService {
 
     public ResponseEntity<ResponseDto<UserDto>> addUser(UserDto userDto) {
         User entity = userMapper.toEntity(userDto);
-        entity.setRoles(List.of(roleRepository.findByName("ROLE_USER")));
+        entity.setRole(roleRepository.findByName(RoleName.ROLE_USER.toString()));
 
         boolean existsByPhoneNumber = userRepository.existsByPhoneNumber(userDto.getPhoneNumber());
         boolean existsByUsername = userRepository.existsByUsername(userDto.getUsername());

@@ -11,6 +11,8 @@ import uz.mu.lms.dto.TeacherDto;
 import uz.mu.lms.exceptions.UserAlreadyExistsException;
 import uz.mu.lms.exceptions.UserNotFoundException;
 import uz.mu.lms.model.Teacher;
+import uz.mu.lms.model.enums.RoleName;
+import uz.mu.lms.repository.RoleRepository;
 import uz.mu.lms.repository.TeacherRepository;
 import uz.mu.lms.service.mapper.TeacherMapper;
 
@@ -22,6 +24,7 @@ public class TeacherService implements ITeacherService {
 
     private final TeacherRepository teacherRepository;
     private final TeacherMapper teacherMapper;
+    private final RoleRepository roleRepository;
 
 
     @Override
@@ -38,9 +41,11 @@ public class TeacherService implements ITeacherService {
             throw new UserAlreadyExistsException("Teacher with teacher Id " +
                     teacherDto.teacherId() + " already exists");
 
-        Teacher entity = teacherMapper.toEntity(teacherDto);
-        entity.getUser().setPassword(teacherDto.userDto().getPassword());
-        Teacher saved = teacherRepository.save(entity);
+        Teacher teacher = teacherMapper.toEntity(teacherDto);
+        teacher.getUser().setPassword(teacherDto.userDto().getPassword());
+        teacher.getUser().setRole(roleRepository.findByName(RoleName.ROLE_TEACHER.toString()));
+
+        Teacher saved = teacherRepository.save(teacher);
         ResponseDto<TeacherDto> teacherDtoResponseDto = ResponseDto
                 .<TeacherDto>builder()
                 .success(true)

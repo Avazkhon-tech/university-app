@@ -16,6 +16,8 @@ import uz.mu.lms.exceptions.ContentDoesNotExistException;
 import uz.mu.lms.exceptions.UserAlreadyExistsException;
 import uz.mu.lms.exceptions.UserNotFoundException;
 import uz.mu.lms.model.Student;
+import uz.mu.lms.model.enums.RoleName;
+import uz.mu.lms.repository.RoleRepository;
 import uz.mu.lms.repository.StudentRepository;
 import uz.mu.lms.service.content.ContentService;
 import uz.mu.lms.service.mapper.StudentMapper;
@@ -30,14 +32,15 @@ public class StudentService implements IStudentService {
     private final StudentMapper studentMapper;
     private final ContentService contentService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     public ResponseEntity<ResponseDto<StudentDto>> addStudent(StudentDto studentDto) {
         if (studentRepository.existsByUser_Username(studentDto.userDto().getUsername())) {
-            throw new UserAlreadyExistsException("User with username " + studentDto.userDto().getUsername() + " already exists");
+            throw new UserAlreadyExistsException("Student with username " + studentDto.userDto().getUsername() + " already exists");
         }
 
         if (studentRepository.existsByUser_PhoneNumber(studentDto.userDto().getPhoneNumber())) {
-            throw new UserAlreadyExistsException("User with phone number " + studentDto.userDto().getPhoneNumber() + " already exists");
+            throw new UserAlreadyExistsException("Student with phone number " + studentDto.userDto().getPhoneNumber() + " already exists");
         }
 
         if (studentRepository.existsByStudentId(studentDto.studentId())) {
@@ -46,6 +49,7 @@ public class StudentService implements IStudentService {
 
         Student student = studentMapper.toEntity(studentDto);
         student.getUser().setPassword(passwordEncoder.encode(studentDto.userDto().getPassword()));
+        student.getUser().setRole(roleRepository.findByName(RoleName.ROLE_STUDENT.toString()));
         Student saved = studentRepository.save(student);
 
         ResponseDto<StudentDto> responseDto = ResponseDto.<StudentDto>builder()

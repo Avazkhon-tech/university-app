@@ -16,8 +16,8 @@ import uz.mu.lms.exceptions.AuthenticationFailureException;
 import uz.mu.lms.exceptions.PasswordNotAcceptedException;
 import uz.mu.lms.model.User;
 import uz.mu.lms.model.redis.TempPassword;
-import uz.mu.lms.repository.redis.TempPasswordRepository;
 import uz.mu.lms.repository.UserRepository;
+import uz.mu.lms.repository.redis.TempPasswordRepository;
 import uz.mu.lms.resource.AuthResource;
 import uz.mu.lms.service.jwt.JwtProvider;
 import uz.mu.lms.service.verification.MethodOTP;
@@ -102,7 +102,7 @@ public class AuthService implements IAuthService {
 
         Optional<TempPassword> tempPassword = tempPasswordRepository.findById(user.getId());
 
-       if (tempPassword.isEmpty()) {
+        if (tempPassword.isEmpty()) {
            throw new PasswordNotAcceptedException("password is expired");
        }
 
@@ -140,7 +140,6 @@ public class AuthService implements IAuthService {
             throw new PasswordNotAcceptedException("Password is not complex enough");
         }
 
-        // TODO add encryption later
         user.setPassword(resetPasswordDto.password());
         userRepository.save(user);
         return ResponseDto.<String>builder()

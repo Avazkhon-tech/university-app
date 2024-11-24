@@ -11,7 +11,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity(name = "users")
 @Getter
@@ -51,16 +50,21 @@ public class User {
 
     private String address;
 
-    @ManyToMany
-    private List<Role> roles;
+    @ManyToOne
+    private Role role;
+
+    @ManyToOne
+    private Status status;
 
     @CreatedDate
     private LocalDateTime createdAt;
+
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @CreatedBy
     private Integer createdBy;
+
     @LastModifiedBy
     private Integer updatedBy;
 }

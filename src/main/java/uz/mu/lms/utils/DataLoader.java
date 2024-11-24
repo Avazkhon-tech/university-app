@@ -5,6 +5,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import uz.mu.lms.model.User;
+import uz.mu.lms.model.enums.RoleName;
+import uz.mu.lms.repository.RoleRepository;
 import uz.mu.lms.repository.UserRepository;
 
 import java.util.List;
@@ -15,6 +17,7 @@ public class DataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Override
     public void run(String... args) {
@@ -26,6 +29,7 @@ public class DataLoader implements CommandLineRunner {
                 .phoneNumber("+998999928775")
                 .firstName("avazxon")
                 .lastName("nazirov")
+                .role(roleRepository.findByName(RoleName.ROLE_ADMIN.toString()))
                 .build();
 
         User user = User.builder()
@@ -35,6 +39,7 @@ public class DataLoader implements CommandLineRunner {
                 .phoneNumber("+998901231805")
                 .firstName("parizoda")
                 .lastName("togaeva")
+                .role(roleRepository.findByName(RoleName.ROLE_STUDENT.name()))
                 .build();
 
         try {
@@ -44,6 +49,5 @@ public class DataLoader implements CommandLineRunner {
         } catch (Exception e) {
             System.out.println("Error while saving users");
         }
-
     }
 }
