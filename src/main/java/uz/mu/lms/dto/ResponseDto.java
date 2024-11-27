@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public record ResponseDto<T> (
     Integer code,
-    String message,
     boolean success,
+    String message,
     T data
 ) {}

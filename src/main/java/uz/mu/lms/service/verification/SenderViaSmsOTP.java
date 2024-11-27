@@ -1,25 +1,58 @@
 package uz.mu.lms.service.verification;
 
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
+import lombok.RequiredArgsConstructor;
+import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import java.io.IOException;
 
 @Service
-public class SenderViaSmsOTP implements IAbstractSenderOTP {
+@RequiredArgsConstructor
+class SenderViaSmsOTP  implements IAbstractSenderOTP {
 
-    public SenderViaSmsOTP() {
-        String ACCOUNT_SID = "ACb4866d4925a8c88bebfc8e8a7d663426";
-        String AUTH_TOKEN = "d7e64ebc4ab975c9e57fa73c935f4356";
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+    private static final Logger log = LoggerFactory.getLogger(SenderViaSmsOTP.class);
+    private final OkHttpClient client;
+    @Value("${infobip.api.url}")
+    private String apiUrl;
+    @Value("${infobip.api.key}")
+    private String apiKey;
+
+    SenderViaSmsOTP() {
+        this.client = new OkHttpClient();
     }
 
-    @Override
-    public void sendOTP(String phoneNumber, String code) {
-        String FROM_PHONE_NUMBER = "+19789157685";
-        Message.creator(
-                new PhoneNumber(phoneNumber),
-                new PhoneNumber(FROM_PHONE_NUMBER),
-                "Your verification code is: " + code).create();
+    public void sendOTP(String toPhoneNumber, String code) {
+        String message = "Your verification code is: " + code;
+        MediaType mediaType = MediaType.parse("application/json");
+
+        String jsonBody = String.format("""
+            {
+                "messages": [
+                    {
+                        "destinations": [
+                            {"to": "%s"}
+                        ],
+                        "from": "447491163443",
+                        "text": "%s"
+                    }
+                ]
+            }
+        """, toPhoneNumber, message);
+
+        RequestBody body = RequestBody.create(mediaType, jsonBody);
+        Request request = new Request.Builder()
+                .url(apiUrl)
+                .post(body)
+                .addHeader("Authorization", "App " + apiKey)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept", "application/json")
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
     }
 }
