@@ -50,7 +50,7 @@ class SenderViaSmsOTP  implements IAbstractSenderOTP {
                 .addHeader("Accept", "application/json")
                 .build();
         try {
-            Response response = client.newCall(request).execute();
+            client.newCall(request).execute();
         } catch (IOException e) {
             log.error(e.getMessage());
         }

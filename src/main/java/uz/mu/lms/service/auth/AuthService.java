@@ -71,9 +71,10 @@ public class AuthService implements IAuthService {
 
         String generatedCode = serviceOTP.generateOTP();
 
+        // TODO this will be changed to send proper code once i find a sms provider
         TempPassword tempPassword = TempPassword
                 .builder()
-                .generatedPassword(generatedCode)
+                .generatedPassword("7777")
                 .expirationDate(LocalDateTime.now().plusMinutes(3))
                 .userId(user.getId())
                 .build();
