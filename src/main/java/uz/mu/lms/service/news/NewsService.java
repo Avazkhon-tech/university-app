@@ -1,10 +1,8 @@
 package uz.mu.lms.service.news;
 
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,41 +11,35 @@ import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.NewsDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.exceptions.ImageDoesNotExistException;
 import uz.mu.lms.model.News;
 import uz.mu.lms.repository.NewsRepository;
 import uz.mu.lms.service.content.ContentService;
 import uz.mu.lms.service.mapper.NewsMapper;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NewsService {
+public class NewsService implements INewsService{
 
     private final NewsRepository newsRepository;
     private final ContentService contentService;
-    private final NewsMapper newsMapper = Mappers.getMapper(NewsMapper.class);
+    private final NewsMapper newsMapper;
 
     @Value("${host}")
     private String hostAddr;
 
-    public ResponseEntity<byte[]> getNewsImage(Long id) {
-        Long contentId = newsRepository.findById(id)
-                .orElseThrow(() -> new ImageDoesNotExistException("Image with id " + id + " does not exists")).getContentId();
-        return contentService.retrieveContent(contentId);
+    public ResponseEntity<byte[]> getNewsImage(Integer id) {
+        return contentService.retrieveContent(id);
     }
 
-    public PaginatedResponseDto<List<NewsDto>> getNews(Integer page, Integer size) {
+    public PaginatedResponseDto<List<NewsDto>> getNews(Pageable pageable) {
 
-        Pageable pageable = PageRequest.of(page, size);
         Page<News> newsPage = newsRepository.findAllByOrderByIdDesc(pageable);
 
         List<NewsDto> dtoList = newsPage
                 .stream()
                 .map(newsMapper::toDto)
-                .peek(newsDto -> newsDto.setContentUrl(generateImageUrl(newsDto.getId())))
                 .toList();
 
         return PaginatedResponseDto
@@ -55,31 +47,24 @@ public class NewsService {
                 .code(HttpStatus.OK.value())
                 .success(true)
                 .data(dtoList)
-                .page(page)
-                .size(size)
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
                 .build();
     }
 
-    public ResponseDto<NewsDto> createEvent(MultipartFile file, NewsDto newsDto) throws IOException {
+    public ResponseEntity<ResponseDto<NewsDto>> createEvent(MultipartFile file, NewsDto newsDto) {
 
-        Long contentId = contentService.createContent(file);
-
+        Integer contentId = contentService.createContent(file);
         News news = newsMapper.toEntity(newsDto);
+        news.setImageUrl(hostAddr + "/api/image/" + contentId);
+        NewsDto dto = newsMapper.toDto(newsRepository.save(news));
 
-        news.setContentId(contentId);
-        News savedNews = newsRepository.save(news);
-        NewsDto dto = newsMapper.toDto(savedNews);
-        dto.setContentUrl(generateImageUrl(savedNews.getId()));
-
-        return ResponseDto.<NewsDto>builder()
+        ResponseDto<NewsDto> newsCreated = ResponseDto.<NewsDto>builder()
                 .data(dto)
                 .code(HttpStatus.OK.value())
                 .success(true)
                 .message("News created")
                 .build();
-    }
-
-    public String generateImageUrl(Long id) {
-        return hostAddr + "/api/image/" + id;
+        return ResponseEntity.ok(newsCreated);
     }
 }

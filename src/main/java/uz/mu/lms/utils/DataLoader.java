@@ -2,8 +2,11 @@ package uz.mu.lms.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import uz.mu.lms.model.User;
+import uz.mu.lms.model.enums.RoleName;
+import uz.mu.lms.repository.RoleRepository;
 import uz.mu.lms.repository.UserRepository;
 
 import java.util.List;
@@ -13,21 +16,30 @@ import java.util.List;
 public class DataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+
     @Override
     public void run(String... args) {
 
         User avaz = User.builder()
-                .id(1L)
+                .id(1)
                 .username("avazxonnazirov334@gmail.com")
-                .password("1234")
+                .password(passwordEncoder.encode("1234"))
                 .phoneNumber("+998999928775")
+                .firstName("avazxon")
+                .lastName("nazirov")
+                .role(roleRepository.findByName(RoleName.ROLE_ADMIN.toString()))
                 .build();
 
         User user = User.builder()
-                .id(2L)
+                .id(2)
                 .username("tparizoda2004@gmail.com")
-                .password("1234")
+                .password(passwordEncoder.encode("1234"))
                 .phoneNumber("+998901231805")
+                .firstName("parizoda")
+                .lastName("togaeva")
+                .role(roleRepository.findByName(RoleName.ROLE_STUDENT.name()))
                 .build();
 
         try {
@@ -37,6 +49,5 @@ public class DataLoader implements CommandLineRunner {
         } catch (Exception e) {
             System.out.println("Error while saving users");
         }
-
     }
 }

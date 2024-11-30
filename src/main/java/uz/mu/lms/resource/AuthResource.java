@@ -17,6 +17,7 @@ public class AuthResource {
 
     private final IAuthService IAuthService;
 
+    // FOR ALL
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<Token>> login(@RequestBody LoginDto loginDto) {
         return IAuthService.login(loginDto);
