@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: lms
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/university
+    username: avazkhon
+    password: 1234
+
+  data:
+    redis:
+      host: localhost # default
+      port: 6378 # default
+#      password: if needed
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  defaultValues:
+    host: http://localhost:8080
+
+
+#logging.level.org.apache.coyote=DEBUG
+#logging.level.org.springframework.web=DEBUG
+#spring.sql.init.mode=never
