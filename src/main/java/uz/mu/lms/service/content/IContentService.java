@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface IContentService {
 
-    ResponseEntity<byte[]> retrieveContent(Long id);
+    ResponseEntity<byte[]> retrieveContent(Integer id);
 
-    Long createContent(MultipartFile file);
+    Integer createContent(MultipartFile file);
 }

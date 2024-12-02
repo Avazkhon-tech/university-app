@@ -1,18 +1,12 @@
 package uz.mu.lms.dto;
 
-import lombok.*;
+public record NewsDto (
 
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class NewsDto {
-
-    private Long id;
-    private String title;
-    private String body;
-    private String location;
-    private String eventTime;
-    private String contentUrl;
-}
+    Integer id,
+    String title,
+    String body,
+    String location,
+    String eventTime,
+    String imageUrl
+)
+{}

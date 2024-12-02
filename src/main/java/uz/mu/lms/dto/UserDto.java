@@ -1,33 +1,51 @@
 package uz.mu.lms.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import uz.mu.lms.model.User;
-import java.util.Collection;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto implements UserDetails {
+@JsonIgnoreProperties(value = {"authorities", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"})
+public class UserDto {
 
+    private Integer id;
+
+    @NotBlank(message = "username field is mandatory")
+    @Email(message = "Username must be a valid email")
     private String username;
+
+    @NotBlank(message = "phoneNumber field is mandatory")
+    private String phoneNumber;
+
+    @NotBlank(message = "firstName field is mandatory")
+    private String firstName;
+
+    @NotBlank(message = "lastName field is mandatory")
+    private String lastName;
+
+    @NotBlank(message = "password field is mandatory")
     private String password;
 
-    // TODO add authorities later
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
+    @Past(message = "Birth date must be in the past")
+    private LocalDate birthDate;
 
+    private String gender;
 
-    public UserDto(User user) {
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-    }
+    @Email(message = "Invalid email format")
+    private String personal_email;
+
+    private String address;
+
+    private List<RoleDto> authorities;
 }

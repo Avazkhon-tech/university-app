@@ -1,15 +1,16 @@
 package uz.mu.lms.resource;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.NewsDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.service.news.NewsService;
+import uz.mu.lms.service.news.INewsService;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -17,21 +18,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NewsResource {
 
-    private final NewsService newsService;
+    private final INewsService newsService;
 
+    // ONLY FOR ADMINS
     @PostMapping("/upload-event")
-    public ResponseDto<NewsDto> uploadEvent(@RequestPart("file") MultipartFile file, @RequestPart NewsDto newsDto) throws IOException {
+    public ResponseEntity<ResponseDto<NewsDto>> uploadEvent(@RequestPart("file") MultipartFile file, @RequestPart NewsDto newsDto) {
         return newsService.createEvent(file, newsDto);
     }
 
-    @GetMapping("/get-events/{page}/{size}")
-
-    public PaginatedResponseDto<List<NewsDto>> getNews(@PathVariable(value = "page") Integer page, @PathVariable(value = "size") Integer size) {
-        return newsService.getNews(page, size);
+    // FOR ALL
+    @GetMapping("/get-events")
+    public PaginatedResponseDto<List<NewsDto>> getNews(
+            @PageableDefault(page = 0, size = 10) Pageable pageable)
+             {
+        return newsService.getNews(pageable);
     }
 
     @GetMapping("/image/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
+    public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
         return newsService.getNewsImage(id);
     }
 }
