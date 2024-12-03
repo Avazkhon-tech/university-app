@@ -9,5 +9,5 @@ import uz.mu.lms.model.User;
 public abstract class UserMapper implements AbstractMapper<User, UserDto> {
 
     @Mapping(target = "password", ignore = true)
-    public abstract User toEntity(UserDto dto);
+    public abstract UserDto toDto(User user);
 }

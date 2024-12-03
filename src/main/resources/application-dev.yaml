@@ -24,11 +24,7 @@ spring:
       max-request-size: 10MB
 
   defaultValues:
-    host: http://192.241.138.76:8080
-
-  profiles:
-    active: dev
-
+    host: http://localhost:8080
 
 
 #logging.level.org.apache.coyote=DEBUG

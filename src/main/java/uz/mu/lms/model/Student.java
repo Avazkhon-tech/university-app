@@ -24,8 +24,6 @@ public class Student {
     @SequenceGenerator(name = "student_seq_generator", sequenceName = "student_seq", allocationSize = 1)
     private Integer id;
 
-    private String bio;
-
     @Column(unique = true)
     private String studentId;
 

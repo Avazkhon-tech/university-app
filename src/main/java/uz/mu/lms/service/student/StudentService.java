@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.StudentDto;
+import uz.mu.lms.dto.StudentProfileDto;
 import uz.mu.lms.exceptions.ContentDoesNotExistException;
+import uz.mu.lms.exceptions.FileNotSupportedException;
 import uz.mu.lms.exceptions.UserAlreadyExistsException;
 import uz.mu.lms.exceptions.UserNotFoundException;
 import uz.mu.lms.model.Student;
@@ -65,6 +67,12 @@ public class StudentService implements IStudentService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
+        String contentType = file.getContentType();
+        if (contentType == null || (!contentType.startsWith("image/"))) {
+            throw new FileNotSupportedException(
+                    "Only image files are allowed");
+        }
+
         Student student = studentRepository.findByUser_Username(username)
                 .orElseThrow(() -> new UserNotFoundException("Student with email " + username + " not found"));
 
@@ -108,8 +116,8 @@ public class StudentService implements IStudentService {
     public ResponseEntity<PaginatedResponseDto<List<StudentDto>>> getAllStudents(Pageable pageable) {
         Page<Student> students = studentRepository.findAll(pageable);
         List<StudentDto> studentDtoList = students
-                        .stream()
-                        .map(studentMapper::toDto).toList();
+                .stream()
+                .map(studentMapper::toDto).toList();
 
         PaginatedResponseDto<List<StudentDto>> paginatedResponseDto = PaginatedResponseDto
                 .<List<StudentDto>>builder()
@@ -121,5 +129,44 @@ public class StudentService implements IStudentService {
                 .build();
 
         return ResponseEntity.ok(paginatedResponseDto);
+    }
+
+    @Override
+    public ResponseEntity<ResponseDto<StudentProfileDto>> getProfileInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        Student student = studentRepository.findByUser_Username(username)
+                .orElseThrow(() -> new UserNotFoundException("Student with email " + username + " not found"));
+
+        ResponseDto<StudentProfileDto> profile = ResponseDto.<StudentProfileDto>builder()
+                .code(200)
+                .success(true)
+                .message("Successfully retrieved student profile info")
+                .data(studentMapper.toProfileDtoFromStudent(student))
+                .build();
+
+        return ResponseEntity.ok(profile);
+    }
+
+    @Override
+    public ResponseEntity<ResponseDto<StudentProfileDto>> updateProfileInfo(StudentProfileDto studentProfileDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        Student student = studentRepository.findByUser_Username(username)
+                .orElseThrow(() -> new UserNotFoundException("Student with email " + username + " not found"));
+
+        Student saved = studentRepository.save(studentMapper.toEntityFromProfileDto(studentProfileDto, student));
+
+        ResponseDto<StudentProfileDto> updated = ResponseDto.<StudentProfileDto>builder()
+                .code(200)
+                .success(true)
+                .message("Successfully updated student profile info")
+                .data(studentMapper.toProfileDtoFromStudent(saved))
+                .build();
+
+        return ResponseEntity.ok(updated);
+
     }
 }
