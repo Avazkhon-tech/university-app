@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.LoginDto;
 import uz.mu.lms.dto.ResetPasswordDto;
@@ -36,6 +37,7 @@ public class AuthService implements IAuthService {
     private final TempPasswordRepository tempPasswordRepository;
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(AuthResource.class);
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ResponseEntity<ResponseDto<String>> login(LoginDto loginDto) {
@@ -137,7 +139,7 @@ public class AuthService implements IAuthService {
             throw new PasswordNotAcceptedException("Password is not complex enough");
         }
 
-        user.setPassword(resetPasswordDto.password());
+        user.setPassword(passwordEncoder.encode(resetPasswordDto.password()));
         userRepository.save(user);
         return ResponseDto.<String>builder()
                 .code(200)

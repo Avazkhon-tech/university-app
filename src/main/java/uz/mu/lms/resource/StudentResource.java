@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.StudentDto;
+import uz.mu.lms.dto.StudentProfileDto;
 import uz.mu.lms.service.student.IStudentService;
 
 import java.util.List;
@@ -39,13 +40,23 @@ public class StudentResource {
     }
 
     // FOR ALL
-    @PostMapping("/profile")
+    @PostMapping("/profile-picture")
     public ResponseEntity<ResponseDto<StudentDto>> uploadProfileImage(@RequestParam MultipartFile file) {
         return studentService.uploadProfileImage(file);
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/profile-picture")
     public ResponseEntity<byte[]> getProfileImage() {
         return studentService.getProfileImage();
+    }
+
+    @GetMapping("/profile-info")
+    public ResponseEntity<ResponseDto<StudentProfileDto>> getProfileInfo() {
+        return studentService.getProfileInfo();
+    }
+
+    @PostMapping("/profile-info")
+    public ResponseEntity<ResponseDto<StudentProfileDto>> updateProfileInfo(@Valid @RequestBody StudentProfileDto studentProfileDto) {
+        return studentService.updateProfileInfo(studentProfileDto);
     }
 }
