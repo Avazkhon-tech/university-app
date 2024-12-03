@@ -1,9 +1,8 @@
 package uz.mu.lms.dto;
 
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public record StudentProfileDto(
 
@@ -11,12 +10,16 @@ public record StudentProfileDto(
 
     String studentId,
 
+    String username,
+
     String firstName,
 
     String lastName,
 
+    @NotBlank(message = "Personal email field can not be empty")
     String personal_email,
 
+    @NotBlank(message = "Phone number field can not be empty")
     String phoneNumber,
 
     LocalDate birthDate

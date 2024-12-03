@@ -24,6 +24,7 @@ public abstract class StudentMapper implements AbstractMapper<Student, StudentDt
     @Mapping(target = "personal_email", source = "user.personal_email")
     @Mapping(target = "phoneNumber", source = "user.phoneNumber")
     @Mapping(target = "birthDate", source = "user.birthDate")
+    @Mapping(target = "username", source = "user.username")
     public abstract StudentProfileDto toProfileDtoFromStudent(Student student);
 
     public Student toEntityFromProfileDto(StudentProfileDto dto, @MappingTarget Student student) {
