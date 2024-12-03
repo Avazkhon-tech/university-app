@@ -10,6 +10,7 @@ import uz.mu.lms.repository.RoleRepository;
 import uz.mu.lms.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -32,22 +33,8 @@ public class DataLoader implements CommandLineRunner {
                 .role(roleRepository.findByName(RoleName.ROLE_ADMIN.toString()))
                 .build();
 
-        User user = User.builder()
-                .id(2)
-                .username("tparizoda2004@gmail.com")
-                .password(passwordEncoder.encode("1234"))
-                .phoneNumber("+998901231805")
-                .firstName("parizoda")
-                .lastName("togaeva")
-                .role(roleRepository.findByName(RoleName.ROLE_STUDENT.name()))
-                .build();
-
         try {
-            userRepository.saveAll(List.of(avaz, user));
-            System.out.println("Successfully saved " + avaz.getId() + " " + avaz.getUsername());
-            System.out.println("Successfully saved " + user.getId() + " " + user.getUsername());
-        } catch (Exception e) {
-            System.out.println("Error while saving users");
-        }
+            userRepository.save(avaz);
+        } catch (Exception e) {}
     }
 }

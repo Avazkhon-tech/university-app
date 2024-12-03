@@ -26,7 +26,7 @@ public class NewsService implements INewsService{
     private final ContentService contentService;
     private final NewsMapper newsMapper;
 
-    @Value("${host}")
+    @Value("${spring.defaultValues.host}")
     private String hostAddr;
 
     public ResponseEntity<byte[]> getNewsImage(Integer id) {

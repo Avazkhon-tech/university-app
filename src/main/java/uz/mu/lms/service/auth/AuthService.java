@@ -27,6 +27,7 @@ import uz.mu.lms.service.verification.ServiceOTP;
 
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 public class AuthService implements IAuthService {
@@ -36,8 +37,8 @@ public class AuthService implements IAuthService {
     private final ServiceOTP serviceOTP;
     private final TempPasswordRepository tempPasswordRepository;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(AuthResource.class);
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ResponseEntity<ResponseDto<Token>> login(LoginDto loginDto) {
@@ -139,7 +140,6 @@ public class AuthService implements IAuthService {
             throw new PasswordNotAcceptedException("Password is not complex enough");
         }
 
-        // TODO add encryption later
         user.setPassword(passwordEncoder.encode(resetPasswordDto.password()));
         userRepository.save(user);
         return ResponseDto.<String>builder()

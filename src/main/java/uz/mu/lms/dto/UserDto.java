@@ -34,7 +34,7 @@ public class UserDto {
     @NotBlank(message = "lastName field is mandatory")
     private String lastName;
 
-    @NotBlank(message = "password field is mandatory")
+//    @NotBlank(message = "password field is mandatory")
     private String password;
 
     @Past(message = "Birth date must be in the past")
