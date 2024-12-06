@@ -6,7 +6,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/university
     username: avazkhon
     password: 1234
-
   data:
     redis:
       host: localhost # default
@@ -26,11 +25,22 @@ spring:
   defaultValues:
     host: http://192.241.138.76:8080
 
-  profiles:
-    active: dev
+#  profiles:
+#    active: dev
 
+  sql:
+    init:
+      mode: never
 
+infobip:
+  api:
+    url: "https://9k1844.api.infobip.com/sms/2/text/advanced"
+    key: "803ec566e8ae96734162759372aa2084-03461112-9598-456e-bd5f-0b1d6a4bcf62"
 
-#logging.level.org.apache.coyote=DEBUG
-#logging.level.org.springframework.web=DEBUG
-#spring.sql.init.mode=never
+logging:
+  level:
+    org:
+      apache:
+        coyote: debug
+      springframework:
+        web: debug

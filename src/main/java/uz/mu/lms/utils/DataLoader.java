@@ -33,15 +33,8 @@ public class DataLoader implements CommandLineRunner {
                 .role(roleRepository.findByName(RoleName.ROLE_ADMIN.toString()))
                 .build();
 
-
         try {
-            Optional<User> byUsername = userRepository.findByUsername("avazxonnazirov334@gmail.com");
-            if (!byUsername.isPresent()) {
-                userRepository.saveAll(List.of(avaz));
-                System.out.println("Successfully saved " + avaz.getId() + " " + avaz.getUsername());
-            }
-        } catch (Exception e) {
-            System.out.println("Error while saving users");
-        }
+            userRepository.save(avaz);
+        } catch (Exception e) {}
     }
 }

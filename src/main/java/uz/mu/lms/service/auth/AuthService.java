@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.LoginDto;
 import uz.mu.lms.dto.ResetPasswordDto;
 import uz.mu.lms.dto.ResponseDto;
+import uz.mu.lms.dto.Token;
 import uz.mu.lms.exceptions.AuthenticationFailureException;
 import uz.mu.lms.exceptions.PasswordNotAcceptedException;
 import uz.mu.lms.model.User;
@@ -40,7 +41,7 @@ public class AuthService implements IAuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public ResponseEntity<ResponseDto<String>> login(LoginDto loginDto) {
+    public ResponseEntity<ResponseDto<Token>> login(LoginDto loginDto) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password()));
@@ -51,10 +52,10 @@ public class AuthService implements IAuthService {
 
         logger.info("User {} logged in successfully", loginDto.username());
         String generatedToken = jwtProvider.generateToken(loginDto.username());
-        ResponseDto<String> responseDto = ResponseDto.<String>builder()
+        ResponseDto<Token> responseDto = ResponseDto.<Token>builder()
                 .code(200)
                 .message("Successfully logged in")
-                .data(generatedToken)
+                .data(new Token(generatedToken))
                 .success(true)
                 .build();
         return ResponseEntity.ok(responseDto);
@@ -72,10 +73,10 @@ public class AuthService implements IAuthService {
 
         String generatedCode = serviceOTP.generateOTP();
 
-
+        // TODO this will be changed to send proper code once i find a sms provider
         TempPassword tempPassword = TempPassword
                 .builder()
-                .password(generatedCode)
+                .password(methodOTP.equals(MethodOTP.PHONE_NUMBER)? "7777": generatedCode)
                 .userId(user.getId())
                 .build();
 
@@ -92,7 +93,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public ResponseEntity<ResponseDto<String>> verifyOTP(LoginDto loginDto, MethodOTP methodOTP) {
+    public ResponseEntity<ResponseDto<Token>> verifyOTP(LoginDto loginDto, MethodOTP methodOTP) {
         User user = null;
         if (methodOTP.equals(MethodOTP.EMAIL)) {
             user = userRepository.findByUsername(loginDto.username())
@@ -113,11 +114,11 @@ public class AuthService implements IAuthService {
         }
 
         tempPasswordRepository.deleteById(tempPassword.get().getUserId());
-        String generatedToken = jwtProvider.generateToken(loginDto.username());
+        String generatedToken = jwtProvider.generateToken(user.getUsername());
         return ResponseEntity.ok()
-                .body(ResponseDto.<String>builder()
+                .body(ResponseDto.<Token>builder()
                 .code(200)
-                .data(generatedToken)
+                .data(new Token(generatedToken))
                 .message("Successfully verified")
                 .success(true)
                 .build());

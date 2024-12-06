@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.LoginDto;
 import uz.mu.lms.dto.ResetPasswordDto;
 import uz.mu.lms.dto.ResponseDto;
+import uz.mu.lms.dto.Token;
 import uz.mu.lms.service.auth.IAuthService;
 import uz.mu.lms.service.verification.MethodOTP;
 
@@ -18,7 +19,7 @@ public class AuthResource {
 
     // FOR ALL
     @PostMapping("/login")
-    public ResponseEntity<ResponseDto<String>> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<ResponseDto<Token>> login(@RequestBody LoginDto loginDto) {
         return IAuthService.login(loginDto);
     }
 
@@ -28,7 +29,7 @@ public class AuthResource {
     }
 
     @PostMapping("/verify-otp-email")
-    public ResponseEntity<ResponseDto<String>> verifyOTPEmail(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<ResponseDto<Token>> verifyOTPEmail(@RequestBody LoginDto loginDto) {
         return IAuthService.verifyOTP(loginDto, MethodOTP.EMAIL);
     }
 
@@ -38,7 +39,7 @@ public class AuthResource {
     }
 
     @PostMapping("/verify-otp-sms")
-    public ResponseEntity<ResponseDto<String>> verifyOTPPhoneNumber(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<ResponseDto<Token>> verifyOTPPhoneNumber(@RequestBody LoginDto loginDto) {
         return IAuthService.verifyOTP(loginDto, MethodOTP.PHONE_NUMBER);
     }
 

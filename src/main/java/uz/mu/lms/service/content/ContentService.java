@@ -37,13 +37,10 @@ public class ContentService implements IContentService {
         if (file == null || file.isEmpty() || file.getOriginalFilename() == null)
             throw new FileNotSupportedException("File can not be empty");
 
-        String extension = getContentExtension(file.getOriginalFilename());
-        String name = UUID.randomUUID() + "." + extension;
-
         try {
             Attachment attachment = Attachment
                     .builder()
-                    .filename(name)
+                    .filename(file.getOriginalFilename())
                     .size(file.getSize())
                     .bytes(file.getBytes())
                     .fileType(file.getContentType())
@@ -54,11 +51,6 @@ public class ContentService implements IContentService {
             throw new FileNotSupportedException("File not supported");
         }
 
-    }
-
-    private String getContentExtension(String filename)  {
-        String[] split = filename.split("\\.");
-        return split.length > 1 ? split[split.length - 1] : "";
     }
 }
 
