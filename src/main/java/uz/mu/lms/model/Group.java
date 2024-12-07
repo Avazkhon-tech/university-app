@@ -7,34 +7,34 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "groups")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Teacher {
+public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teacher_seq_generator")
-    @SequenceGenerator(name = "teacher_seq_generator", sequenceName = "teacher_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_seq_generator")
+    @SequenceGenerator(name = "group_seq_generator", sequenceName = "group_seq", allocationSize = 1)
     private Integer id;
 
-    private String teacherId;
+    private String name;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private User user;
+    @OneToMany
+    private List<Student> students;
 
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private List<Degree> degrees;
+    @OneToOne
+    private WeeklySchedule weeklySchedule;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;

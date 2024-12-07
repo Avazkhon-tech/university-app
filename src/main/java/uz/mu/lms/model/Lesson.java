@@ -18,23 +18,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Teacher {
+public class Lesson {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teacher_seq_generator")
-    @SequenceGenerator(name = "teacher_seq_generator", sequenceName = "teacher_seq", allocationSize = 1)
-    private Integer id;
-
-    private String teacherId;
-
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private User user;
-
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private List<Degree> degrees;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lesson_seq_generator")
+    @SequenceGenerator(name = "lesson_seq_generator", sequenceName = "lesson_seq", allocationSize = 1)
+    private Long id;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;

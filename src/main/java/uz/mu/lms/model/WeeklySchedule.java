@@ -1,13 +1,16 @@
 package uz.mu.lms.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import uz.mu.lms.model.enums.DayOfWeek;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,23 +21,21 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Teacher {
+public class WeeklySchedule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "teacher_seq_generator")
-    @SequenceGenerator(name = "teacher_seq_generator", sequenceName = "teacher_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "weekly_schedule_seq_generator")
+    @SequenceGenerator(name = "weekly_schedule_seq_generator", sequenceName = "weekly_schedule_seq", allocationSize = 1)
     private Integer id;
 
-    private String teacherId;
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek dayOfWeek;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private User user;
-
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private List<Degree> degrees;
+    @ManyToOne
+    private TimeSlot timeSlot;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
@@ -44,4 +45,6 @@ public class Teacher {
 
     @LastModifiedBy
     private Integer updatedBy;
+
+
 }
