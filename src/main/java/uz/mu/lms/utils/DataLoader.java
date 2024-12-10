@@ -24,7 +24,7 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) {
 
         User avaz = User.builder()
-                .id(1)
+                .id(2)
                 .username("avazxonnazirov334@gmail.com")
                 .password(passwordEncoder.encode("1234"))
                 .phoneNumber("+998999928775")

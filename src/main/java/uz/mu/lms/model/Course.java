@@ -7,8 +7,11 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -30,8 +33,11 @@ public class Course {
 
     private String taughtLanguage;
 
-    @OneToMany
-    private List<Group> groups;
+    @ManyToOne
+    private Department department;
+
+    @ManyToMany
+    private Set<Teacher> teachers;
 
     @CreatedDate
     private LocalDateTime createAt;

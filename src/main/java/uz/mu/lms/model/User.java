@@ -1,7 +1,6 @@
 package uz.mu.lms.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedBy;
@@ -9,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import uz.mu.lms.model.offuse.Status;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq_generator")
-    @SequenceGenerator(name = "users_seq_generator", sequenceName = "users_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "users_seq_generator", sequenceName = "users_seq", allocationSize = 1)
     private Integer id;
 
     @Column(nullable = false, unique = true)

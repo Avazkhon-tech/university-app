@@ -6,8 +6,6 @@ public record TeacherDto(
 
     Integer id,
 
-    String bio,
-
     String teacherId,
 
     UserDto userDto,

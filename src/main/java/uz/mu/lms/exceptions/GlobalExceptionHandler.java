@@ -45,10 +45,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ContentDoesNotExistException.class)
     public ResponseEntity<ResponseDto<?>> handleContentDoesNotExistException(ContentDoesNotExistException e) {
         log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ResponseDto
                         .builder()
-                        .code(204)
+                        .code(409)
                         .message(e.getMessage())
                         .build()
         );

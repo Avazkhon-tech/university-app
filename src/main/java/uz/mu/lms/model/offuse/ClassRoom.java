@@ -1,4 +1,4 @@
-package uz.mu.lms.model;
+package uz.mu.lms.model.offuse;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,7 +8,6 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Setter
@@ -16,19 +15,16 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Building {
+public class ClassRoom {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "building_generator")
-    @SequenceGenerator(name = "building_generator", sequenceName = "buildings_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "class_room_generator")
+    @SequenceGenerator(name = "class_room_generator", sequenceName = "class_room_seq", allocationSize = 1)
     private Long id;
 
     private String name;
 
     private String address;
-
-    @OneToMany
-    private List<ClassRoom> classrooms;
 
     @CreatedDate
     private LocalDateTime createAt;

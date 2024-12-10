@@ -1,9 +1,11 @@
-package uz.mu.lms.model;
+package uz.mu.lms.dto;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import uz.mu.lms.model.Role;
+import uz.mu.lms.model.User;
 
 import java.util.Collection;
 import java.util.List;

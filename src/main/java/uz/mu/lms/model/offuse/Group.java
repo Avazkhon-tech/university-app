@@ -1,4 +1,4 @@
-package uz.mu.lms.model;
+package uz.mu.lms.model.offuse;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,8 +7,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import uz.mu.lms.model.Course;
+import uz.mu.lms.model.Student;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "groups")
@@ -26,6 +28,9 @@ public class Group {
     private Integer id;
 
     private String name;
+
+    @ManyToOne
+    private Course course;
 
     @OneToMany
     private List<Student> students;

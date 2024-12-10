@@ -1,4 +1,4 @@
-package uz.mu.lms.model;
+package uz.mu.lms.model.offuse;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,24 +6,29 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Getter
 @Setter
+@Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Lesson {
+@AllArgsConstructor
+public class Building {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lesson_seq_generator")
-    @SequenceGenerator(name = "lesson_seq_generator", sequenceName = "lesson_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "building_generator")
+    @SequenceGenerator(name = "building_generator", sequenceName = "buildings_seq", allocationSize = 1)
     private Long id;
+
+    private String name;
+
+    private String address;
+
+    @OneToMany
+    private List<ClassRoom> classrooms;
 
     @CreatedDate
     private LocalDateTime createAt;

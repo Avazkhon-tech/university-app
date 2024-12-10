@@ -1,4 +1,4 @@
-package uz.mu.lms.model;
+package uz.mu.lms.model.offuse;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,9 +8,9 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -19,26 +19,21 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Faculty {
+public class TimeSlot {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "faculty_seq_generator")
-    @SequenceGenerator(name = "faculty_seq_generator", sequenceName = "faculty_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "timeslot_seq_generator")
+    @SequenceGenerator(name = "timeslot_seq_generator", sequenceName = "timeslot_seq", allocationSize = 1)
     private Integer id;
 
-    @Column(nullable = false)
-    private String name;
+    private Integer orderNumber;
 
-    @OneToOne
-    private Teacher deanOfFaculty;
+    private LocalTime startTime;
 
-    private String phoneNumber;
+    private Duration duration;
 
     @CreatedDate
-    private LocalDate establishmentDate;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;

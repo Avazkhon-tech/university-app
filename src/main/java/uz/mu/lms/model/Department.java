@@ -30,8 +30,8 @@ public class Department {
 
     private Long tuitionFee;
 
-    @OneToMany
-    private List<Course> courses;
+    @ManyToOne
+    private Faculty faculty;
 
     @CreatedDate
     private LocalDateTime establishedDate;
