@@ -1,4 +1,4 @@
-package uz.mu.lms.model.offuse;
+package uz.mu.lms.model;
 
 import jakarta.persistence.*;
 import lombok.*;

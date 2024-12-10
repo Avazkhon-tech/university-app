@@ -11,13 +11,13 @@ import uz.mu.lms.model.enums.DayOfWeek;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+//@Entity
+//@Getter
+//@Setter
+//@Builder
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@EntityListeners(AuditingEntityListener.class)
 public class WeeklySchedule {
 
     @Id

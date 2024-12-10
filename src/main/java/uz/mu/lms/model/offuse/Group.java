@@ -13,13 +13,13 @@ import uz.mu.lms.model.Student;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity(name = "groups")
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+//@Entity(name = "groups")
+//@Getter
+//@Setter
+//@Builder
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@EntityListeners(AuditingEntityListener.class)
 public class Group {
 
     @Id

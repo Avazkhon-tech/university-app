@@ -9,12 +9,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Setter
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+//@Entity
+//@Setter
+//@Getter
+//@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class ClassRoom {
 
     @Id
