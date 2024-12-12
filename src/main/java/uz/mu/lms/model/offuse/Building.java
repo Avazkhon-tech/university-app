@@ -1,11 +1,11 @@
 package uz.mu.lms.model.offuse;
 
 import jakarta.persistence.*;
-import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import uz.mu.lms.model.Room;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +28,7 @@ public class Building {
     private String address;
 
     @OneToMany
-    private List<ClassRoom> classrooms;
+    private List<Room> classrooms;
 
     @CreatedDate
     private LocalDateTime createAt;

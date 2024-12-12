@@ -30,3 +30,4 @@ public class MyUserDetails implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.getName()));
     }
 }
+

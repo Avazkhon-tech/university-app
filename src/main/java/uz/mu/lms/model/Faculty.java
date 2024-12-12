@@ -37,6 +37,9 @@ public class Faculty {
     @CreatedDate
     private LocalDate establishmentDate;
 
+    @OneToMany(mappedBy = "faculty")
+    private List<Department> departments;
+
     @CreatedDate
     private LocalDateTime createdAt;
 

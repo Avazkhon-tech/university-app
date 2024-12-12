@@ -16,8 +16,6 @@ public record CourseDto(
     String taughtLanguage,
 
     @NotBlank(message = "The department has to be specified")
-    DepartmentDto department,
-
-    List<TeacherDto> teachers
+    DepartmentDto department
 )
 {}

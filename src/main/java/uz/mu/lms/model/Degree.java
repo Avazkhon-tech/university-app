@@ -23,4 +23,8 @@ public class Degree {
     private String universityName;
 
     private Integer yearOfCompletion;
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 }

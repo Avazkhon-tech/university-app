@@ -1,26 +1,23 @@
-package uz.mu.lms.model;
+package uz.mu.lms.model.offuse;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import uz.mu.lms.model.Faculty;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-@Entity
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+//@Entity
+//@Getter
+//@Setter
+//@Builder
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@EntityListeners(AuditingEntityListener.class)
 public class AcademicCalendar {
 
     @Id

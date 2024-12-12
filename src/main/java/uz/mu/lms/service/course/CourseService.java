@@ -17,6 +17,7 @@ import uz.mu.lms.repository.DepartmentRepository;
 import uz.mu.lms.repository.TeacherRepository;
 import uz.mu.lms.service.mapper.CourseMapper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -60,18 +61,7 @@ public class CourseService implements ICourseService {
             throw new ContentDoesNotExistException("Department with id %d not found".formatted(courseDto.department().id()));
         }
 
-        var teachers = new HashSet<Teacher>();
-        if (courseDto.teachers() != null) {
-            for (TeacherDto teacherDto : courseDto.teachers()) {
-                teacherRepository.findById(teacherDto.id())
-                        .ifPresentOrElse(teachers::add, () -> {
-                            throw new ContentDoesNotExistException("Teacher with id %d not found".formatted(teacherDto.id()));
-                        });
-            }
-        }
-
         var course = courseMapper.toEntity(courseDto);
-        course.setTeachers(teachers);
 
         course.setDepartment(department.get());
         Course savedCourse = courseRepository.save(course);

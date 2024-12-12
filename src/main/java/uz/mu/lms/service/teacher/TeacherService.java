@@ -5,18 +5,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import uz.mu.lms.dto.PaginatedResponseDto;
-import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.dto.TeacherDto;
+import uz.mu.lms.dto.*;
+import uz.mu.lms.exceptions.ContentDoesNotExistException;
 import uz.mu.lms.exceptions.UserAlreadyExistsException;
 import uz.mu.lms.exceptions.UserNotFoundException;
+import uz.mu.lms.model.Degree;
+import uz.mu.lms.model.Department;
 import uz.mu.lms.model.Teacher;
 import uz.mu.lms.model.enums.RoleName;
-import uz.mu.lms.repository.RoleRepository;
-import uz.mu.lms.repository.TeacherRepository;
+import uz.mu.lms.repository.*;
+import uz.mu.lms.service.mapper.DegreeMapper;
 import uz.mu.lms.service.mapper.TeacherMapper;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +30,9 @@ public class TeacherService implements ITeacherService {
     private final TeacherRepository teacherRepository;
     private final TeacherMapper teacherMapper;
     private final RoleRepository roleRepository;
+    private final DepartmentRepository departmentRepository;
+    private final DegreeRepository degreeRepository;
+    private final DegreeMapper degreeMapper;
 
 
     @Override
@@ -41,17 +49,38 @@ public class TeacherService implements ITeacherService {
             throw new UserAlreadyExistsException("Teacher with teacher Id " +
                     teacherDto.teacherId() + " already exists");
 
+        // checking departments
+        Set<Department> departments = teacherDto.departments().stream()
+            .map(departmentDto ->
+                    departmentRepository.findById(departmentDto.id())
+                            .orElseThrow(() -> new ContentDoesNotExistException("Department with id %d does not exist"
+                                    .formatted(departmentDto.id()))))
+                .collect(Collectors.toSet());
+
+        // saving degrees
         Teacher teacher = teacherMapper.toEntity(teacherDto);
+        teacher.setDepartments(departments);
         teacher.getUser().setPassword(teacherDto.userDto().getPassword());
         teacher.getUser().setRole(roleRepository.findByName(RoleName.ROLE_TEACHER.toString()));
+        Teacher savedTeacher = teacherRepository.save(teacher);
 
-        Teacher saved = teacherRepository.save(teacher);
+        for (DegreeDto degreeDto : teacherDto.degrees()) {
+            Degree entity = degreeMapper.toEntity(degreeDto);
+            entity.setTeacher(savedTeacher);
+            Degree save = degreeRepository.save(entity);
+        }
+
+        for (Department department : departments) {
+            department.getTeachers().add(savedTeacher);
+        }
+        departmentRepository.saveAll(departments);
+
         ResponseDto<TeacherDto> teacherDtoResponseDto = ResponseDto
                 .<TeacherDto>builder()
                 .success(true)
                 .code(200)
                 .message("Teacher added successfully")
-                .data(teacherMapper.toDto(saved))
+                .data(teacherMapper.toDto(savedTeacher))
                 .build();
 
         return ResponseEntity.ok(teacherDtoResponseDto);
