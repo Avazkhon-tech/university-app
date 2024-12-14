@@ -12,6 +12,6 @@ import java.util.List;
 public interface INewsService {
 
     ResponseEntity<byte[]> getNewsImage(Integer id);
-    PaginatedResponseDto<List<NewsDto>> getNews(Pageable pageable);
+    ResponseEntity<PaginatedResponseDto<List<NewsDto>>> getNews(Pageable pageable);
     ResponseEntity<ResponseDto<NewsDto>> createEvent(MultipartFile file, NewsDto newsDto);
 }

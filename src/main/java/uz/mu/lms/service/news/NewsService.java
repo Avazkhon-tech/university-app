@@ -33,7 +33,7 @@ public class NewsService implements INewsService{
         return contentService.retrieveContent(id);
     }
 
-    public PaginatedResponseDto<List<NewsDto>> getNews(Pageable pageable) {
+    public ResponseEntity<PaginatedResponseDto<List<NewsDto>>> getNews(Pageable pageable) {
 
         Page<News> newsPage = newsRepository.findAllByOrderByIdDesc(pageable);
 
@@ -42,14 +42,14 @@ public class NewsService implements INewsService{
                 .map(newsMapper::toDto)
                 .toList();
 
-        return PaginatedResponseDto
+        return ResponseEntity.ok(PaginatedResponseDto
                 .<List<NewsDto>>builder()
                 .code(HttpStatus.OK.value())
                 .success(true)
                 .data(dtoList)
                 .page(pageable.getPageNumber())
                 .size(pageable.getPageSize())
-                .build();
+                .build());
     }
 
     public ResponseEntity<ResponseDto<NewsDto>> createEvent(MultipartFile file, NewsDto newsDto) {
