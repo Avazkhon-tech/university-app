@@ -36,7 +36,14 @@ public class Course {
     private Department department;
 
     @OneToMany(mappedBy = "course")
-    private List<Lesson> lessons;
+    private List<CourseMaterial> courseMaterials;
+
+    @ManyToMany
+    @JoinTable(
+            name = "course_student",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id"))
+    private List<Student> students;
 
     @CreatedDate
     private LocalDateTime createAt;

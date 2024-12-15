@@ -37,9 +37,6 @@ public class Teacher {
     @ManyToMany(mappedBy = "teachers")
     private Set<Department> departments;
 
-    @OneToMany(mappedBy = "teacher")
-    private List<Lesson> lessons;
-
     @CreatedDate
     private LocalDateTime createdAt;
 

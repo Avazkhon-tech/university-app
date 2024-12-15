@@ -33,10 +33,6 @@ public class DataLoader implements CommandLineRunner {
                 .role(roleRepository.findByName(RoleName.ROLE_ADMIN.toString()))
                 .build();
 
-        User parizoda = User.builder()
-                .id(2)
-                .username("tparizoda2004@gmail.com")
-                .password(passwordEncoder.encode(""))
 
         try {
             userRepository.save(avaz);

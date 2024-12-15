@@ -29,6 +29,7 @@ public class Department {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private Long tuitionFee;
 
     @ManyToOne
@@ -38,15 +39,11 @@ public class Department {
     @OneToMany(mappedBy = "department")
     private List<Course> courses;
 
-    @OneToMany(mappedBy = "department")
-    private List<Student> students;
-
     @ManyToMany
     @JoinTable(
             name = "department_teacher",
             joinColumns = @JoinColumn(name = "department_id"),
-            inverseJoinColumns = @JoinColumn(name = "teacher_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "teacher_id"))
     private List<Teacher> teachers;
 
     @CreatedDate

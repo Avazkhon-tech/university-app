@@ -42,8 +42,8 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler(ContentDoesNotExistException.class)
-    public ResponseEntity<ResponseDto<?>> handleContentDoesNotExistException(ContentDoesNotExistException e) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ResponseDto<?>> handleContentDoesNotExistException(ResourceNotFoundException e) {
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ResponseDto

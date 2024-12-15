@@ -2,8 +2,10 @@ package uz.mu.lms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import uz.mu.lms.model.Course;
 import uz.mu.lms.model.Student;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,5 +18,4 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     boolean existsByUser_PhoneNumber(String phoneNumber);
 
     boolean existsByStudentId(String studentId);
-
 }

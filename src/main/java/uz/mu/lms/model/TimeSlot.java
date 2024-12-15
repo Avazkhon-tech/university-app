@@ -1,15 +1,14 @@
-package uz.mu.lms.model.offuse;
+package uz.mu.lms.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import uz.mu.lms.model.enums.DayOfWeek;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 //@Entity
 //@Getter
@@ -18,18 +17,18 @@ import java.time.LocalDateTime;
 //@AllArgsConstructor
 //@NoArgsConstructor
 //@EntityListeners(AuditingEntityListener.class)
-public class WeeklySchedule {
+public class TimeSlot {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "weekly_schedule_seq_generator")
-    @SequenceGenerator(name = "weekly_schedule_seq_generator", sequenceName = "weekly_schedule_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "timeslot_seq_generator")
+    @SequenceGenerator(name = "timeslot_seq_generator", sequenceName = "timeslot_seq", allocationSize = 1)
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
-    private DayOfWeek dayOfWeek;
+    private Integer orderNumber;
 
-    @ManyToOne
-    private TimeSlot timeSlot;
+    private LocalTime startTime;
+
+    private Duration duration;
 
     @CreatedDate
     private LocalDateTime createAt;
@@ -42,6 +41,4 @@ public class WeeklySchedule {
 
     @LastModifiedBy
     private Integer updatedBy;
-
-
 }

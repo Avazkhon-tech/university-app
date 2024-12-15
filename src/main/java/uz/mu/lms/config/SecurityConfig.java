@@ -28,13 +28,11 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(
-                                        "/api/auth/**",
-                                        "/api/auth/get-code-email/**",
-                                        "/api/auth/verify-code-email/",
-                                        "/api/auth/get-code-sms/",
-                                        "/api/auth/verify-code-sms/",
-                                        "/src/**")
+                        .requestMatchers("/api/auth/login",
+                                        "/api/auth/get-otp-email/*",
+                                        "/api/auth/verify-otp-email/*",
+                                        "/api/auth/get-otp-sms/*",
+                                        "/api/auth/verify-otp-sms/*")
                                 .permitAll()
                                 .anyRequest().authenticated())
 

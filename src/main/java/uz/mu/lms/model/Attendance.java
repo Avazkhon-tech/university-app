@@ -9,7 +9,7 @@ import uz.mu.lms.model.enums.AttendanceStatus;
 
 import java.time.LocalDateTime;
 
-@Entity
+//@Entity
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attendance_seq_generator")

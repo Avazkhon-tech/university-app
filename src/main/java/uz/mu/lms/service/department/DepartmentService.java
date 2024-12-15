@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.DepartmentDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
-import uz.mu.lms.exceptions.ContentDoesNotExistException;
+import uz.mu.lms.exceptions.ResourceNotFoundException;
 import uz.mu.lms.model.Department;
 import uz.mu.lms.model.Faculty;
 import uz.mu.lms.repository.DepartmentRepository;
@@ -53,7 +53,7 @@ public class DepartmentService implements IDepartmentService {
         if (faculty.isPresent()) {
             entity.setFaculty(faculty.get());
         } else {
-            throw new ContentDoesNotExistException(
+            throw new ResourceNotFoundException(
                     "Faculty with id %d does not exist"
                     .formatted(departmentDto.faculty().id()));
         }

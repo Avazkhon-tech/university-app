@@ -54,7 +54,7 @@ public class NewsService implements INewsService{
 
     public ResponseEntity<ResponseDto<NewsDto>> createEvent(MultipartFile file, NewsDto newsDto) {
 
-        Integer contentId = contentService.createContent(file);
+        Integer contentId = contentService.createContent(file).getId();
         News news = newsMapper.toEntity(newsDto);
         news.setImageUrl(hostAddr + "/api/image/" + contentId);
         NewsDto dto = newsMapper.toDto(newsRepository.save(news));

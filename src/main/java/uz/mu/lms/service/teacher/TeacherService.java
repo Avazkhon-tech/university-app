@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.*;
-import uz.mu.lms.exceptions.ContentDoesNotExistException;
+import uz.mu.lms.exceptions.ResourceNotFoundException;
 import uz.mu.lms.exceptions.UserAlreadyExistsException;
 import uz.mu.lms.exceptions.UserNotFoundException;
 import uz.mu.lms.model.Degree;
@@ -17,9 +17,7 @@ import uz.mu.lms.repository.*;
 import uz.mu.lms.service.mapper.DegreeMapper;
 import uz.mu.lms.service.mapper.TeacherMapper;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,7 +51,7 @@ public class TeacherService implements ITeacherService {
         Set<Department> departments = teacherDto.departments().stream()
             .map(departmentDto ->
                     departmentRepository.findById(departmentDto.id())
-                            .orElseThrow(() -> new ContentDoesNotExistException("Department with id %d does not exist"
+                            .orElseThrow(() -> new ResourceNotFoundException("Department with id %d does not exist"
                                     .formatted(departmentDto.id()))))
                 .collect(Collectors.toSet());
 
