@@ -20,6 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 
+
 public class CourseMaterialServiceImpl implements CourseMaterialService {
 
     private final CourseRepository courseRepository;
@@ -30,7 +31,8 @@ public class CourseMaterialServiceImpl implements CourseMaterialService {
     @Override
     public ResponseDto<List<CourseMaterialDto>> getCourseContents(Integer courseId) {
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Course with id %d not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Course with id %d not found"
+                        .formatted(courseId)));
 
         List<CourseMaterial> courseMaterials = course.getCourseMaterials();
 
@@ -73,5 +75,23 @@ public class CourseMaterialServiceImpl implements CourseMaterialService {
     @Override
     public ResponseEntity<byte[]> getMaterialFile(Integer materialId) {
         return contentService.retrieveContent(materialId);
+    }
+
+    @Override
+    public ResponseDto<?> addMaterialToExistingList(Integer materialId, MultipartFile file) {
+        CourseMaterial courseMaterial = courseMaterialRepository.findById(materialId)
+                .orElseThrow(() -> new ResourceNotFoundException("Material list with id %d not found"
+                        .formatted(materialId)));
+
+        Attachment attachment = contentService.createContent(file);
+        courseMaterial.getAttachments().add(attachment);
+        courseMaterialRepository.save(courseMaterial);
+
+        return ResponseDto.builder()
+                .code(200)
+                .message("OK")
+                .success(true)
+                .build();
+
     }
 }

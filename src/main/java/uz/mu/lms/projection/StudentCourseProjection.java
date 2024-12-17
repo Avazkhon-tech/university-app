@@ -1,6 +1,6 @@
 package uz.mu.lms.projection;
 
-public interface CourseGroupProjection {
+public interface StudentCourseProjection {
 
     Integer getCourseId();
 

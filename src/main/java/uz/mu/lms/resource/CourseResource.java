@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.CourseDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.projection.CourseGroupProjection;
+import uz.mu.lms.projection.StudentCourseProjection;
 import uz.mu.lms.service.course.CourseService;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class CourseResource {
     }
 
     @GetMapping("/student")
-    public ResponseEntity<List<CourseGroupProjection>> getCourses(Authentication authentication) {
+    public ResponseEntity<List<StudentCourseProjection>> getCourses(Authentication authentication) {
         return ResponseEntity.ok(courseService.getCoursesStudent2(authentication));
     }
 

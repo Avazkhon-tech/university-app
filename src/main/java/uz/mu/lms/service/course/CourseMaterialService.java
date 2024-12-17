@@ -14,4 +14,6 @@ public interface CourseMaterialService {
     ResponseDto<String> addCourseMaterial(Integer courseId, String title, MultipartFile file);
 
     ResponseEntity<byte[]> getMaterialFile(Integer materialId);
- }
+
+    ResponseDto<?> addMaterialToExistingList(Integer materialId, MultipartFile file);
+}

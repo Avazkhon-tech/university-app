@@ -11,7 +11,7 @@ import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
 import uz.mu.lms.exceptions.UserNotFoundException;
 import uz.mu.lms.model.*;
-import uz.mu.lms.projection.CourseGroupProjection;
+import uz.mu.lms.projection.StudentCourseProjection;
 import uz.mu.lms.repository.CourseRepository;
 import uz.mu.lms.repository.DepartmentRepository;
 import uz.mu.lms.repository.StudentRepository;
@@ -117,7 +117,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseGroupProjection> getCoursesStudent2(Authentication authentication) {
+    public List<StudentCourseProjection> getCoursesStudent2(Authentication authentication) {
         MyUserDetails principal = (MyUserDetails) authentication.getPrincipal();
         Student student = studentRepository.findByUser_Username(principal.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("Student with username %s not found"

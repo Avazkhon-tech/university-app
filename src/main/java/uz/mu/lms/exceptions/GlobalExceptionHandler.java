@@ -54,6 +54,18 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<ResponseDto<?>> handleResourceAlreadyExistsException(ResourceAlreadyExistsException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                ResponseDto
+                        .builder()
+                        .code(409)
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
     @ExceptionHandler(ImageDoesNotExistException.class)
     public ResponseEntity<ResponseDto<?>> handleImageDoesNotExistException(ImageDoesNotExistException e) {
         log.error(e.getMessage());

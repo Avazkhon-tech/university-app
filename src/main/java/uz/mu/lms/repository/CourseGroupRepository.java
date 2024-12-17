@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import uz.mu.lms.model.CourseGroup;
-import uz.mu.lms.projection.CourseGroupProjection;
+import uz.mu.lms.projection.StudentCourseProjection;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ public interface CourseGroupRepository extends JpaRepository<CourseGroup, Intege
            "CONCAT(g.teacher.user.firstName, ' ', g.teacher.user.lastName) AS teacherFullName, " +
            "g.course.title AS courseTitle " +
            "FROM CourseGroup g")
-    List<CourseGroupProjection> findByCourseId(Integer courseId);
+    List<StudentCourseProjection> findByCourseId(Integer courseId);
 }
