@@ -8,39 +8,38 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Lesson {
+public class Grade {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lesson_seq_generator")
-    @SequenceGenerator(name = "lesson_seq_generator", sequenceName = "lesson_seq", allocationSize = 1)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grade_seq_generator")
+    @SequenceGenerator(name = "grade_seq_generator", sequenceName = "grade_seq", allocationSize = 1)
+    private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
+    private Course course;
 
     @ManyToOne
-    private TimeSlot timeSlot;
+    private Teacher teacher;
 
-    private LocalDate lessonDate;
+    @ManyToOne
+    private Student student;
 
-    @OneToMany(mappedBy = "lesson")
-    private List<Attendance> attendances;
+    private Integer grade;
 
-    @OneToMany
-    private List<Grade> grades;
+    @ManyToOne
+    private GradingScale gradingScale;
+
+    private String comment;
 
     @CreatedDate
     private LocalDateTime createAt;

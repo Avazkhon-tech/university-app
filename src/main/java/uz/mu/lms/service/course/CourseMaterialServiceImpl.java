@@ -13,6 +13,7 @@ import uz.mu.lms.model.CourseMaterial;
 import uz.mu.lms.repository.CourseMaterialRepository;
 import uz.mu.lms.repository.CourseRepository;
 import uz.mu.lms.service.content.ContentService;
+import uz.mu.lms.service.mapper.CourseMaterialMapper;
 
 import java.util.List;
 

@@ -3,7 +3,6 @@ package uz.mu.lms.service.course;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.CourseDto;
 import uz.mu.lms.dto.MyUserDetails;
@@ -12,16 +11,18 @@ import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
 import uz.mu.lms.exceptions.UserNotFoundException;
 import uz.mu.lms.model.*;
+import uz.mu.lms.projection.CourseGroupProjection;
 import uz.mu.lms.repository.CourseRepository;
 import uz.mu.lms.repository.DepartmentRepository;
 import uz.mu.lms.repository.StudentRepository;
-import uz.mu.lms.repository.UserRepository;
+import uz.mu.lms.service.mapper.CourseMapper;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+
 
 public class CourseServiceImpl implements CourseService {
 
@@ -113,5 +114,16 @@ public class CourseServiceImpl implements CourseService {
                 .success(true)
                 .data(list)
                 .build();
+    }
+
+    @Override
+    public List<CourseGroupProjection> getCoursesStudent2(Authentication authentication) {
+        MyUserDetails principal = (MyUserDetails) authentication.getPrincipal();
+        Student student = studentRepository.findByUser_Username(principal.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("Student with username %s not found"
+                .formatted(principal.getUsername())));
+        return courseRepository.findByStudentId(student.getId());
+
+
     }
 }

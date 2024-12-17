@@ -10,12 +10,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//@Entity
-//@Setter
-//@Getter
-//@Builder
-//@NoArgsConstructor
-//@AllArgsConstructor
+@Entity
+@Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Room {
 
     @Id
@@ -24,9 +24,6 @@ public class Room {
     private Long id;
 
     private String roomNumber;
-
-    @OneToMany(mappedBy = "room")
-    private List<Lesson> lessons;
 
     @CreatedDate
     private LocalDateTime createAt;

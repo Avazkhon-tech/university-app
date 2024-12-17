@@ -33,5 +33,4 @@ public class CourseMaterialResource {
                                                @RequestPart("file") MultipartFile file) {
         return ResponseEntity.ok(courseMaterialService.addCourseMaterial(courseId, title, file));
     }
-
 }

@@ -25,6 +25,7 @@ spring:
   defaultValues:
     host: http://192.241.138.76:8080
 
+
   profiles:
     active: dev
 
@@ -44,3 +45,4 @@ logging:
         coyote: debug
       springframework:
         web: debug
+

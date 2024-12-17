@@ -1,22 +1,24 @@
 package uz.mu.lms.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-//@Entity
-//@Getter
-//@Setter
-//@Builder
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@EntityListeners(AuditingEntityListener.class)
+@Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class TimeSlot {
 
     @Id
@@ -28,7 +30,7 @@ public class TimeSlot {
 
     private LocalTime startTime;
 
-    private Duration duration;
+    private LocalTime endTime;
 
     @CreatedDate
     private LocalDateTime createAt;

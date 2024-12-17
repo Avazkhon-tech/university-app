@@ -40,6 +40,9 @@ public class Student {
     @ManyToMany(mappedBy = "students")
     private List<Course> courses;
 
+    @ManyToMany(mappedBy = "students")
+    private List<CourseGroup> courseGroups;
+
     @CreatedDate
     private LocalDateTime createdAt;
 

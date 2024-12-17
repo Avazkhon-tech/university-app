@@ -1,6 +1,8 @@
 package uz.mu.lms.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,39 +10,33 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Lesson {
+public class GradingScale {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lesson_seq_generator")
-    @SequenceGenerator(name = "lesson_seq_generator", sequenceName = "lesson_seq", allocationSize = 1)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grading_scale_seq_generator")
+    @SequenceGenerator(name = "grading_scale_seq_generator", sequenceName = "grading_scale_seq", allocationSize = 1)
+    private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
+    private Course course;
 
-    @ManyToOne
-    private TimeSlot timeSlot;
+    @NotNull
+    private Integer pass;
 
-    private LocalDate lessonDate;
+    @NotNull
+    private Integer merit;
 
-    @OneToMany(mappedBy = "lesson")
-    private List<Attendance> attendances;
-
-    @OneToMany
-    private List<Grade> grades;
+    @NotNull
+    private Integer distinction;
 
     @CreatedDate
     private LocalDateTime createAt;

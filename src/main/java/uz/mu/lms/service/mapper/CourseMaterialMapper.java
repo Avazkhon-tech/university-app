@@ -1,6 +1,5 @@
-package uz.mu.lms.service.course;
+package uz.mu.lms.service.mapper;
 
-import jdk.jfr.Name;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -8,13 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import uz.mu.lms.dto.CourseMaterialDto;
 import uz.mu.lms.model.Attachment;
 import uz.mu.lms.model.CourseMaterial;
-import uz.mu.lms.service.mapper.AbstractMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.mapstruct.*;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")

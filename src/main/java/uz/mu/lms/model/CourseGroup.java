@@ -12,42 +12,44 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Course {
+public class CourseGroup {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_seq_generator")
-    @SequenceGenerator(name = "course_seq_generator", sequenceName = "course_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_seq_generator")
+    @SequenceGenerator(name = "group_seq_generator", sequenceName = "group_seq", allocationSize = 1)
     private Integer id;
 
-    private String title;
-
-    private String description;
-
-    private String taughtLanguage;
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-    @OneToMany(mappedBy = "course")
-    private List<CourseMaterial> courseMaterials;
+    @ManyToOne
+    private Teacher teacher;
+
+    @ManyToOne
+    private Teacher teacherAssistant;
 
     @ManyToMany
     @JoinTable(
-            name = "course_student",
-            joinColumns = @JoinColumn(name = "course_id"),
+            name = "group_students",
+            joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id"))
     private List<Student> students;
 
-    @OneToMany(mappedBy = "course")
-    private List<CourseGroup> courseGroups;
+    @OneToMany
+    @JoinTable(
+            name = "group_lessons",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "lesson_id"))
+    private List<Lesson> lessons;
 
     @CreatedDate
     private LocalDateTime createAt;
