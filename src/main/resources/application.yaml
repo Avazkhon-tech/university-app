@@ -26,8 +26,8 @@ spring:
     host: http://157.245.133.169:8080
 
 
-  profiles:
-    active: dev
+#  profiles:
+#    active: dev
 
   sql:
     init:
