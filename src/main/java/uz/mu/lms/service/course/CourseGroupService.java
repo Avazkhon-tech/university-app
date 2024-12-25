@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface CourseGroupService {
 
-    List<StudentCourseProjection> getAllGroups(Integer courseId);
-
     ResponseDto<CourseGroupDto> createGroup(CourseGroupDto courseGroupDto, Integer courseId);
 
     ResponseDto<?> enrollStudentInGroup(Integer groupId, Integer studentId);

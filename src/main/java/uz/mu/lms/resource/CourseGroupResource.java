@@ -17,12 +17,6 @@ public class CourseGroupResource {
 
     private final CourseGroupService courseGroupService;
 
-    @GetMapping
-    public List<StudentCourseProjection> getAllCourses(
-            @RequestParam Integer courseId ) {
-        return courseGroupService.getAllGroups(courseId);
-    }
-
     @PostMapping
     public ResponseEntity<ResponseDto<CourseGroupDto>> createGroup(@RequestParam Integer courseId,
                                                                    @RequestBody CourseGroupDto courseGroupDto) {

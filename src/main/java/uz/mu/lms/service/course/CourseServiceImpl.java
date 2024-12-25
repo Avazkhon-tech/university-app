@@ -1,6 +1,7 @@
 package uz.mu.lms.service.course;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ import java.util.Optional;
 
 
 public class CourseServiceImpl implements CourseService {
+
+    @Value("${spring.defaultValues.host}")
+    String hostAddr;
 
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
@@ -122,7 +126,7 @@ public class CourseServiceImpl implements CourseService {
         Student student = studentRepository.findByUser_Username(principal.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("Student with username %s not found"
                 .formatted(principal.getUsername())));
-        return courseRepository.findByStudentId(student.getId());
+        return courseRepository.findByStudentId(student.getId(), hostAddr);
 
 
     }
