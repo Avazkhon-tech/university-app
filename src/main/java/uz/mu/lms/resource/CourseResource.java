@@ -28,7 +28,7 @@ public class CourseResource {
 
     @GetMapping("/student")
     public ResponseEntity<List<StudentCourseProjection>> getCourses(Authentication authentication) {
-        return ResponseEntity.ok(courseService.getCoursesStudent2(authentication));
+        return ResponseEntity.ok(courseService.getCoursesStudent(authentication));
     }
 
     @PostMapping

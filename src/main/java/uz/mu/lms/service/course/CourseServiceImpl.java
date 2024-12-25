@@ -99,29 +99,9 @@ public class CourseServiceImpl implements CourseService {
                 .build();
     }
 
-    @Override
-    public ResponseDto<List<CourseDto>> getCoursesStudent(Authentication authentication) {
-        MyUserDetails principal = (MyUserDetails) authentication.getPrincipal();
-        Student student = studentRepository.findByUser_Username(principal.getUsername())
-                .orElseThrow(() -> new UserNotFoundException("Student with username %s not found"
-                .formatted(principal.getUsername())));
-
-        List<CourseDto> list = student
-                .getCourses()
-                .stream()
-                .map(courseMapper::toDto)
-                .toList();
-
-        return ResponseDto.<List<CourseDto>>builder()
-                .code(200)
-                .message("Successfully retrieved courses")
-                .success(true)
-                .data(list)
-                .build();
-    }
 
     @Override
-    public List<StudentCourseProjection> getCoursesStudent2(Authentication authentication) {
+    public List<StudentCourseProjection> getCoursesStudent(Authentication authentication) {
         MyUserDetails principal = (MyUserDetails) authentication.getPrincipal();
         Student student = studentRepository.findByUser_Username(principal.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("Student with username %s not found"
