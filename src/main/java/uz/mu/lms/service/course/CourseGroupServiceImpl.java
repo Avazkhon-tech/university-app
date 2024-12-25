@@ -1,6 +1,7 @@
 package uz.mu.lms.service.course;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.CourseGroupDto;
 import uz.mu.lms.dto.ResponseDto;
@@ -23,6 +24,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseGroupServiceImpl implements CourseGroupService {
 
+    @Value("${spring.defaultValues.host}")
+    String hostAddr;
+
     private final CourseGroupRepository courseGroupRepository;
     private final CourseGroupMapper courseGroupMapper;
     private final CourseRepository courseRepository;
@@ -31,7 +35,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
 
     @Override
     public List<StudentCourseProjection> getAllGroups(Integer courseId) {
-        return courseGroupRepository.findByCourseId(courseId);
+        return courseGroupRepository.findByCourseId(courseId, hostAddr);
     }
 
     @Override
