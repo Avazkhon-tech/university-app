@@ -17,7 +17,7 @@ public class CourseMaterialResource {
 
     private final CourseMaterialService courseMaterialService;
 
-    @GetMapping("/{courseId}")
+    @GetMapping("/files/{courseId}")
     public ResponseEntity<ResponseDto<List<CourseMaterialDto>>> getAllCourses(
             @PathVariable Integer courseId) {
         return ResponseEntity.ok(courseMaterialService.getCourseContents(courseId));
