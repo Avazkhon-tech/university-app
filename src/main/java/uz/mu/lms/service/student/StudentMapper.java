@@ -1,13 +1,14 @@
-package uz.mu.lms.service.mapper;
+package uz.mu.lms.service.student;
 
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import uz.mu.lms.dto.StudentDto;
 import uz.mu.lms.dto.StudentProfileDto;
 import uz.mu.lms.model.Student;
+import uz.mu.lms.service.mapper.AbstractMapper;
+import uz.mu.lms.service.mapper.UserMapper;
 
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 @RequiredArgsConstructor

@@ -4,7 +4,7 @@ package uz.mu.lms.config;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import uz.mu.lms.model.MyUserDetails;
+import uz.mu.lms.dto.MyUserDetails;
 
 import java.util.Optional;
 

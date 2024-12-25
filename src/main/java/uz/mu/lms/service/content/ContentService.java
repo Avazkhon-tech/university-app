@@ -6,13 +6,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import uz.mu.lms.exceptions.ContentDoesNotExistException;
+import uz.mu.lms.exceptions.ResourceNotFoundException;
 import uz.mu.lms.exceptions.FileNotSupportedException;
 import uz.mu.lms.model.Attachment;
 import uz.mu.lms.repository.ContentRepository;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class ContentService implements IContentService {
 
     public ResponseEntity<byte[]> retrieveContent(Integer id) {
         Attachment byId = contentRepository.findById(id)
-                .orElseThrow(() -> new ContentDoesNotExistException("Content with id " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Content with id " + id + " not found"));
 
         return ResponseEntity
                 .ok()
@@ -32,8 +31,8 @@ public class ContentService implements IContentService {
                 .body(byId.getBytes());
     }
 
-    public Integer createContent(MultipartFile file) {
 
+    public Attachment createContent(MultipartFile file) {
         if (file == null || file.isEmpty() || file.getOriginalFilename() == null)
             throw new FileNotSupportedException("File can not be empty");
 
@@ -45,7 +44,7 @@ public class ContentService implements IContentService {
                     .bytes(file.getBytes())
                     .fileType(file.getContentType())
                     .build();
-            return contentRepository.save(attachment).getId();
+            return contentRepository.save(attachment);
 
         } catch (IOException e) {
             throw new FileNotSupportedException("File not supported");

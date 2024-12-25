@@ -11,7 +11,7 @@ import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.StudentDto;
 import uz.mu.lms.dto.StudentProfileDto;
-import uz.mu.lms.service.student.IStudentService;
+import uz.mu.lms.service.student.StudentService;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentResource {
 
-    private final IStudentService studentService;
+    private final StudentService studentService;
 
     // ONLY FOR ADMINS
     @GetMapping

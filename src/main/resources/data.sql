@@ -1,3 +1,8 @@
+delete from role where id = 1;
+delete from role where id = 2;
+delete from role where id = 3;
+delete from role where id = 4;
+
 insert into role(id, name)  values (1, 'ROLE_ADMIN');
 insert into role(id, name)  values (2, 'ROLE_USER');
 insert into role(id, name)  values (3, 'ROLE_TEACHER');

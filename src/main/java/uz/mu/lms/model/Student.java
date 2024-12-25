@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +32,16 @@ public class Student {
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    @ManyToMany(mappedBy = "students")
+    private List<Course> courses;
+
+    @ManyToMany(mappedBy = "students")
+    private List<CourseGroup> courseGroups;
 
     @CreatedDate
     private LocalDateTime createdAt;

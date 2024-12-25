@@ -28,13 +28,16 @@ public class DataLoader implements CommandLineRunner {
                 .username("avazxonnazirov334@gmail.com")
                 .password(passwordEncoder.encode("1234"))
                 .phoneNumber("+998999928775")
-                .firstName("avazxon")
-                .lastName("nazirov")
+                .firstName("Avazxon")
+                .lastName("Nazirov")
                 .role(roleRepository.findByName(RoleName.ROLE_ADMIN.toString()))
                 .build();
 
+
         try {
             userRepository.save(avaz);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            System.out.println("Error saving user: " + e.getMessage());
+        }
     }
 }

@@ -42,13 +42,25 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler(ContentDoesNotExistException.class)
-    public ResponseEntity<ResponseDto<?>> handleContentDoesNotExistException(ContentDoesNotExistException e) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ResponseDto<?>> handleContentDoesNotExistException(ResourceNotFoundException e) {
         log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ResponseDto
                         .builder()
-                        .code(204)
+                        .code(409)
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<ResponseDto<?>> handleResourceAlreadyExistsException(ResourceAlreadyExistsException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                ResponseDto
+                        .builder()
+                        .code(409)
                         .message(e.getMessage())
                         .build()
         );
