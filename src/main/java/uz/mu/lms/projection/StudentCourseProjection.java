@@ -7,4 +7,6 @@ public interface StudentCourseProjection {
     String getCourseTitle();
 
     String getTeacherFullName();
+
+    String getContentUrl();
 }
