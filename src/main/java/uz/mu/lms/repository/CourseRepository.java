@@ -16,7 +16,7 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Query("SELECT g.course.id AS courseId, " +
             "g.course.title AS courseTitle, " +
             "CONCAT(g.teacher.user.firstName, ' ', g.teacher.user.lastName) AS teacherFullName, " +
-            "CONCAT(:hostAddr, '/courses/student/', g.course.id) AS contentUrl " +
+            "CONCAT(:hostAddr, '/course-content/', g.course.id) AS contentUrl " +
             "FROM CourseGroup g " +
             "JOIN g.students AS s " +
             "WHERE s.id = :studentId")

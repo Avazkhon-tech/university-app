@@ -11,15 +11,15 @@ import uz.mu.lms.service.course.CourseMaterialService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/course-material")
+@RequestMapping("/api/course-content")
 @RequiredArgsConstructor
 public class CourseMaterialResource {
 
     private final CourseMaterialService courseMaterialService;
 
-    @GetMapping
+    @GetMapping("/{courseId}")
     public ResponseEntity<ResponseDto<List<CourseMaterialDto>>> getAllCourses(
-            @RequestParam Integer courseId) {
+            @PathVariable Integer courseId) {
         return ResponseEntity.ok(courseMaterialService.getCourseContents(courseId));
     }
 

@@ -128,6 +128,5 @@ public class CourseServiceImpl implements CourseService {
                 .formatted(principal.getUsername())));
         return courseRepository.findByStudentId(student.getId(), hostAddr);
 
-
     }
 }
