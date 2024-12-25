@@ -9,6 +9,6 @@ public record CourseMaterialDto(
 
     String title,
 
-    List<String> contentUrls
+    List<AttachmentDto> attachments
 )
 {}

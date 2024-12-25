@@ -12,21 +12,9 @@ import java.util.List;
 
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {AttachmentMapper.class})
 public abstract class CourseMaterialMapper implements AbstractMapper<CourseMaterial, CourseMaterialDto> {
 
-    @Value("${spring.defaultValues.host}")
-    String hostAddr;
-
-    @Mapping(target = "contentUrls", source = "attachments", qualifiedByName = "generateUrls")
-    public abstract CourseMaterialDto toDto(CourseMaterial courseMaterial);
-
-    @Named("generateUrls")
-    public List<String> generateUrls(List<Attachment> attachments) {
-        return attachments.stream()
-                .map(attachment -> hostAddr + "/course-material/" + attachment.getId())
-                .collect(Collectors.toList());
-    }
 }
 
 

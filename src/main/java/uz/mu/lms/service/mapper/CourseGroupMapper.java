@@ -10,6 +10,7 @@ import uz.mu.lms.model.CourseGroup;
 @Mapper(componentModel = "spring", uses = {CourseMapper.class, TeacherMapper.class})
 @RequiredArgsConstructor
 public abstract class CourseGroupMapper implements AbstractMapper<CourseGroup, CourseGroupDto> {
+
 }
 
 
