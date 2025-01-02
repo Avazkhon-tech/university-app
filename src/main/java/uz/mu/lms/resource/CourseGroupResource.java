@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.CourseGroupDto;
 import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.projection.StudentCourseProjection;
 import uz.mu.lms.service.course.CourseGroupService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

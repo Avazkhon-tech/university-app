@@ -12,11 +12,11 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
-    // retrieves student-specific courses with contentUrl
+    // retrieves student-specific courses
     @Query("SELECT g.course.id AS courseId, " +
             "g.course.title AS courseTitle, " +
             "CONCAT(g.teacher.user.firstName, ' ', g.teacher.user.lastName) AS teacherFullName, " +
-            "CONCAT(:hostAddr, '/course-material/student/', g.course.id) AS contentUrl " +
+            "CONCAT(:hostAddr, '/course-content/files/', g.course.id) AS contentUrl " +
             "FROM CourseGroup g " +
             "JOIN g.students AS s " +
             "WHERE s.id = :studentId")

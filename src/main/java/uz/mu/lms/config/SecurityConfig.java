@@ -28,11 +28,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/auth/login",
-                                        "/api/auth/get-otp-email/*",
-                                        "/api/auth/verify-otp-email/*",
-                                        "/api/auth/get-otp-sms/*",
-                                        "/api/auth/verify-otp-sms/*")
+                        .requestMatchers("/api/auth/**")
                                 .permitAll()
                                 .anyRequest().authenticated())
 

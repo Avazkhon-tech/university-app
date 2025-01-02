@@ -23,7 +23,7 @@ spring:
       max-request-size: 10MB
 
   defaultValues:
-    host: http://157.245.133.169:8080
+    host: http://app.avazkhon.uz
 
 
 #  profiles:
