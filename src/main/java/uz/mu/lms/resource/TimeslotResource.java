@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.TimeslotDto;
-import uz.mu.lms.service.timeslot.TimeslotService;
+import uz.mu.lms.service.TimeslotService;
 
 import java.util.List;
 

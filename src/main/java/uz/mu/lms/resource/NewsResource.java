@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.NewsDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.service.news.INewsService;
+import uz.mu.lms.service.NewsService;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NewsResource {
 
-    private final INewsService newsService;
+    private final NewsService newsService;
 
     // ONLY FOR ADMINS
     @PostMapping("/upload-event")

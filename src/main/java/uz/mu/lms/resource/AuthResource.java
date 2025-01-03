@@ -7,7 +7,7 @@ import uz.mu.lms.dto.LoginDto;
 import uz.mu.lms.dto.ResetPasswordDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.Token;
-import uz.mu.lms.service.auth.IAuthService;
+import uz.mu.lms.service.AuthService;
 import uz.mu.lms.service.verification.MethodOTP;
 
 @RestController
@@ -15,32 +15,32 @@ import uz.mu.lms.service.verification.MethodOTP;
 @RequiredArgsConstructor
 public class AuthResource {
 
-    private final IAuthService IAuthService;
+    private final AuthService authService;
 
     // FOR ALL
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<Token>> login(@RequestBody LoginDto loginDto) {
-        return IAuthService.login(loginDto);
+        return authService.login(loginDto);
     }
 
     @PostMapping("/get-otp-email/{email}")
     public ResponseDto<String> sendOTPbyEmail(@PathVariable String email) {
-        return IAuthService.SendOTP(email, MethodOTP.EMAIL);
+        return authService.SendOTP(email, MethodOTP.EMAIL);
     }
 
     @PostMapping("/verify-otp-email")
     public ResponseEntity<ResponseDto<Token>> verifyOTPEmail(@RequestBody LoginDto loginDto) {
-        return IAuthService.verifyOTP(loginDto, MethodOTP.EMAIL);
+        return authService.verifyOTP(loginDto, MethodOTP.EMAIL);
     }
 
     @PostMapping("/get-otp-sms/{phoneNumber}")
     public ResponseDto<String> SendOTPbyPhoneNumber(@PathVariable String phoneNumber) {
-        return IAuthService.SendOTP(phoneNumber, MethodOTP.PHONE_NUMBER);
+        return authService.SendOTP(phoneNumber, MethodOTP.PHONE_NUMBER);
     }
 
     @PostMapping("/verify-otp-sms")
     public ResponseEntity<ResponseDto<Token>> verifyOTPPhoneNumber(@RequestBody LoginDto loginDto) {
-        return IAuthService.verifyOTP(loginDto, MethodOTP.PHONE_NUMBER);
+        return authService.verifyOTP(loginDto, MethodOTP.PHONE_NUMBER);
     }
 
     @PostMapping("/reset-password")
@@ -48,6 +48,6 @@ public class AuthResource {
             @RequestBody ResetPasswordDto resetPasswordDto,
             @RequestHeader("Authorization") String token) {
 
-        return IAuthService.resetPassword(resetPasswordDto, token);
+        return authService.resetPassword(resetPasswordDto, token);
     }
 }

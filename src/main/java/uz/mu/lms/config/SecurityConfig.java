@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import uz.mu.lms.service.auth.MyUserDetailsService;
+import uz.mu.lms.service.impl.UserDetailsServiceImpl;
 import uz.mu.lms.service.jwt.JwtFilter;
 
 @Configuration
@@ -21,7 +21,7 @@ import uz.mu.lms.service.jwt.JwtFilter;
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
-    private final MyUserDetailsService myUserDetailsService;
+    private final UserDetailsServiceImpl myUserDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

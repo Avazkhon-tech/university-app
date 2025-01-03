@@ -11,7 +11,7 @@ import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.StudentDto;
 import uz.mu.lms.dto.StudentProfileDto;
-import uz.mu.lms.service.student.StudentService;
+import uz.mu.lms.service.StudentService;
 
 import java.util.List;
 

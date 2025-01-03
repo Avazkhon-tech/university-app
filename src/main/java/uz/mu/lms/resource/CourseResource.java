@@ -10,7 +10,7 @@ import uz.mu.lms.dto.CourseDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.projection.StudentCourseProjection;
-import uz.mu.lms.service.course.CourseService;
+import uz.mu.lms.service.CourseService;
 
 import java.util.List;
 

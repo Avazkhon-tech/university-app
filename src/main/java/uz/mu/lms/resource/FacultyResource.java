@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.FacultyDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
-import uz.mu.lms.service.faculty.IFacultyService;
+import uz.mu.lms.service.FacultyService;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FacultyResource {
 
-    private final IFacultyService facultyService;
+    private final FacultyService facultyService;
 
     @GetMapping
     public ResponseEntity<PaginatedResponseDto<List<FacultyDto>>> getAllFaculties(@PageableDefault Pageable pageable) {

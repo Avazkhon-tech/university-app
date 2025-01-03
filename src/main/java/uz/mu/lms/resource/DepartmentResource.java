@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.DepartmentDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
-import uz.mu.lms.service.department.IDepartmentService;
+import uz.mu.lms.service.DepartmentService;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DepartmentResource {
 
-    private final IDepartmentService departmentService;
+    private final DepartmentService departmentService;
 
     @GetMapping
     public ResponseEntity<PaginatedResponseDto<List<DepartmentDto>>> getDepartments(@PageableDefault Pageable pageable) {

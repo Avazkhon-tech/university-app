@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.UserDto;
-import uz.mu.lms.service.user.UserService;
+import uz.mu.lms.service.UserService;
+import uz.mu.lms.service.impl.UserServiceImpl;
 
 import java.util.List;
 

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.CourseMaterialDto;
 import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.service.course.CourseMaterialService;
+import uz.mu.lms.service.CourseMaterialService;
 
 import java.util.List;
 

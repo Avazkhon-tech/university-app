@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.TeacherDto;
-import uz.mu.lms.service.teacher.ITeacherService;
+import uz.mu.lms.service.TeacherService;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TeacherResource {
 
-    private final ITeacherService teacherService;
+    private final TeacherService teacherService;
 
 
     // ONLY FOR ADMINS
