@@ -20,7 +20,7 @@ public abstract class AttachmentMapper implements AbstractMapper<Attachment, Att
 
     @Named("generateUrl")
     public String generateUrls(Integer id) {
-        return hostAddr + "api/course-content/" + id;
+        return hostAddr + "/api/course-content/" + id;
     }
 }
 
