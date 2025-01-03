@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import uz.mu.lms.dto.AttachmentDto;
 import uz.mu.lms.model.Attachment;
 
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring")
 @RequiredArgsConstructor
 public abstract class AttachmentMapper implements AbstractMapper<Attachment, AttachmentDto> {
 
@@ -20,7 +20,7 @@ public abstract class AttachmentMapper implements AbstractMapper<Attachment, Att
 
     @Named("generateUrl")
     public String generateUrls(Integer id) {
-        return hostAddr + "/course-content/" + id;
+        return hostAddr + "api/course-content/" + id;
     }
 }
 
