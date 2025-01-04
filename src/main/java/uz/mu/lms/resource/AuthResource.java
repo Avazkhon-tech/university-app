@@ -8,7 +8,7 @@ import uz.mu.lms.dto.ResetPasswordDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.Token;
 import uz.mu.lms.service.AuthService;
-import uz.mu.lms.service.verification.MethodOTP;
+import uz.mu.lms.utils.OtpMethod;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,22 +25,22 @@ public class AuthResource {
 
     @PostMapping("/get-otp-email/{email}")
     public ResponseDto<String> sendOTPbyEmail(@PathVariable String email) {
-        return authService.SendOTP(email, MethodOTP.EMAIL);
+        return authService.SendOTP(email, OtpMethod.EMAIL);
     }
 
     @PostMapping("/verify-otp-email")
     public ResponseEntity<ResponseDto<Token>> verifyOTPEmail(@RequestBody LoginDto loginDto) {
-        return authService.verifyOTP(loginDto, MethodOTP.EMAIL);
+        return authService.verifyOTP(loginDto, OtpMethod.EMAIL);
     }
 
     @PostMapping("/get-otp-sms/{phoneNumber}")
     public ResponseDto<String> SendOTPbyPhoneNumber(@PathVariable String phoneNumber) {
-        return authService.SendOTP(phoneNumber, MethodOTP.PHONE_NUMBER);
+        return authService.SendOTP(phoneNumber, OtpMethod.PHONE_NUMBER);
     }
 
     @PostMapping("/verify-otp-sms")
     public ResponseEntity<ResponseDto<Token>> verifyOTPPhoneNumber(@RequestBody LoginDto loginDto) {
-        return authService.verifyOTP(loginDto, MethodOTP.PHONE_NUMBER);
+        return authService.verifyOTP(loginDto, OtpMethod.PHONE_NUMBER);
     }
 
     @PostMapping("/reset-password")

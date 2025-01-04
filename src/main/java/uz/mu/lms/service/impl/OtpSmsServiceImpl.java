@@ -1,29 +1,33 @@
-package uz.mu.lms.service.verification;
+package uz.mu.lms.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uz.mu.lms.service.OtpService;
+
 import java.io.IOException;
 
 @Service
+@Qualifier("sms")
 @RequiredArgsConstructor
-class SenderViaSmsOTP  implements IAbstractSenderOTP {
+public class OtpSmsServiceImpl implements OtpService {
 
-    private static final Logger log = LoggerFactory.getLogger(SenderViaSmsOTP.class);
     private final OkHttpClient client;
     @Value("${infobip.api.url}")
     private String apiUrl;
     @Value("${infobip.api.key}")
     private String apiKey;
 
-    SenderViaSmsOTP() {
+    OtpSmsServiceImpl() {
         this.client = new OkHttpClient();
     }
 
-    public void sendOTP(String toPhoneNumber, String code) {
+    public Integer sendOTP(String phoneNumber) {
+
+        Integer code = generateOTP();
+
         String message = "Your verification code is: " + code;
         MediaType mediaType = MediaType.parse("application/json");
 
@@ -39,9 +43,10 @@ class SenderViaSmsOTP  implements IAbstractSenderOTP {
                     }
                 ]
             }
-        """, toPhoneNumber, message);
+        """, phoneNumber, message);
 
         RequestBody body = RequestBody.create(mediaType, jsonBody);
+
         Request request = new Request.Builder()
                 .url(apiUrl)
                 .post(body)
@@ -52,7 +57,9 @@ class SenderViaSmsOTP  implements IAbstractSenderOTP {
         try {
             client.newCall(request).execute();
         } catch (IOException e) {
-            log.error(e.getMessage());
+            return -1;
         }
+
+        return code;
     }
 }

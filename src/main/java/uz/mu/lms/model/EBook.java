@@ -1,6 +1,5 @@
 package uz.mu.lms.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,21 +17,29 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"id"})
-public class Attachment {
+public class EBook {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "content_seq_generator")
-    @SequenceGenerator(name = "content_seq_generator", sequenceName = "content_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ebook_seq_generator")
+    @SequenceGenerator(name = "ebook_seq_generator", sequenceName = "ebook_seq", allocationSize = 1)
     private Integer id;
 
-    private String filename;
+    private String title;
 
-    private String fileType;
+    private String author;
 
-    private Long size;
+    private String description;
 
-    private byte[] bytes;
+    private String isbn;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Attachment bookFile;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Attachment bookCoverImage;
+
+    @ManyToOne
+    private BookCategory bookCategory;
 
     @CreatedDate
     private LocalDateTime createdAt;

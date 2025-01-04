@@ -1,21 +1,27 @@
-package uz.mu.lms.service.verification;
+package uz.mu.lms.service.impl;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import uz.mu.lms.service.OtpService;
 
 @Service
+@Qualifier("email")
 @RequiredArgsConstructor
-public class SenderViaEmailOTP implements IAbstractSenderOTP {
+public class OtpEmailServiceImpl implements OtpService {
 
     private final JavaMailSender mailSender;
 
     @Override
-    public void sendOTP(String username, String code) {
+    public Integer sendOTP(String username) {
+
         MimeMessage message = mailSender.createMimeMessage();
+
+        Integer code = generateOTP();
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -37,7 +43,10 @@ public class SenderViaEmailOTP implements IAbstractSenderOTP {
 
         } catch (MessagingException e) {
             e.printStackTrace();
+            return -1;
         }
+
+        return code;
     }
 }
 

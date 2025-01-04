@@ -1,6 +1,5 @@
 package uz.mu.lms.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -8,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 
@@ -18,24 +18,27 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"id"})
-public class Attachment {
+public class Borrowing {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "content_seq_generator")
-    @SequenceGenerator(name = "content_seq_generator", sequenceName = "content_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "borrowing_seq_generator")
+    @SequenceGenerator(name = "borrowing_seq_generator", sequenceName = "borrowing_seq", allocationSize = 1, initialValue = 999)
     private Integer id;
 
-    private String filename;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private PhysicalBook book;
 
-    private String fileType;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private User user;
 
-    private Long size;
-
-    private byte[] bytes;
+    private LocalDateTime borrowedAt;
+    private LocalDateTime dueDate;
+    private LocalDateTime returnedAt;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;

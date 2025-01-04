@@ -1,8 +1,6 @@
 package uz.mu.lms.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,11 +18,9 @@ import uz.mu.lms.model.User;
 import uz.mu.lms.model.redis.TempPassword;
 import uz.mu.lms.repository.UserRepository;
 import uz.mu.lms.repository.redis.TempPasswordRepository;
-import uz.mu.lms.resource.AuthResource;
 import uz.mu.lms.service.AuthService;
 import uz.mu.lms.service.jwt.JwtProvider;
-import uz.mu.lms.service.verification.MethodOTP;
-import uz.mu.lms.service.verification.OTPServiceImpl;
+import uz.mu.lms.utils.OtpMethod;
 
 import java.util.Optional;
 
@@ -34,12 +30,14 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtProvider jwtProvider;
-    private final OTPServiceImpl serviceOTP;
     private final TempPasswordRepository tempPasswordRepository;
     private final UserRepository userRepository;
-    private static final Logger logger = LoggerFactory.getLogger(AuthResource.class);
+    private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
+
+    // TODO figure out a proper way to handle this situation
+    private final OtpEmailServiceImpl otpViaEmailService;
+    private final OtpSmsServiceImpl otpViaSmsService;
 
     @Override
     public ResponseEntity<ResponseDto<Token>> login(LoginDto loginDto) {
@@ -47,11 +45,9 @@ public class AuthServiceImpl implements AuthService {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password()));
         } catch (BadCredentialsException e) {
-            logger.info("Could not authenticate user: {}", loginDto.username());
             throw new AuthenticationFailureException("Username or password is incorrect");
         }
 
-        logger.info("User {} logged in successfully", loginDto.username());
         String generatedToken = jwtProvider.generateToken(loginDto.username());
         ResponseDto<Token> responseDto = ResponseDto.<Token>builder()
                 .code(200)
@@ -61,48 +57,56 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         return ResponseEntity.ok(responseDto);
     }
+
+
     @Override
-    public ResponseDto<String> SendOTP(String username, MethodOTP methodOTP) {
+    public ResponseDto<String> SendOTP(String username, OtpMethod otpMethod) {
         User user = null;
-        if (methodOTP.equals(MethodOTP.EMAIL)) {
+        int generatedCode = 0;
+
+        if (otpMethod.equals(OtpMethod.EMAIL)) {
             user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException(username));
-        } else if (methodOTP.equals(MethodOTP.PHONE_NUMBER)) {
+
+            generatedCode  = otpViaEmailService.sendOTP(username);
+
+        } else if (otpMethod.equals(OtpMethod.PHONE_NUMBER)) {
             user = userRepository.findByPhoneNumber(username)
                     .orElseThrow(() -> new UsernameNotFoundException(username));
+
+            generatedCode = otpViaSmsService.sendOTP(username);
         }
 
-        String generatedCode = serviceOTP.generateOTP();
+
 
         // TODO this will be changed to send proper code once i find a sms provider
         TempPassword tempPassword = TempPassword
                 .builder()
-                .password(methodOTP.equals(MethodOTP.PHONE_NUMBER)? "7777": generatedCode)
+                .password(otpMethod.equals(OtpMethod.PHONE_NUMBER)? "7777" : String.valueOf(generatedCode))
                 .userId(user.getId())
                 .build();
 
         tempPasswordRepository.save(tempPassword);
 
-        serviceOTP.sendOTP(username, methodOTP, generatedCode);
-
         return ResponseDto.<String>builder()
                 .code(200)
                 .success(true)
                 .message("Verification code has been sent to your "
-                        + methodOTP.toString().toLowerCase().replace("_", " "))
+                        + otpMethod.toString().toLowerCase().replace("_", " "))
                 .build();
     }
 
     @Override
-    public ResponseEntity<ResponseDto<Token>> verifyOTP(LoginDto loginDto, MethodOTP methodOTP) {
+    public ResponseEntity<ResponseDto<Token>> verifyOTP(LoginDto loginDto, OtpMethod otpMethod) {
         User user = null;
-        if (methodOTP.equals(MethodOTP.EMAIL)) {
+        if (otpMethod.equals(OtpMethod.EMAIL)) {
             user = userRepository.findByUsername(loginDto.username())
                     .orElseThrow(() -> new UsernameNotFoundException(loginDto.username()));
-        } else if (methodOTP.equals(MethodOTP.PHONE_NUMBER)) {
+        } else if (otpMethod.equals(OtpMethod.PHONE_NUMBER)) {
             user = userRepository.findByPhoneNumber(loginDto.username())
                     .orElseThrow(() -> new UsernameNotFoundException(loginDto.username()));
         }
+
 
         Optional<TempPassword> tempPassword = tempPasswordRepository.findById(user.getId());
 
@@ -110,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
            throw new PasswordNotAcceptedException("password is expired");
        }
 
-        if (!tempPassword.get().getPassword().equals(loginDto.password())) {
+        if(!tempPassword.get().getPassword().equals(loginDto.password())) {
             throw new PasswordNotAcceptedException("Incorrect code");
         }
 

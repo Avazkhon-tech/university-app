@@ -29,7 +29,7 @@ public class NewsResource {
     // FOR ALL
     @GetMapping("/get-events")
     public ResponseEntity<PaginatedResponseDto<List<NewsDto>>> getNews(
-            @PageableDefault(page = 0, size = 10) Pageable pageable)
+            @PageableDefault Pageable pageable)
              {
         return newsService.getNews(pageable);
     }
