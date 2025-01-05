@@ -1,7 +1,6 @@
 package uz.mu.lms.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,30 +14,21 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class GradingScale {
+public class Semester {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grading_scale_seq_generator")
-    @SequenceGenerator(name = "grading_scale_seq_generator", sequenceName = "grading_scale_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "semester_seq_generator")
+    @SequenceGenerator(name = "semester_seq_generator", sequenceName = "semester_seq", allocationSize = 1)
     private Integer id;
 
     @ManyToOne
-    private Course course;
-
-    @NotNull
-    private Integer pass;
-
-    @NotNull
-    private Integer merit;
-
-    @NotNull
-    private Integer distinction;
+    private Department department;
 
     @CreatedDate
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
