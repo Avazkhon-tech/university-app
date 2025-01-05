@@ -45,9 +45,6 @@ public class Lesson {
     @OneToMany
     private List<Grade> grades;
 
-    @ManyToOne
-    private Section section;
-
     @CreatedDate
     private LocalDateTime createAt;
 
