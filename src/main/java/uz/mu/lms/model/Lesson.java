@@ -28,19 +28,25 @@ public class Lesson {
     private Long id;
 
     @ManyToOne
+    private TimeSlot timeSlot;
+
+    private LocalDate lessonDate;
+
+    @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne
-    private TimeSlot timeSlot;
-
-    private LocalDate lessonDate;
+    private Teacher teacher;
 
     @OneToMany(mappedBy = "lesson")
     private List<Attendance> attendances;
 
     @OneToMany
     private List<Grade> grades;
+
+    @ManyToOne
+    private Section section;
 
     @CreatedDate
     private LocalDateTime createAt;
