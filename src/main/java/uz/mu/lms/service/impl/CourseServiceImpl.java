@@ -59,13 +59,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public ResponseDto<CourseDto> createCourse(CourseDto courseDto) {
 
-        Optional<Department> department = departmentRepository.findById(courseDto.department().id());
+        Optional<Department> department = departmentRepository.findById(courseDto.departmentId());
 
         if (department.isEmpty()) {
-            throw new ResourceNotFoundException("Department with id %d not found".formatted(courseDto.department().id()));
+            throw new ResourceNotFoundException("Department with id %d not found".formatted(courseDto.departmentId()));
         }
 
-        var course = courseMapper.toEntity(courseDto);
+        Course course = courseMapper.toEntity(courseDto);
 
         course.setDepartment(department.get());
         Course savedCourse = courseRepository.save(course);
@@ -80,25 +80,25 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
-    @Override
-    public ResponseDto<?> enrollStudent(Integer studentId, Integer courseId) {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new UserNotFoundException("Student with id %d not found"
-                        .formatted(studentId)));
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Course with id %d not found"));
-
-        if (!course.getStudents().contains(student)) {
-            course.getStudents().add(student);
-        }
-
-        courseRepository.save(course);
-        return ResponseDto.builder()
-                .code(200)
-                .message("Successfully enrolled student in %s".formatted(course.getTitle()))
-                .success(true)
-                .build();
-    }
+//    @Override
+//    public ResponseDto<?> enrollStudent(Integer studentId, Integer courseId) {
+//        Student student = studentRepository.findById(studentId)
+//                .orElseThrow(() -> new UserNotFoundException("Student with id %d not found"
+//                        .formatted(studentId)));
+//        Course course = courseRepository.findById(courseId)
+//                .orElseThrow(() -> new ResourceNotFoundException("Course with id %d not found"));
+//
+//        if (!course.getStudents().contains(student)) {
+//            course.getStudents().add(student);
+//        }
+//
+//        courseRepository.save(course);
+//        return ResponseDto.builder()
+//                .code(200)
+//                .message("Successfully enrolled student in %s".formatted(course.getTitle()))
+//                .success(true)
+//                .build();
+//    }
 
 
     @Override

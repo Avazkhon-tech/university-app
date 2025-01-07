@@ -25,17 +25,19 @@ public class GradingScale {
     @SequenceGenerator(name = "grading_scale_seq_generator", sequenceName = "grading_scale_seq", allocationSize = 1)
     private Integer id;
 
-    @ManyToOne
-    private Course course;
-
-    @NotNull
     private Integer pass;
 
-    @NotNull
     private Integer merit;
 
-    @NotNull
     private Integer distinction;
+
+    private Integer attendance;
+
+    private Integer progress;
+
+    private Integer midterm;
+
+    private Integer finalExam;
 
     @CreatedDate
     private LocalDateTime createAt;

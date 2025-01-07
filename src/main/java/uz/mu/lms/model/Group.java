@@ -11,14 +11,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
+@Entity(name = "_group")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class CourseGroup {
+public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_seq_generator")
@@ -27,29 +27,28 @@ public class CourseGroup {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
-
-    @ManyToOne
-    private Teacher teacher;
-
-    @ManyToOne
-    private Teacher teacherAssistant;
-
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
-            name = "group_students",
+            name = "group_courses",
             joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
+            inverseJoinColumns = @JoinColumn(name = "course_id"))
+    private List<Course> courses;
+
+    @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Student> students;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(
             name = "group_lessons",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "lesson_id"))
     private List<Lesson> lessons;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
+    private List<CourseTeacher> courseTeachers;
+
+    @ManyToOne
+    private Department department;
 
     @CreatedDate
     private LocalDateTime createAt;
@@ -62,4 +61,5 @@ public class CourseGroup {
 
     @LastModifiedBy
     private Integer updatedBy;
+
 }

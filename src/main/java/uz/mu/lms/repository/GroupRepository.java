@@ -2,9 +2,9 @@ package uz.mu.lms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import uz.mu.lms.model.CourseGroup;
+import uz.mu.lms.model.Group;
 
 @Repository
-public interface CourseGroupRepository extends JpaRepository<CourseGroup, Integer> {
+public interface GroupRepository extends JpaRepository<Group, Integer> {
 
 }

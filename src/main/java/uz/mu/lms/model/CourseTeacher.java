@@ -7,7 +7,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import uz.mu.lms.model.enums.AttendanceStatus;
 
 import java.time.LocalDateTime;
 
@@ -15,31 +14,27 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Attendance {
+public class CourseTeacher {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attendance_seq_generator")
-    @SequenceGenerator(name = "attendance_seq_generator", sequenceName = "attendance_seq", allocationSize = 1)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private Student student;
-
-    @ManyToOne
-    @JoinColumn(name = "lesson_id")
-    private Lesson lesson;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_teacher_seq_generator")
+    @SequenceGenerator(name = "course_teacher_seq_generator", sequenceName = "course_teacher_seq", allocationSize = 1)
+    private Integer id;
 
     @ManyToOne
     private Course course;
 
-    @Enumerated(EnumType.STRING)
-    private AttendanceStatus status;
+    @ManyToOne
+    private Teacher teacher;
+
+    @ManyToOne
+    private Group group;
 
     @CreatedDate
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;

@@ -6,8 +6,8 @@ import lombok.Builder;
 public record PaginatedResponseDto<T>  (
     Integer code,
     String message,
-    T data,
     boolean success,
     int page,
-    int size
+    int size,
+    T data
 ) {}

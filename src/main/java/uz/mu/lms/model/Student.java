@@ -37,11 +37,12 @@ public class Student {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @ManyToMany(mappedBy = "students")
-    private List<Course> courses;
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
 
-    @ManyToMany(mappedBy = "students")
-    private List<CourseGroup> courseGroups;
+    @OneToMany(mappedBy = "student")
+    private List<Attendance> attendance;
 
     @CreatedDate
     private LocalDateTime createdAt;

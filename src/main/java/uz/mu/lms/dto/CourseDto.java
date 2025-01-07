@@ -16,6 +16,15 @@ public record CourseDto(
     String taughtLanguage,
 
     @NotBlank(message = "The department has to be specified")
-    DepartmentDto department
-)
-{}
+    Integer departmentId,
+
+    Integer year,
+
+    Integer semester,
+
+    Integer creditHours,
+
+    Integer creditPoints,
+
+    GradingScaleDto gradingScale
+) {}

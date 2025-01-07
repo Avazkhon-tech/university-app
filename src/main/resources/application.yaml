@@ -16,6 +16,12 @@ spring:
     hibernate:
       ddl-auto: update
 
+
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: true
+
   servlet:
     multipart:
       max-file-size: 10MB
@@ -35,7 +41,11 @@ infobip:
   api:
     url: "https://9k1844.api.infobip.com/sms/2/text/advanced"
     key: "803ec566e8ae96734162759372aa2084-03461112-9598-456e-bd5f-0b1d6a4bcf62"
-logging:
-  level:
-    root: debug
+
+
+#logging:
+#  level:
+#    root: debug
+
+
 

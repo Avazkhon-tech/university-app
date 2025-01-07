@@ -23,12 +23,6 @@ public class CourseMaterialResource {
         return ResponseEntity.ok(courseMaterialService.getCourseContents(courseId));
     }
 
-    @GetMapping("/{materialId}")
-    public ResponseEntity<byte[]> getMaterialFile(
-            @PathVariable Integer materialId) {
-        return courseMaterialService.getMaterialFile(materialId);
-    }
-
     @PostMapping
     public ResponseEntity<?> addCourseMaterial(
             @RequestParam Integer courseId,

@@ -74,11 +74,6 @@ public class CourseMaterialServiceImpl implements CourseMaterialService {
     }
 
     @Override
-    public ResponseEntity<byte[]> getMaterialFile(Integer materialId) {
-        return contentService.retrieveContent(materialId);
-    }
-
-    @Override
     public ResponseDto<?> addMaterialToExistingList(Integer materialId, MultipartFile file) {
         CourseMaterial courseMaterial = courseMaterialRepository.findById(materialId)
                 .orElseThrow(() -> new ResourceNotFoundException("Material list with id %d not found"

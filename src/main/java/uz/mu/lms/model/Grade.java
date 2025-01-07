@@ -36,9 +36,6 @@ public class Grade {
 
     private Integer grade;
 
-    @ManyToOne
-    private GradingScale gradingScale;
-
     private String comment;
 
     @CreatedDate

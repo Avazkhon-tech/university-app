@@ -10,9 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Entity
-
 @Getter
 @Setter
 @Builder
@@ -32,22 +30,23 @@ public class Course {
 
     private String taughtLanguage;
 
+    private Integer semester;
+
+    private Integer year;
+
+    private Integer creditHours;
+
+    private Integer creditPoints;
+
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private GradingScale gradingScale;
+
     @OneToMany(mappedBy = "course")
     private List<CourseMaterial> courseMaterials;
-
-    @ManyToMany
-    @JoinTable(
-            name = "course_student",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private List<Student> students;
-
-    @OneToMany(mappedBy = "course")
-    private List<CourseGroup> courseGroups;
 
     @CreatedDate
     private LocalDateTime createAt;

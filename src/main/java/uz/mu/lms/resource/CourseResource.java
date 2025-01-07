@@ -32,16 +32,16 @@ public class CourseResource {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto<CourseDto>> createDepartment(@RequestBody CourseDto courseDto) {
+    public ResponseEntity<ResponseDto<CourseDto>> createCourse(@RequestBody CourseDto courseDto) {
         return ResponseEntity.ok(courseService.createCourse(courseDto));
     }
 
-    @PostMapping("/enroll-student")
-    public ResponseEntity<ResponseDto<?>> enrollStudent(
-            @RequestParam Integer studentId,
-            @RequestParam Integer courseId) {
-        return ResponseEntity.ok(courseService.enrollStudent(studentId, courseId));
-    }
+//    @PostMapping("/enroll-student")
+//    public ResponseEntity<ResponseDto<?>> enrollStudent(
+//            @RequestParam Integer studentId,
+//            @RequestParam Integer courseId) {
+//        return ResponseEntity.ok(courseService.enrollStudent(studentId, courseId));
+//    }
 
 
 }
