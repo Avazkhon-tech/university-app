@@ -27,31 +27,10 @@ public class Lesson {
     @SequenceGenerator(name = "lesson_seq_generator", sequenceName = "lesson_seq", allocationSize = 1)
     private Long id;
 
-    private String type;
-
     private LocalDate lessonDate;
 
     @ManyToOne
-    private Course course;
-
-    @ManyToOne
-    private TimeSlot timeSlot;
-
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
-
-    @ManyToOne
-    private Teacher teacher;
-
-    @OneToMany(mappedBy = "lesson")
-    private List<Attendance> attendances;
-
-    @OneToMany
-    private List<Grade> grades;
-
-    @ManyToMany
-    private List<Group> groups;
+    private LessonTemplate lessonTemplate;
 
     @CreatedDate
     private LocalDateTime createAt;

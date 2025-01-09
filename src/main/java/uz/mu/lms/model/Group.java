@@ -44,8 +44,8 @@ public class Group {
             inverseJoinColumns = @JoinColumn(name = "lesson_id"))
     private List<Lesson> lessons;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
-    private List<CourseTeacher> courseTeachers;
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "group")
+    private List<LessonTemplate> lessonTemplates;
 
     @ManyToOne
     private Department department;

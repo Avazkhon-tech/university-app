@@ -8,8 +8,8 @@ import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.service.GroupService;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/group")
+@RequiredArgsConstructor
 public class GroupResource {
 
     private final GroupService groupService;
@@ -22,8 +22,13 @@ public class GroupResource {
     @PostMapping("/student")
     public ResponseEntity<ResponseDto<?>> enrollStudentInGroup(
             @RequestParam Integer groupId,
-            @RequestParam Integer studentId
-    ) {
+            @RequestParam Integer studentId) {
         return ResponseEntity.ok(groupService.enrollStudentInGroup(groupId, studentId));
+    }
+
+    // should not be used in production
+    @PostMapping("/generate-lessons")
+    public void generateLessons() {
+        groupService.generateLesson();
     }
 }

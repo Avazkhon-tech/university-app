@@ -21,7 +21,7 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "room_seq_generator")
     @SequenceGenerator(name = "room_seq_generator", sequenceName = "class_room_seq", allocationSize = 1)
-    private Long id;
+    private Integer id;
 
     private String roomNumber;
 

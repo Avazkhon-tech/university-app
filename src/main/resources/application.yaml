@@ -43,9 +43,12 @@ infobip:
     key: "803ec566e8ae96734162759372aa2084-03461112-9598-456e-bd5f-0b1d6a4bcf62"
 
 
-#logging:
-#  level:
-#    root: debug
+logging:
+  level:
+    uz.mu.lms: TRACE
 
+server:
+  address: 0.0.0.0
+  port: 8080
 
 

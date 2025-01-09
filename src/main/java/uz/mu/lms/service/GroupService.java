@@ -8,4 +8,6 @@ public interface GroupService {
     ResponseDto<GroupDto> createGroup(GroupDto groupDto);
 
     ResponseDto<?> enrollStudentInGroup(Integer groupId, Integer studentId);
+
+    void generateLesson();
 }

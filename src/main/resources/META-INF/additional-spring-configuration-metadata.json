@@ -3,11 +3,11 @@
     {
       "name": "spring.defaultValues",
       "type": "java.lang.String",
-      "description": "Description for spring.defaultValues."
+      "description": ""
     },
     {
       "name": "spring.defaultValues.host",
       "type": "java.lang.String",
-      "description": "Description for spring.defaultValues.host."
+      "description": ""
     }
   ] }

@@ -20,10 +20,9 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
             "CONCAT(c.teacher.user.firstName, ' ' , c.teacher.user.lastName) AS teacherFullName " +
             "FROM Student s " +
             "JOIN s.group g " +
-            "JOIN g.courseTeachers c " +
+            "JOIN g.lessonTemplates c " +
             "WHERE s.id = :studentId")
     List<StudentCourseProjection> findByStudentId(
     @Param("studentId") Integer studentId,
     @Param("hostAddr") String hostAddr);
-
 }

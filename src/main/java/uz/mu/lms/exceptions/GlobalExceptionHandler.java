@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationFailureException.class)
     public ResponseEntity<ResponseDto<?>> handleAuthenticationFailure(AuthenticationFailureException authenticationFailureException) {
-        log.error(authenticationFailureException.getMessage());
+        log.info(authenticationFailureException.getMessage());
         return ResponseEntity
                 .status(401)
                 .body(ResponseDto
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ResponseDto<String>> handleUsernameNotFoundException(UsernameNotFoundException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(404)
                 .body(ResponseDto.<String>builder()
                         .code(404)
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ResponseDto<?>> handleContentDoesNotExistException(ResourceNotFoundException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ResponseDto
                         .builder()
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<ResponseDto<?>> handleResourceAlreadyExistsException(ResourceAlreadyExistsException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ResponseDto
                         .builder()
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ImageDoesNotExistException.class)
     public ResponseEntity<ResponseDto<?>> handleImageDoesNotExistException(ImageDoesNotExistException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 ResponseDto
                         .builder()
@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FileNotSupportedException.class)
     public ResponseEntity<ResponseDto<?>> handleEmptyFileException(FileNotSupportedException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ResponseDto
                         .builder()
@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PasswordNotAcceptedException.class)
     public ResponseEntity<ResponseDto<?>> handlePasswordNotAcceptedException(PasswordNotAcceptedException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ResponseDto
                         .builder()
@@ -104,7 +104,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateKeyValueException.class)
     public ResponseEntity<ResponseDto<?>> handleDuplicateKey(DuplicateKeyValueException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ResponseDto
                         .builder()
@@ -116,7 +116,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ResponseDto<?>> handleUserNotFound(UserNotFoundException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 ResponseDto
                         .builder()
@@ -128,6 +128,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        log.info(ex.getMessage());
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
@@ -137,7 +138,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ResponseDto<Object>> handleUserAlreadyExistsExceptions(UserAlreadyExistsException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ResponseDto
                         .builder()
