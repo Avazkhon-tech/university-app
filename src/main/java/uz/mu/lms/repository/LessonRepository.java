@@ -14,25 +14,27 @@ import java.util.List;
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
 
-    @Query("""
+
+        @Query("""
         SELECT lt.dayOfWeek as dayOfWeek,
-        ts.startTime as startTime,
-        ts.endTime as endTime,
-        c.title as courseTitle,
-        r.roomNumber as roomNumber,
-        CONCAT(t.user.firstName, ' ', t.user.lastName) as teacherFullName,
-        lt.lessonType as lessonType
+               ts.startTime as startTime,
+               ts.endTime as endTime,
+               c.title as courseTitle,
+               r.roomNumber as roomNumber,
+               CONCAT(t.user.firstName, ' ', t.user.lastName) as teacherFullName,
+               lt.lessonType as lessonType
         FROM Lesson l
         JOIN l.lessonTemplate lt
         JOIN lt.timeSlot ts
         JOIN lt.course c
         JOIN lt.room r
         JOIN lt.teacher t
-        JOIN lt.group g
-        WHERE l.lessonDate = :currentDate and g.id = :groupId
+        JOIN groups g ON lt MEMBER OF g.lessonTemplates
+        WHERE l.lessonDate = :currentDate AND g.id = :groupId
         """)
-    List<ScheduleProjection> findLessonsByDate(
-            @Param("currentDate") LocalDate currentDate,
-            @Param("groupId") Integer groupId);
+        List<ScheduleProjection> findLessonsByDate(
+                @Param("currentDate") LocalDate currentDate,
+                @Param("groupId") Integer groupId);
+
 
 }

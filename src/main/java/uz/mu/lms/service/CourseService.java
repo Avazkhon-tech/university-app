@@ -15,7 +15,5 @@ public interface CourseService {
 
     ResponseDto<CourseDto> createCourse(CourseDto courseDto);
 
-//    ResponseDto<?> enrollStudent(Integer studentId, Integer courseId);
-
     List<StudentCourseProjection> getCoursesStudent(Authentication authentication);
  }

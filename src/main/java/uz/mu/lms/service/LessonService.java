@@ -9,4 +9,6 @@ import java.util.List;
 public interface LessonService {
 
     ResponseDto<List<ScheduleProjection>> getLessonsForToday(LocalDate date);
+
+    void generateLesson();
 }

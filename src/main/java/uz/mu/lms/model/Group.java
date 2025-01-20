@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity(name = "_group")
+@Entity(name = "groups")
 @Getter
 @Setter
 @Builder
@@ -37,14 +37,8 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Student> students;
 
-    @ManyToMany
-    @JoinTable(
-            name = "group_lessons",
-            joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "lesson_id"))
-    private List<Lesson> lessons;
-
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "group")
+    @ManyToMany(cascade =  CascadeType.PERSIST)
+    @JoinTable(name = "group_lesson_templates")
     private List<LessonTemplate> lessonTemplates;
 
     @ManyToOne
@@ -61,5 +55,4 @@ public class Group {
 
     @LastModifiedBy
     private Integer updatedBy;
-
 }

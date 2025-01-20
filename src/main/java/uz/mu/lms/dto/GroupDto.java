@@ -7,5 +7,5 @@ public record GroupDto(
         Integer id,
         String name,
         Integer departmentId,
-        List<LessonTemplateDto> lessonTemplates
+        List<Integer> courseIds
 ) {}

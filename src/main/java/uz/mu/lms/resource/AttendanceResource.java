@@ -1,21 +1,34 @@
 package uz.mu.lms.resource;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.projection.ScheduleProjection;
-import uz.mu.lms.service.LessonService;
-
-import java.time.LocalDate;
-import java.util.List;
+import uz.mu.lms.service.AttendanceService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/attendance")
 public class AttendanceResource {
 
+    private final AttendanceService attendanceService;
+
+    @GetMapping
+    public ResponseEntity<byte[]> generateQRCode(@RequestParam Integer lessonId) {
+        byte[] qrCodeImage = attendanceService.generateAttendanceQR(lessonId);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=qr_code.png")
+                .contentType(MediaType.IMAGE_PNG)
+                .body(qrCodeImage);
+    }
+
+    @PostMapping("/{qrId}")
+    public ResponseEntity<ResponseDto<?>> recordAttendance(@PathVariable String qrId) {
+        ResponseDto<?> responseDto = attendanceService.recordAttendance(qrId);
+        return ResponseEntity.ok(responseDto);
+    }
 }

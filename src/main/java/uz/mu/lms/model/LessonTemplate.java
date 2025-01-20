@@ -11,7 +11,6 @@ import uz.mu.lms.model.enums.LessonType;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -27,21 +26,18 @@ public class LessonTemplate {
     @SequenceGenerator(name = "course_teacher_seq_generator", sequenceName = "course_teacher_seq", allocationSize = 1)
     private Integer id;
 
-    @ManyToOne
-    private Group group;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Course course;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Teacher teacher;
 
-    @ManyToOne
-    private TimeSlot timeSlot;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "room_id")
     private Room room;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private TimeSlot timeSlot;
 
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;

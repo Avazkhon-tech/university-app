@@ -6,11 +6,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.UserNotFoundException;
-import uz.mu.lms.model.Student;
+import uz.mu.lms.model.*;
 import uz.mu.lms.projection.ScheduleProjection;
 import uz.mu.lms.repository.*;
 import uz.mu.lms.service.LessonService;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,11 +22,11 @@ public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
     private final StudentRepository studentRepository;
+    private final AcademicCalendarRepository academicCalendarRepository;
+    private final GroupRepository groupRepository;
 
     @Override
     public ResponseDto<List<ScheduleProjection>> getLessonsForToday(LocalDate date) {
-
-        System.out.println(LocalDate.now());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -43,4 +44,84 @@ public class LessonServiceImpl implements LessonService {
                 .data(lessonsByDate)
                 .build();
     }
+
+    @Override
+    public void generateLesson() {
+        for (AcademicCalendar academicCalendar : academicCalendarRepository.findAllByAreLessonsGeneratedFalse()) {
+            generateLessonsForSemester(
+                    1,
+                    academicCalendar.getDepartment().getId(),
+                    academicCalendar.getSem1StartDate(),
+                    academicCalendar.getSem1EndDate(),
+                    academicCalendar.getSem1MidtermStart(),
+                    academicCalendar.getSem1MidtermEnd(),
+                    academicCalendar.getSem1FinalStart(),
+                    academicCalendar.getSem1FinalEnd());
+
+            generateLessonsForSemester(
+                    2,
+                    academicCalendar.getDepartment().getId(),
+                    academicCalendar.getSem2StartDate(),
+                    academicCalendar.getSem2EndDate(),
+                    academicCalendar.getSem2MidtermStart(),
+                    academicCalendar.getSem2MidtermEnd(),
+                    academicCalendar.getSem2FinalStart(),
+                    academicCalendar.getSem2FinalEnd());
+
+            academicCalendar.setAreLessonsGenerated(true);
+            academicCalendarRepository.save(academicCalendar);
+        }
+    }
+
+    private void generateLessonsForSemester(Integer semester, Integer departmentId, LocalDate semesterStartDate, LocalDate semesterEndDate,
+                                           LocalDate midtermStart, LocalDate midtermEnd, LocalDate finalStart, LocalDate finalEnd) {
+
+        for (Group group : groupRepository.findAllByDepartmentId(departmentId)) {
+
+            for (LessonTemplate lessonTemplate : group.getLessonTemplates()) {
+
+                if (lessonTemplate.getCourse().getSemester() != semester) continue;
+
+                // Find the first valid lesson date that matches the lesson's day of the week
+                LocalDate lessonDate = getNextWeekDay(lessonTemplate.getDayOfWeek(), semesterStartDate);
+
+                while (!lessonDate.isAfter(semesterEndDate)) {
+
+                    // Skip lesson date if it falls within midterm or final exam period
+                    if ((lessonDate.isAfter(midtermStart) && lessonDate.isBefore(midtermEnd)) ||
+                            (lessonDate.isAfter(finalStart) && lessonDate.isBefore(finalEnd))
+                    ) {
+                        // Move to the next valid lesson day (skip this week if it's in midterm or final period)
+                        lessonDate = getNextWeekDay(lessonTemplate.getDayOfWeek(), lessonDate.plusDays(7));
+                        continue;
+                    }
+
+                    // Create the lesson object
+                    Lesson lesson = Lesson.builder()
+                            .lessonDate(lessonDate)
+                            .lessonTemplate(lessonTemplate)
+                            .build();
+
+                    // Save the lesson
+                    lessonRepository.save(lesson);
+
+                    // Move to the next week after creating the lesson
+                    lessonDate = lessonDate.plusDays(7);
+                }
+            }
+        }
+    }
+
+    private LocalDate getNextWeekDay(DayOfWeek dayOfWeek, LocalDate currentDate) {
+        // Increment the current date until it matches the desired day of the week
+        LocalDate nextLessonDate = currentDate;
+
+        // Increment the date by 1 day until it matches the desired weekday
+        while (nextLessonDate.getDayOfWeek() != dayOfWeek) {
+            nextLessonDate = nextLessonDate.plusDays(1);
+        }
+
+        return nextLessonDate;
+    }
+
 }

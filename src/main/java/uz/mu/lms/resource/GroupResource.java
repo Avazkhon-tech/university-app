@@ -15,7 +15,7 @@ public class GroupResource {
     private final GroupService groupService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<GroupDto>> createGroup(@RequestBody GroupDto groupDto) {
+    public ResponseEntity<ResponseDto<?>> createGroup(@RequestBody GroupDto groupDto) {
         return ResponseEntity.ok(groupService.createGroup(groupDto));
     }
 
@@ -24,11 +24,5 @@ public class GroupResource {
             @RequestParam Integer groupId,
             @RequestParam Integer studentId) {
         return ResponseEntity.ok(groupService.enrollStudentInGroup(groupId, studentId));
-    }
-
-    // should not be used in production
-    @PostMapping("/generate-lessons")
-    public void generateLessons() {
-        groupService.generateLesson();
     }
 }

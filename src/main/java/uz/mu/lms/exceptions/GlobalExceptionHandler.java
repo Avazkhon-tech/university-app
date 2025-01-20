@@ -137,12 +137,24 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ResponseDto<Object>> handleUserAlreadyExistsExceptions(UserAlreadyExistsException e) {
+    public ResponseEntity<ResponseDto<?>> handleUserAlreadyExistsExceptions(UserAlreadyExistsException e) {
         log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 ResponseDto
                         .builder()
                         .code(409)
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(CouldNotProcessRequestException.class)
+    public ResponseEntity<ResponseDto<?>> handleCouldNotProcessRequestException(CouldNotProcessRequestException e) {
+        log.info(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                ResponseDto
+                        .builder()
+                        .code(500)
                         .message(e.getMessage())
                         .build()
         );

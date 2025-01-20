@@ -5,9 +5,8 @@ import uz.mu.lms.dto.ResponseDto;
 
 public interface GroupService {
 
-    ResponseDto<GroupDto> createGroup(GroupDto groupDto);
+    ResponseDto<?> createGroup(GroupDto groupDto);
 
     ResponseDto<?> enrollStudentInGroup(Integer groupId, Integer studentId);
 
-    void generateLesson();
 }

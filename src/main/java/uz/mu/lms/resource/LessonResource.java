@@ -26,4 +26,10 @@ public class LessonResource {
         ResponseDto<List<ScheduleProjection>> lessonsForToday = lessonService.getLessonsForToday(date);
         return ResponseEntity.ok(lessonsForToday);
     }
+
+    // todo  figure out a better way to solve this problem
+    @PostMapping("/generate-lessons")
+    public void generateLessons() {
+        lessonService.generateLesson();
+    }
 }
