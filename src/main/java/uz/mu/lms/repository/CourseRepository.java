@@ -14,7 +14,7 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     // retrieves student-specific courses
     @Query(
-    "SELECT c.course.id AS courseId, " +
+    "SELECT DISTINCT c.course.id AS courseId, " +
             "c.course.title AS courseTitle, " +
             "CONCAT(:hostAddr, '/api/course-content/files/', c.course.id) AS contentUrl, " +
             "CONCAT(c.teacher.user.firstName, ' ' , c.teacher.user.lastName) AS teacherFullName " +

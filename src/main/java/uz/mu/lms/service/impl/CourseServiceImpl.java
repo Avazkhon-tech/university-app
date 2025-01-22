@@ -80,26 +80,6 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
-//    @Override
-//    public ResponseDto<?> enrollStudent(Integer studentId, Integer courseId) {
-//        Student student = studentRepository.findById(studentId)
-//                .orElseThrow(() -> new UserNotFoundException("Student with id %d not found"
-//                        .formatted(studentId)));
-//        Course course = courseRepository.findById(courseId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Course with id %d not found"));
-//
-//        if (!course.getStudents().contains(student)) {
-//            course.getStudents().add(student);
-//        }
-//
-//        courseRepository.save(course);
-//        return ResponseDto.builder()
-//                .code(200)
-//                .message("Successfully enrolled student in %s".formatted(course.getTitle()))
-//                .success(true)
-//                .build();
-//    }
-
 
     @Override
     public List<StudentCourseProjection> getCoursesStudent(Authentication authentication) {

@@ -36,12 +36,4 @@ public class CourseResource {
         return ResponseEntity.ok(courseService.createCourse(courseDto));
     }
 
-//    @PostMapping("/enroll-student")
-//    public ResponseEntity<ResponseDto<?>> enrollStudent(
-//            @RequestParam Integer studentId,
-//            @RequestParam Integer courseId) {
-//        return ResponseEntity.ok(courseService.enrollStudent(studentId, courseId));
-//    }
-
-
 }
