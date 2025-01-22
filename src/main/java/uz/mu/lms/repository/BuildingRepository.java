@@ -7,7 +7,6 @@ import uz.mu.lms.model.Building;
 import java.util.List;
 
 // todo change to proper jpa repository
-//@Repository
 public class BuildingRepository {
 
     public static List<Building> findAllBuildings() {
@@ -36,6 +35,13 @@ public class BuildingRepository {
                 .name("Avazxon")
                 .latitude(40.581772)
                 .longitude(70.923249)
+                .radiusInMeters(50)
+                .build();
+
+        Building home2 = Building.builder()
+                .name("Parizoda")
+                .latitude(41.268521)
+                .longitude(69.251866)
                 .radiusInMeters(50)
                 .build();
 
