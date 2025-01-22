@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.CourseDto;
-import uz.mu.lms.dto.MyUserDetails;
+import uz.mu.lms.dto.UserDetailsDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
@@ -103,7 +103,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<StudentCourseProjection> getCoursesStudent(Authentication authentication) {
-        MyUserDetails principal = (MyUserDetails) authentication.getPrincipal();
+        UserDetailsDto principal = (UserDetailsDto) authentication.getPrincipal();
         Student student = studentRepository.findByUser_Username(principal.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("Student with username %s not found"
                 .formatted(principal.getUsername())));

@@ -51,7 +51,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         LessonTemplate lessonTemplate = lesson.getLessonTemplate();
 
-        // todo
 //        for (Student student : lessonTemplate.getGroup().getStudents()) {
 //            if (!attendanceRepository.existsByStudentIdAndLessonId(student.getId(), lessonId)) {
 //                Attendance attendance = Attendance
@@ -103,6 +102,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         if (!lessonRepository.existsById(lessonId)) {
             throw new ResourceNotFoundException("Lesson with id %s not found".formatted(lessonId));
         }
+
 
         Attendance attendance = attendanceRepository.findAttendanceByStudentIdAndLessonId(studentId, lessonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Attendance record not found"));

@@ -19,6 +19,8 @@ import uz.mu.lms.model.redis.TempPassword;
 import uz.mu.lms.repository.UserRepository;
 import uz.mu.lms.repository.redis.TempPasswordRepository;
 import uz.mu.lms.service.AuthService;
+import uz.mu.lms.service.OtpService;
+import uz.mu.lms.service.factory.OtpServiceFactory;
 import uz.mu.lms.service.jwt.JwtProvider;
 import uz.mu.lms.utils.OtpMethod;
 
@@ -34,13 +36,11 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
-
-    // TODO figure out a proper way to handle this situation
-    private final OtpEmailServiceImpl otpViaEmailService;
-    private final OtpSmsServiceImpl otpViaSmsService;
+    private final OtpServiceFactory otpServiceFactory;
 
     @Override
     public ResponseEntity<ResponseDto<Token>> login(LoginDto loginDto) {
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password()));
@@ -61,28 +61,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseDto<String> SendOTP(String username, OtpMethod otpMethod) {
-        User user = null;
-        int generatedCode = 0;
+        User user = getUser(otpMethod, username);
+        OtpService otpService;
 
-        if (otpMethod.equals(OtpMethod.EMAIL)) {
-            user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException(username));
-
-            generatedCode  = otpViaEmailService.sendOTP(username);
-
-        } else if (otpMethod.equals(OtpMethod.PHONE_NUMBER)) {
-            user = userRepository.findByPhoneNumber(username)
-                    .orElseThrow(() -> new UsernameNotFoundException(username));
-
-            generatedCode = otpViaSmsService.sendOTP(username);
-        }
-
+        otpService = otpServiceFactory.getOtpService(otpMethod);
+        int generatedCode = otpService.sendOTP(username);
 
 
         // TODO this will be changed to send proper code once i find a sms provider
         TempPassword tempPassword = TempPassword
                 .builder()
-                .password(otpMethod.equals(OtpMethod.PHONE_NUMBER)? "7777" : String.valueOf(generatedCode))
+                .password(otpMethod.equals(OtpMethod.PHONE_NUMBER) ? "7777" : String.valueOf(generatedCode))
                 .userId(user.getId())
                 .build();
 
@@ -98,23 +87,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<ResponseDto<Token>> verifyOTP(LoginDto loginDto, OtpMethod otpMethod) {
-        User user = null;
-        if (otpMethod.equals(OtpMethod.EMAIL)) {
-            user = userRepository.findByUsername(loginDto.username())
-                    .orElseThrow(() -> new UsernameNotFoundException(loginDto.username()));
-        } else if (otpMethod.equals(OtpMethod.PHONE_NUMBER)) {
-            user = userRepository.findByPhoneNumber(loginDto.username())
-                    .orElseThrow(() -> new UsernameNotFoundException(loginDto.username()));
-        }
-
+        String username = loginDto.username();
+        User user = getUser(otpMethod, username);
 
         Optional<TempPassword> tempPassword = tempPasswordRepository.findById(user.getId());
 
         if (tempPassword.isEmpty()) {
-           throw new PasswordNotAcceptedException("password is expired");
-       }
+            throw new PasswordNotAcceptedException("password is expired");
+        }
 
-        if(!tempPassword.get().getPassword().equals(loginDto.password())) {
+        if (!tempPassword.get().getPassword().equals(loginDto.password())) {
             throw new PasswordNotAcceptedException("Incorrect code");
         }
 
@@ -122,15 +104,15 @@ public class AuthServiceImpl implements AuthService {
         String generatedToken = jwtProvider.generateToken(user.getUsername());
         return ResponseEntity.ok()
                 .body(ResponseDto.<Token>builder()
-                .code(200)
-                .data(new Token(generatedToken))
-                .message("Successfully verified")
-                .success(true)
-                .build());
+                        .code(200)
+                        .data(new Token(generatedToken))
+                        .message("Successfully verified")
+                        .success(true)
+                        .build());
     }
 
     @Override
-    public ResponseDto<String> resetPassword(ResetPasswordDto resetPasswordDto, String token) {;
+    public ResponseDto<String> resetPassword(ResetPasswordDto resetPasswordDto, String token) {
 
         String username = jwtProvider.extractUserName(token.replace("Bearer ", ""));
         User user = userRepository.findByUsername(username)
@@ -152,5 +134,16 @@ public class AuthServiceImpl implements AuthService {
                 .message("Successfully updated the password")
                 .success(true)
                 .build();
+    }
+
+
+    private User getUser(OtpMethod otpMethod, String username) {
+        return switch (otpMethod) {
+            case EMAIL -> userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException(username));
+
+            case PHONE_NUMBER -> userRepository.findByPhoneNumber(username)
+                    .orElseThrow(() -> new UsernameNotFoundException(username));
+        };
     }
 }

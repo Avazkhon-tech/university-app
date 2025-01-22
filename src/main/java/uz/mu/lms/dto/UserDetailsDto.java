@@ -11,14 +11,14 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter
-public class MyUserDetails implements UserDetails {
+public class UserDetailsDto implements UserDetails {
 
     private final Integer id;
     private final String username;
     private final String password;
     private final Role role;
 
-    public MyUserDetails(User user) {
+    public UserDetailsDto(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
