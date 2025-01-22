@@ -20,7 +20,7 @@ spring:
     properties:
       hibernate:
         format_sql: false
-        show_sql: true
+        show_sql: false
 
   servlet:
     multipart:
@@ -30,9 +30,6 @@ spring:
   defaultValues:
     host: http://app.avazkhon.uz
 
-#  profiles:
-#    active: dev
-
   sql:
     init:
       mode: never
@@ -41,11 +38,6 @@ infobip:
   api:
     url: "https://9k1844.api.infobip.com/sms/2/text/advanced"
     key: "803ec566e8ae96734162759372aa2084-03461112-9598-456e-bd5f-0b1d6a4bcf62"
-
-
-logging:
-  level:
-    uz.mu.lms: TRACE
 
 server:
   address: 0.0.0.0
