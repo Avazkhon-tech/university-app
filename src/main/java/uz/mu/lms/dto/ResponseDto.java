@@ -8,4 +8,23 @@ public record ResponseDto<T> (
     boolean success,
     String message,
     T data
-) {}
+) {
+
+    /*
+    data only
+     */
+    public static <T> ResponseDto<T> success(T data) {
+        return new ResponseDto<>(200, true, "OK", data);
+    }
+
+    /*
+    message only
+     */
+    public static <T> ResponseDto<T> success(String message) {
+        return new ResponseDto<>(200, true, message, null);
+    }
+
+    public static <T> ResponseDto<T> error(Integer code, String message) {
+        return new ResponseDto<>(code, false, message, null);
+    }
+}

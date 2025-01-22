@@ -11,6 +11,7 @@ import uz.mu.lms.exceptions.*;
 import uz.mu.lms.model.*;
 import uz.mu.lms.model.enums.AttendanceStatus;
 import uz.mu.lms.model.redis.AttendanceChecking;
+import uz.mu.lms.projection.AttendanceSummaryProjection;
 import uz.mu.lms.repository.*;
 import uz.mu.lms.repository.redis.AttendanceCheckingRepository;
 import uz.mu.lms.service.AttendanceService;
@@ -34,6 +35,12 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceCheckingRepository attendanceCheckingRepository;
     private final QRCodeService qrCodeService;
     private final BuildingService buildingService;
+
+    @Override
+    public List<AttendanceSummaryProjection> getAttendanceSummaries() {
+        Student currentStudent = getCurrentStudent();
+        return attendanceRepository.findAttendanceSummaryByCourseForStudent(currentStudent.getId());
+    }
 
     @Override
     public byte[] generateAttendanceQR(Integer lessonId) {

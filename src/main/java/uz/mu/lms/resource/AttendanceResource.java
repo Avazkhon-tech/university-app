@@ -1,5 +1,6 @@
 package uz.mu.lms.resource;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.LocationDto;
 import uz.mu.lms.dto.ResponseDto;
+import uz.mu.lms.projection.AttendanceSummaryProjection;
 import uz.mu.lms.service.AttendanceService;
+
+import java.util.List;
+
+import static uz.mu.lms.dto.ResponseDto.success;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,5 +39,11 @@ public class AttendanceResource {
                                                            @RequestBody LocationDto locationDto) {
         ResponseDto<?> responseDto = attendanceService.recordAttendance(qrId, locationDto);
         return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/summary")
+    public ResponseDto<List<AttendanceSummaryProjection>> getAttendanceSummary() {
+        List<AttendanceSummaryProjection> attendanceSummaries = attendanceService.getAttendanceSummaries();
+        return ResponseDto.success(attendanceSummaries);
     }
 }
