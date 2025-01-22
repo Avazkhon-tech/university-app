@@ -2,10 +2,12 @@ package uz.mu.lms.resource;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uz.mu.lms.dto.LocationDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.service.AttendanceService;
 
@@ -27,8 +29,9 @@ public class AttendanceResource {
     }
 
     @PostMapping("/{qrId}")
-    public ResponseEntity<ResponseDto<?>> recordAttendance(@PathVariable String qrId) {
-        ResponseDto<?> responseDto = attendanceService.recordAttendance(qrId);
+    public ResponseEntity<ResponseDto<?>> recordAttendance(@PathVariable String qrId,
+                                                           @RequestBody LocationDto locationDto) {
+        ResponseDto<?> responseDto = attendanceService.recordAttendance(qrId, locationDto);
         return ResponseEntity.ok(responseDto);
     }
 }

@@ -30,7 +30,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
             """)
     boolean existsByStudentIdAndLessonId(
             @Param("stId") Integer studentId,
-            @Param("lId") Integer lessonId
+            @Param("lId") Long lessonId
     );
 
 

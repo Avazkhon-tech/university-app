@@ -159,4 +159,16 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+
+    @ExceptionHandler(StudentIsNotInUniversityZoneException.class)
+    public ResponseEntity<ResponseDto<?>> handleCouldNotProcessRequestException(StudentIsNotInUniversityZoneException e) {
+        log.info(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                ResponseDto
+                        .builder()
+                        .code(409)
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
 }

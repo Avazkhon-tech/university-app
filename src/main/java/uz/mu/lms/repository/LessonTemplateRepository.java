@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface LessonTemplateRepository extends JpaRepository<LessonTemplate, Integer> {
 
-    // todo
-//    List<LessonTemplate> findByGroupId(Integer groupId);
 }
