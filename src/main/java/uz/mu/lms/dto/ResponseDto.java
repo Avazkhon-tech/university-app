@@ -17,6 +17,10 @@ public record ResponseDto<T> (
         return new ResponseDto<>(200, true, "OK", data);
     }
 
+    public static <T> ResponseDto<T> success(T data, String message) {
+        return new ResponseDto<>(200, true, message, data);
+    }
+
     /*
     message only
      */

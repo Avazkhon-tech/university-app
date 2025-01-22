@@ -35,10 +35,10 @@ public class AttendanceResource {
     }
 
     @PostMapping("/{qrId}")
-    public ResponseEntity<ResponseDto<?>> recordAttendance(@PathVariable String qrId,
-                                                           @RequestBody LocationDto locationDto) {
-        ResponseDto<?> responseDto = attendanceService.recordAttendance(qrId, locationDto);
-        return ResponseEntity.ok(responseDto);
+    public ResponseDto<?> recordAttendance(@PathVariable String qrId,
+                                           @RequestBody LocationDto locationDto) {
+        attendanceService.recordAttendance(qrId, locationDto);
+        return ResponseDto.success("Attendance has been recorded");
     }
 
     @GetMapping("/summary")

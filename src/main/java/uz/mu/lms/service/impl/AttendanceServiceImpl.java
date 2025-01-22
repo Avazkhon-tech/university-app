@@ -19,7 +19,6 @@ import uz.mu.lms.service.BuildingService;
 import uz.mu.lms.service.QRCodeService;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -50,7 +49,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         List<Attendance> attendances = initializeAttendances(groups, lesson);
         attendanceRepository.saveAll(attendances);
 
-        UUID attendanceUUID = generateAttendanceUUID(lessonId);
+        UUID attendanceUUID = generateAttendanceUUID();
         System.out.println("UUID: " + attendanceUUID);
         AttendanceChecking attendanceChecking = createAttendanceChecking(attendanceUUID, lessonId);
 
@@ -58,7 +57,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public ResponseDto<?> recordAttendance(String qrUUID, LocationDto locationDto) {
+    public void recordAttendance(String qrUUID, LocationDto locationDto) {
         if (!buildingService.isUserWithinUniversityZone(locationDto.latitude(), locationDto.longitude())) {
             throw new StudentIsNotInUniversityZoneException("You are out of the university zone");
         }
@@ -74,7 +73,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setStatus(AttendanceStatus.PRESENT);
         attendanceRepository.save(attendance);
 
-        return createSuccessResponse("Attendance has been recorded");
     }
 
     private Lesson getLessonById(Integer lessonId) {
@@ -98,7 +96,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         return attendances;
     }
 
-    private UUID generateAttendanceUUID(Integer lessonId) {
+    private UUID generateAttendanceUUID() {
         return UUID.randomUUID();
     }
 
@@ -129,24 +127,17 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     private Attendance getAttendanceForStudent(Integer studentId, Integer lessonId) {
         return attendanceRepository.findAttendanceByStudentIdAndLessonId(studentId, lessonId)
-                .orElseThrow(() -> new ResourceNotFoundException("Lesson has not been initialized by teacher yet"));
+                .orElseThrow(() -> new ResourceNotFoundException("You do not belong to this group"));
     }
 
     private void validateAttendanceStatus(Attendance attendance) {
         AttendanceStatus status = attendance.getStatus();
-         if(status != AttendanceStatus.ABSENT) {
+        if(status != AttendanceStatus.ABSENT) {
             throw new ResourceAlreadyExistsException("Your attendance status has already been recorded as %s"
                     .formatted(status.toString().toLowerCase()));
         }
     }
 
-    private ResponseDto<?> createSuccessResponse(String message) {
-        return ResponseDto.builder()
-                .code(200)
-                .success(true)
-                .message(message)
-                .build();
-    }
 
     // Finds the current student from security context
     private Student getCurrentStudent() {
