@@ -31,6 +31,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Integer> {
         JOIN lt.teacher t
         JOIN groups g ON lt MEMBER OF g.lessonTemplates
         WHERE l.lessonDate = :currentDate AND g.id = :groupId
+        ORDER BY ts.orderNumber
         """)
         List<ScheduleProjection> findLessonsByDate(
                 @Param("currentDate") LocalDate currentDate,

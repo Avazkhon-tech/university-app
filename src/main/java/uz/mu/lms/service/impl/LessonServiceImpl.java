@@ -82,30 +82,24 @@ public class LessonServiceImpl implements LessonService {
 
                 if (lessonTemplate.getCourse().getSemester() != semester) continue;
 
-                // Find the first valid lesson date that matches the lesson's day of the week
                 LocalDate lessonDate = getNextWeekDay(lessonTemplate.getDayOfWeek(), semesterStartDate);
 
                 while (!lessonDate.isAfter(semesterEndDate)) {
 
-                    // Skip lesson date if it falls within midterm or final exam period
                     if ((lessonDate.isAfter(midtermStart) && lessonDate.isBefore(midtermEnd)) ||
                             (lessonDate.isAfter(finalStart) && lessonDate.isBefore(finalEnd))
                     ) {
-                        // Move to the next valid lesson day (skip this week if it's in midterm or final period)
                         lessonDate = getNextWeekDay(lessonTemplate.getDayOfWeek(), lessonDate.plusDays(7));
                         continue;
                     }
 
-                    // Create the lesson object
                     Lesson lesson = Lesson.builder()
                             .lessonDate(lessonDate)
                             .lessonTemplate(lessonTemplate)
                             .build();
 
-                    // Save the lesson
                     lessonRepository.save(lesson);
 
-                    // Move to the next week after creating the lesson
                     lessonDate = lessonDate.plusDays(7);
                 }
             }
@@ -113,10 +107,8 @@ public class LessonServiceImpl implements LessonService {
     }
 
     private LocalDate getNextWeekDay(DayOfWeek dayOfWeek, LocalDate currentDate) {
-        // Increment the current date until it matches the desired day of the week
         LocalDate nextLessonDate = currentDate;
 
-        // Increment the date by 1 day until it matches the desired weekday
         while (nextLessonDate.getDayOfWeek() != dayOfWeek) {
             nextLessonDate = nextLessonDate.plusDays(1);
         }
