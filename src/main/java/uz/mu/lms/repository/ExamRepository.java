@@ -18,7 +18,8 @@ public interface ExamRepository extends JpaRepository<Exam, Integer> {
         e.examType examType,
         e.room.roomNumber roomNumber,
         e.localDateTime examDateTime,
-        CONCAT(t.user.firstName, ' ', t.user.lastName) teacherFullName,
+        (SELECT STRING_AGG(CONCAT(t.user.firstName, ' ', t.user.lastName), ', ')
+        FROM e.teachers t) as teacherNames,
         e.fee as examFee
         FROM Exam e
         JOIN e.students s

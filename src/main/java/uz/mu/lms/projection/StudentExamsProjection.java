@@ -1,6 +1,7 @@
 package uz.mu.lms.projection;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public interface StudentExamsProjection {
@@ -13,7 +14,7 @@ public interface StudentExamsProjection {
 
     LocalDateTime getExamDateTime();
 
-    String getTeacherFullName();
+    String getTeacherNames();
 
     Integer getExamFee();
 }
