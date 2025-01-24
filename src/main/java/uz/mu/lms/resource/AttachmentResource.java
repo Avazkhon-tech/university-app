@@ -14,7 +14,6 @@ public class AttachmentResource {
 
     @GetMapping("/{attachmentId}")
     public ResponseEntity<byte[]> getAttachment(@PathVariable Integer attachmentId) {
-
         return contentService.retrieveContent(attachmentId);
     }
 }
