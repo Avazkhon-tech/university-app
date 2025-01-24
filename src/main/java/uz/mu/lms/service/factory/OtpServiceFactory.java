@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import uz.mu.lms.service.OtpService;
 import uz.mu.lms.service.impl.OtpEmailServiceImpl;
 import uz.mu.lms.service.impl.OtpSmsServiceImpl;
-import uz.mu.lms.utils.OtpMethod;
+import uz.mu.lms.model.enums.OtpMethod;
 
 @Service
 @RequiredArgsConstructor

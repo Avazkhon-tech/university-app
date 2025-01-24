@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import uz.mu.lms.dto.CourseDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
+import uz.mu.lms.model.Course;
 import uz.mu.lms.projection.StudentCourseProjection;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface CourseService {
     ResponseDto<CourseDto> createCourse(CourseDto courseDto);
 
     List<StudentCourseProjection> getCoursesStudent(Authentication authentication);
+
+    Course findCourseById(Integer id);
  }

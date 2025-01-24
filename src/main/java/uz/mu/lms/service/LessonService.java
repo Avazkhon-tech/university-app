@@ -11,4 +11,6 @@ public interface LessonService {
     ResponseDto<List<ScheduleProjection>> getLessonsForToday(LocalDate date);
 
     void generateLesson();
+
+    void initializeLesson(Integer lessonId);
 }

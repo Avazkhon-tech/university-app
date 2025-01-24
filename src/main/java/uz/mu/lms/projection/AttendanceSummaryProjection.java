@@ -9,4 +9,8 @@ public interface AttendanceSummaryProjection {
     Integer getAbsentCount();
 
     Integer getPercentage();
+
+    Integer getSemester();
+
+    Integer getYear();
 }

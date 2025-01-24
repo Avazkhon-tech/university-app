@@ -170,4 +170,18 @@ public class StudentServiceImpl implements StudentService {
         return ResponseEntity.ok(updated);
 
     }
+
+
+    @Override
+    public List<Student> findStudentsByGroupIds(List<Integer> groupIds) {
+        return studentRepository.findStudentsByGroupIds(groupIds);
+    }
+
+    @Override
+    public Student findCurrentStudent() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        return studentRepository.findByUser_Username(username)
+                .orElseThrow(() -> new UserNotFoundException("Student with email " + username + " not found"));
+    }
 }

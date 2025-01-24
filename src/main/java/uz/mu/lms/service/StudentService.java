@@ -7,6 +7,7 @@ import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.StudentDto;
 import uz.mu.lms.dto.StudentProfileDto;
+import uz.mu.lms.model.Student;
 
 import java.util.List;
 
@@ -29,5 +30,7 @@ public interface StudentService {
 
     ResponseEntity<ResponseDto<StudentProfileDto>> updateProfileInfo(StudentProfileDto studentProfileDto);
 
+    List<Student> findStudentsByGroupIds(List<Integer> groupIds);
 
+    Student findCurrentStudent();
 }

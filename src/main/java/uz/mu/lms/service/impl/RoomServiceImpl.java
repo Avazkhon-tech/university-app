@@ -70,4 +70,11 @@ public class RoomServiceImpl implements RoomService {
                 .data(list)
                 .build();
     }
+
+    @Override
+    public Room findRoomById(Integer id) {
+        return roomRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Room with id %d not found".formatted(id))
+        );
+    }
 }

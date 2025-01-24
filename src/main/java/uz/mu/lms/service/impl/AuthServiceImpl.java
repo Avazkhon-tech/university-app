@@ -22,7 +22,7 @@ import uz.mu.lms.service.AuthService;
 import uz.mu.lms.service.OtpService;
 import uz.mu.lms.service.factory.OtpServiceFactory;
 import uz.mu.lms.service.jwt.JwtProvider;
-import uz.mu.lms.utils.OtpMethod;
+import uz.mu.lms.model.enums.OtpMethod;
 
 import java.util.Optional;
 

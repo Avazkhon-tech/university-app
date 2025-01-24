@@ -8,7 +8,7 @@ import uz.mu.lms.dto.ResetPasswordDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.Token;
 import uz.mu.lms.service.AuthService;
-import uz.mu.lms.utils.OtpMethod;
+import uz.mu.lms.model.enums.OtpMethod;
 
 @RestController
 @RequestMapping("/api/auth")

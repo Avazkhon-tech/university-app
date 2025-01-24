@@ -1,6 +1,8 @@
 package uz.mu.lms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import uz.mu.lms.model.Course;
 import uz.mu.lms.model.Student;
@@ -18,4 +20,11 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     boolean existsByUser_PhoneNumber(String phoneNumber);
 
     boolean existsByStudentId(String studentId);
+
+    @Query("""
+             SELECT s FROM Student s
+             JOIN s.group g
+             WHERE g.id IN :groupIds
+       """)
+    List<Student> findStudentsByGroupIds(@Param("groupIds") List<Integer> groupIds);
 }

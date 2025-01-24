@@ -40,7 +40,9 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
                    a.course.title AS courseTitle,
                    COUNT(a) AS totalLessons,
                    SUM(CASE WHEN a.status = 'ABSENT' THEN 1 ELSE 0 END) AS absentCount,
-                   (CAST(SUM(CASE WHEN a.status = 'PRESENT' THEN 1 ELSE 0 END) AS double) / COUNT(a)) * 100 AS percentage
+                   (CAST(SUM(CASE WHEN a.status = 'PRESENT' THEN 1 ELSE 0 END) AS double) / COUNT(a)) * 100 AS percentage,
+                   a.course.semester as semester,
+                   a.course.year as year
             FROM Attendance a
             WHERE a.student.id = :studentId
             GROUP BY courseId

@@ -73,6 +73,11 @@ public class LessonServiceImpl implements LessonService {
         }
     }
 
+    @Override
+    public void initializeLesson(Integer lessonId) {
+
+    }
+
     private void generateLessonsForSemester(Integer semester, Integer departmentId, LocalDate semesterStartDate, LocalDate semesterEndDate,
                                            LocalDate midtermStart, LocalDate midtermEnd, LocalDate finalStart, LocalDate finalEnd) {
 

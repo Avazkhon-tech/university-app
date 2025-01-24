@@ -18,6 +18,7 @@ import uz.mu.lms.service.TeacherService;
 import uz.mu.lms.service.mapper.DegreeMapper;
 import uz.mu.lms.service.mapper.TeacherMapper;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -116,4 +117,17 @@ public class TeacherServiceImpl implements TeacherService {
         return ResponseEntity.ok(dtoPaginatedResponseDto);
     }
 
+    @Override
+    public Teacher findTeacherById(Integer id) {
+        return teacherRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Teacher with id %d not found".formatted(id))
+        );
+    }
+
+    @Override
+    public List<Teacher> findAllTeachersByIds(List<Integer> ids) {
+        List<Teacher> teachers = new LinkedList<>();
+        ids.forEach(id -> teachers.add(findTeacherById(id)));
+        return teachers;
+    }
 }

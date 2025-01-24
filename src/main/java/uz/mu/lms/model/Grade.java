@@ -2,6 +2,7 @@ package uz.mu.lms.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -9,14 +10,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @EntityListeners(AuditingEntityListener.class)
 public class Grade {
 
@@ -27,9 +28,6 @@ public class Grade {
 
     @ManyToOne
     private Course course;
-
-    @ManyToOne
-    private Teacher teacher;
 
     @ManyToOne
     private Student student;
@@ -49,4 +47,5 @@ public class Grade {
 
     @LastModifiedBy
     private Integer updatedBy;
+
 }

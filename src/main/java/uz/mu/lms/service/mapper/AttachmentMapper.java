@@ -9,7 +9,6 @@ import uz.mu.lms.dto.AttachmentDto;
 import uz.mu.lms.model.Attachment;
 
 @Mapper(componentModel = "spring")
-@RequiredArgsConstructor
 public abstract class AttachmentMapper implements AbstractMapper<Attachment, AttachmentDto> {
 
     @Value("${spring.defaultValues.host}")

@@ -90,4 +90,11 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.findByStudentId(student.getId(), hostAddr);
 
     }
+
+    @Override
+    public Course findCourseById(Integer id) {
+        return courseRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Course with id %d not found".formatted(id))
+        );
+    }
 }
