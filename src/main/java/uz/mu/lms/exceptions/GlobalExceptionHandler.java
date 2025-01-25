@@ -2,11 +2,11 @@ package uz.mu.lms.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import uz.mu.lms.dto.ResponseDto;
 
@@ -18,157 +18,140 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationFailureException.class)
-    public ResponseEntity<ResponseDto<?>> handleAuthenticationFailure(AuthenticationFailureException authenticationFailureException) {
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseDto<?> handleAuthenticationFailure(AuthenticationFailureException authenticationFailureException) {
         log.info(authenticationFailureException.getMessage());
-        return ResponseEntity
-                .status(401)
-                .body(ResponseDto
-                        .builder()
-                        .code(401)
-                        .success(false)
-                        .message(authenticationFailureException.getMessage())
-                        .build());
+        return ResponseDto.builder()
+                .code(401)
+                .success(false)
+                .message(authenticationFailureException.getMessage())
+                .build();
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ResponseDto<String>> handleUsernameNotFoundException(UsernameNotFoundException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseDto<?> handleUsernameNotFoundException(UsernameNotFoundException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(404)
-                .body(ResponseDto.<String>builder()
-                        .code(404)
-                        .message("User not found")
-                        .data(null)
-                        .success(false)
-                        .build());
+        return ResponseDto.<String>builder()
+                .code(404)
+                .message("User not found")
+                .success(false)
+                .build();
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ResponseDto<?>> handleContentDoesNotExistException(ResourceNotFoundException e) {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseDto<?> handleContentDoesNotExistException(ResourceNotFoundException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                ResponseDto
-                        .builder()
-                        .code(409)
-                        .message(e.getMessage())
-                        .build()
-        );
+        return ResponseDto.builder()
+                .code(409)
+                .message(e.getMessage())
+                .build();
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ResponseEntity<ResponseDto<?>> handleResourceAlreadyExistsException(ResourceAlreadyExistsException e) {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseDto<?> handleResourceAlreadyExistsException(ResourceAlreadyExistsException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                ResponseDto
-                        .builder()
-                        .code(409)
-                        .message(e.getMessage())
-                        .build()
-        );
+        return ResponseDto.builder()
+                .code(409)
+                .message(e.getMessage())
+                .build();
     }
 
     @ExceptionHandler(ImageDoesNotExistException.class)
-    public ResponseEntity<ResponseDto<?>> handleImageDoesNotExistException(ImageDoesNotExistException e) {
+    public ResponseDto<?> handleImageDoesNotExistException(ImageDoesNotExistException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                ResponseDto
-                        .builder()
-                        .code(404)
-                        .message(e.getMessage())
-                        .build()
-        );
+        return ResponseDto.builder()
+                .code(404)
+                .message(e.getMessage())
+                .build();
     }
 
     @ExceptionHandler(FileNotSupportedException.class)
-    public ResponseEntity<ResponseDto<?>> handleEmptyFileException(FileNotSupportedException e) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseDto<?> handleEmptyFileException(FileNotSupportedException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ResponseDto
-                        .builder()
-                        .code(400)
-                        .message(e.getMessage())
-                        .build()
-        );
+        return ResponseDto.builder()
+                .code(400)
+                .message(e.getMessage())
+                .build();
     }
 
     @ExceptionHandler(PasswordNotAcceptedException.class)
-    public ResponseEntity<ResponseDto<?>> handlePasswordNotAcceptedException(PasswordNotAcceptedException e) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseDto<?> handlePasswordNotAcceptedException(PasswordNotAcceptedException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ResponseDto
-                        .builder()
-                        .code(400)
-                        .message(e.getMessage())
-                        .build()
-        );
+        return ResponseDto.builder()
+                .code(400)
+                .message(e.getMessage())
+                .build();
     }
 
     @ExceptionHandler(DuplicateKeyValueException.class)
-    public ResponseEntity<ResponseDto<?>> handleDuplicateKey(DuplicateKeyValueException e) {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseDto<?> handleDuplicateKey(DuplicateKeyValueException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                ResponseDto
-                        .builder()
-                        .code(409)
-                        .message(e.getMessage())
-                        .build()
-        );
+        return ResponseDto.builder()
+                .code(409)
+                .message(e.getMessage())
+                .build();
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ResponseDto<?>> handleUserNotFound(UserNotFoundException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseDto<?> handleUserNotFound(UserNotFoundException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                ResponseDto
-                        .builder()
-                        .code(404)
-                        .message(e.getMessage())
-                        .build()
-        );
+        return ResponseDto.builder()
+                .code(404)
+                .message(e.getMessage())
+                .build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseDto<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.info(ex.getMessage());
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return ResponseDto.<Map<String, String>>builder()
+                .code(400)
+                .message("Invalid field values provided")
+                .success(false)
+                .data(errors)
+                .build();
     }
 
+
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ResponseDto<?>> handleUserAlreadyExistsExceptions(UserAlreadyExistsException e) {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseDto<Object> handleUserAlreadyExistsExceptions(UserAlreadyExistsException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                ResponseDto
-                        .builder()
-                        .code(409)
-                        .message(e.getMessage())
-                        .build()
-        );
+        return ResponseDto.builder()
+                .code(409)
+                .message(e.getMessage())
+                .build();
     }
 
     @ExceptionHandler(CouldNotProcessRequestException.class)
-    public ResponseEntity<ResponseDto<?>> handleCouldNotProcessRequestException(CouldNotProcessRequestException e) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseDto<?> handleCouldNotProcessRequestException(CouldNotProcessRequestException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                ResponseDto
-                        .builder()
-                        .code(500)
-                        .message(e.getMessage())
-                        .build()
-        );
+        return ResponseDto.builder()
+                .code(500)
+                .message(e.getMessage())
+                .build();
     }
 
     @ExceptionHandler(StudentIsNotInUniversityZoneException.class)
-    public ResponseEntity<ResponseDto<?>> handleCouldNotProcessRequestException(StudentIsNotInUniversityZoneException e) {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseDto<?> handleCouldNotProcessRequestException(StudentIsNotInUniversityZoneException e) {
         log.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                ResponseDto
-                        .builder()
-                        .code(409)
-                        .message(e.getMessage())
-                        .build()
-        );
+        return ResponseDto.builder()
+                .code(409)
+                .message(e.getMessage())
+                .build();
     }
 }
