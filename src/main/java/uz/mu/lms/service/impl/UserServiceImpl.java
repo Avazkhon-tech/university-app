@@ -3,12 +3,9 @@ package uz.mu.lms.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.mu.lms.dto.PaginatedResponseDto;
-import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.UserDto;
 import uz.mu.lms.exceptions.DuplicateKeyValueException;
 import uz.mu.lms.model.User;
@@ -29,7 +26,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<ResponseDto<UserDto>> addUser(UserDto userDto) {
+    @Override
+    public UserDto addUser(UserDto userDto) {
         User entity = userMapper.toEntity(userDto);
         entity.setRole(roleRepository.findByName(RoleName.ROLE_USER.toString()));
 
@@ -43,45 +41,26 @@ public class UserServiceImpl implements UserService {
 
         entity.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User saved = userRepository.save(entity);
-
-        ResponseDto<UserDto> responseDto = ResponseDto.<UserDto>builder()
-                .success(true)
-                .code(200)
-                .message("User has been added successfully")
-                .data(userMapper.toDto(saved))
-                .build();
-        return ResponseEntity.ok(responseDto);
+        return userMapper.toDto(saved);
     }
 
-    public ResponseEntity<PaginatedResponseDto<List<UserDto>>> getAllUsers(Integer page, Integer size) {
+    @Override
+    public List<UserDto> getAllUsers(Integer page, Integer size) {
         Pageable pageable =  PageRequest.of(page, size);
 
-        List<UserDto> list  = userRepository.findAll(pageable).stream().map(userMapper::toDto).toList();
+        return userRepository.findAll(pageable).stream()
+                .map(userMapper::toDto)
+                .toList();
 
-        PaginatedResponseDto<List<UserDto>> responseDto = PaginatedResponseDto.<List<UserDto>>builder()
-                .success(true)
-                .code(200)
-                .message("Successfully retrieved")
-                .data(list)
-                .page(page)
-                .size(size)
-                .build();
-        return ResponseEntity.ok(responseDto);
     }
 
 
-    public ResponseEntity<ResponseDto<UserDto>> getUser(Integer id) {
+    @Override
+    public UserDto getUser(Integer id) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new UsernameNotFoundException("User with id " + id + " not found")
         );
-
-        ResponseDto<UserDto> responseDto = ResponseDto.<UserDto>builder()
-                .success(true)
-                .code(200)
-                .message("Successfully retrieved")
-                .data(userMapper.toDto(user))
-                .build();
-        return ResponseEntity.ok(responseDto);
+        return userMapper.toDto(user);
     }
 }
 

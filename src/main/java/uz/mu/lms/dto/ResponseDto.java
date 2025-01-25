@@ -9,10 +9,6 @@ public record ResponseDto<T> (
     String message,
     T data
 ) {
-
-    /*
-    data only
-     */
     public static <T> ResponseDto<T> success(T data) {
         return new ResponseDto<>(200, true, "OK", data);
     }
@@ -21,9 +17,6 @@ public record ResponseDto<T> (
         return new ResponseDto<>(200, true, message, data);
     }
 
-    /*
-    message only
-     */
     public static <T> ResponseDto<T> success(String message) {
         return new ResponseDto<>(200, true, message, null);
     }

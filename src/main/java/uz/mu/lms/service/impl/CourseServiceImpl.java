@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.CourseDto;
 import uz.mu.lms.dto.UserDetailsDto;
-import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
 import uz.mu.lms.exceptions.UserNotFoundException;
@@ -17,6 +16,7 @@ import uz.mu.lms.repository.CourseRepository;
 import uz.mu.lms.repository.DepartmentRepository;
 import uz.mu.lms.repository.StudentRepository;
 import uz.mu.lms.service.CourseService;
+import uz.mu.lms.service.StudentService;
 import uz.mu.lms.service.mapper.CourseMapper;
 
 import java.util.List;
@@ -31,33 +31,23 @@ public class CourseServiceImpl implements CourseService {
     @Value("${spring.defaultValues.host}")
     String hostAddr;
 
+    private final StudentService studentService;
     private final CourseRepository courseRepository;
     private final DepartmentRepository departmentRepository;
     private final StudentRepository studentRepository;
     private final CourseMapper courseMapper;
 
     @Override
-    public PaginatedResponseDto<List<CourseDto>> getAllCourses(Pageable pageable) {
-
-        var courses = courseRepository
+    public List<CourseDto> getAllCourses(Pageable pageable) {
+        return courseRepository
                 .findAll(pageable)
                 .stream()
                 .map(courseMapper::toDto)
                 .toList();
-
-        return PaginatedResponseDto.<List<CourseDto>>builder()
-                .page(pageable.getPageSize())
-                .size(courses.size())
-                .success(true)
-                .code(200)
-                .message("Successfully retrieved courses")
-                .data(courses)
-                .build();
-
     }
 
     @Override
-    public ResponseDto<CourseDto> createCourse(CourseDto courseDto) {
+    public CourseDto createCourse(CourseDto courseDto) {
 
         Optional<Department> department = departmentRepository.findById(courseDto.departmentId());
 
@@ -69,26 +59,15 @@ public class CourseServiceImpl implements CourseService {
 
         course.setDepartment(department.get());
         Course savedCourse = courseRepository.save(course);
-        CourseDto dtoCourse = courseMapper.toDto(savedCourse);
-
-        return ResponseDto.<CourseDto>builder()
-                .code(200)
-                .message("Successfully created the course")
-                .success(true)
-                .data(dtoCourse)
-                .build();
+        return courseMapper.toDto(savedCourse);
 
     }
 
 
     @Override
-    public List<StudentCourseProjection> getCoursesStudent(Authentication authentication) {
-        UserDetailsDto principal = (UserDetailsDto) authentication.getPrincipal();
-        Student student = studentRepository.findByUser_Username(principal.getUsername())
-                .orElseThrow(() -> new UserNotFoundException("Student with username %s not found"
-                .formatted(principal.getUsername())));
+    public List<StudentCourseProjection> getCoursesStudent() {
+        Student student = studentService.findCurrentStudent();
         return courseRepository.findByStudentId(student.getId(), hostAddr);
-
     }
 
     @Override

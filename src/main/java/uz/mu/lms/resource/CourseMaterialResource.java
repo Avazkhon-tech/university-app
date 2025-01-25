@@ -18,23 +18,24 @@ public class CourseMaterialResource {
     private final CourseMaterialService courseMaterialService;
 
     @GetMapping("/files/{courseId}")
-    public ResponseEntity<ResponseDto<List<CourseMaterialDto>>> getAllCourses(
-            @PathVariable Integer courseId) {
-        return ResponseEntity.ok(courseMaterialService.getCourseContents(courseId));
+    public ResponseDto<List<CourseMaterialDto>> getAllCourses(@PathVariable Integer courseId) {
+        return ResponseDto.success(courseMaterialService.getCourseContents(courseId));
     }
 
     @PostMapping
-    public ResponseEntity<?> addCourseMaterial(
+    public ResponseDto<?> addCourseMaterial(
             @RequestParam Integer courseId,
             @RequestParam String title,
             @RequestPart("file") MultipartFile file) {
-        return ResponseEntity.ok(courseMaterialService.addCourseMaterial(courseId, title, file));
+        courseMaterialService.addCourseMaterial(courseId, title, file);
+        return ResponseDto.success("OK");
     }
 
     @PostMapping("/list")
     public ResponseDto<?> addMaterialToExistingList(
             @RequestParam Integer materialId,
             @RequestPart("file") MultipartFile file) {
-        return courseMaterialService.addMaterialToExistingList(materialId, file);
+        courseMaterialService.addMaterialToExistingList(materialId, file);
+        return ResponseDto.success("OK");
     }
 }

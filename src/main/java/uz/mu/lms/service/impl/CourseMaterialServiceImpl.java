@@ -1,7 +1,6 @@
 package uz.mu.lms.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.CourseMaterialDto;
@@ -30,28 +29,21 @@ public class CourseMaterialServiceImpl implements CourseMaterialService {
     private final ContentService contentService;
 
     @Override
-    public ResponseDto<List<CourseMaterialDto>> getCourseContents(Integer courseId) {
+    public List<CourseMaterialDto> getCourseContents(Integer courseId) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Course with id %d not found"
                         .formatted(courseId)));
 
         List<CourseMaterial> courseMaterials = course.getCourseMaterials();
 
-        List<CourseMaterialDto> list = courseMaterials
+        return courseMaterials
                 .stream()
                 .map(courseMaterialMapper::toDto)
                 .toList();
-
-        return ResponseDto.<List<CourseMaterialDto>>builder()
-                .code(200)
-                .message("OK")
-                .success(true)
-                .data(list)
-                .build();
     }
 
     @Override
-    public ResponseDto<String> addCourseMaterial(Integer courseId, String title,  MultipartFile file) {
+    public void addCourseMaterial(Integer courseId, String title, MultipartFile file) {
         Attachment attachment = contentService.createContent(file);
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Course with id %d not found"
@@ -63,18 +55,11 @@ public class CourseMaterialServiceImpl implements CourseMaterialService {
                 .course(course)
                 .attachments(List.of(attachment))
                 .build();
-
         courseMaterialRepository.save(courseMaterial);
-
-        return ResponseDto.<String>builder()
-                .code(200)
-                .message("OK")
-                .success(true)
-                .build();
     }
 
     @Override
-    public ResponseDto<?> addMaterialToExistingList(Integer materialId, MultipartFile file) {
+    public void addMaterialToExistingList(Integer materialId, MultipartFile file) {
         CourseMaterial courseMaterial = courseMaterialRepository.findById(materialId)
                 .orElseThrow(() -> new ResourceNotFoundException("Material list with id %d not found"
                         .formatted(materialId)));
@@ -82,12 +67,5 @@ public class CourseMaterialServiceImpl implements CourseMaterialService {
         Attachment attachment = contentService.createContent(file);
         courseMaterial.getAttachments().add(attachment);
         courseMaterialRepository.save(courseMaterial);
-
-        return ResponseDto.builder()
-                .code(200)
-                .message("OK")
-                .success(true)
-                .build();
-
     }
 }

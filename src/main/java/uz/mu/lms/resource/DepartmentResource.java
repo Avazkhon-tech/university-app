@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.mu.lms.dto.DepartmentDto;
 import uz.mu.lms.dto.PaginatedResponseDto;
+import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.service.DepartmentService;
 
 import java.util.List;
@@ -19,12 +20,14 @@ public class DepartmentResource {
     private final DepartmentService departmentService;
 
     @GetMapping
-    public ResponseEntity<PaginatedResponseDto<List<DepartmentDto>>> getDepartments(@PageableDefault Pageable pageable) {
-        return departmentService.getAllDepartments(pageable);
+    public PaginatedResponseDto<List<DepartmentDto>> getDepartments(@PageableDefault Pageable pageable) {
+        List<DepartmentDto> departments = departmentService.getAllDepartments(pageable);
+        return PaginatedResponseDto.success(pageable.getPageNumber(), pageable.getPageSize(), departments);
     }
 
     @PostMapping
-    public ResponseEntity<DepartmentDto> createDepartment(@RequestBody DepartmentDto departmentDto) {
-        return departmentService.createDepartment(departmentDto);
+    public ResponseDto<DepartmentDto> createDepartment(@RequestBody DepartmentDto departmentDto) {
+        DepartmentDto department = departmentService.createDepartment(departmentDto);
+        return ResponseDto.success(department);
     }
 }

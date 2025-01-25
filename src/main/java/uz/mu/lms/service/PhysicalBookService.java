@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.BookCategoryDto;
 import uz.mu.lms.dto.PhysicalBookDto;
-import uz.mu.lms.dto.ResponseDto;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface PhysicalBookService {
 
     PhysicalBookDto addPhysicalBook(PhysicalBookDto bookDto, MultipartFile coverImage);
 
-    ResponseDto<?> deletePhysicalBook(Integer bookId);
+    void deletePhysicalBook(Integer bookId);
 
-    ResponseDto<List<BookCategoryDto>> getPhysicalBookCategories();
+    List<BookCategoryDto> getPhysicalBookCategories();
 }

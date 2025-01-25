@@ -3,7 +3,6 @@ package uz.mu.lms.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.*;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
@@ -36,7 +35,7 @@ public class TeacherServiceImpl implements TeacherService {
 
 
     @Override
-    public ResponseEntity<ResponseDto<TeacherDto>> addTeacher(TeacherDto teacherDto) {
+    public TeacherDto addTeacher(TeacherDto teacherDto) {
         if (teacherRepository.existsByUser_PhoneNumber(teacherDto.userDto().getPhoneNumber()))
             throw new UserAlreadyExistsException("Teacher with phone number " +
                     teacherDto.userDto().getPhoneNumber() + " already exists");
@@ -75,46 +74,21 @@ public class TeacherServiceImpl implements TeacherService {
         }
         departmentRepository.saveAll(departments);
 
-        ResponseDto<TeacherDto> teacherDtoResponseDto = ResponseDto
-                .<TeacherDto>builder()
-                .success(true)
-                .code(200)
-                .message("Teacher added successfully")
-                .data(teacherMapper.toDto(savedTeacher))
-                .build();
-
-        return ResponseEntity.ok(teacherDtoResponseDto);
+        return teacherMapper.toDto(savedTeacher);
      }
 
     @Override
-    public ResponseEntity<ResponseDto<?>> deleteTeacher(Integer id) {
+    public void deleteTeacher(Integer id) {
         if (!teacherRepository.existsById(id))
             throw new UserNotFoundException("Teacher with id " + id + " does not exist");
-
         teacherRepository.deleteById(id);
-        return ResponseEntity.ok(ResponseDto
-                .builder()
-                .success(true)
-                .code(200)
-                .message("Teacher with id " + id + " deleted successfully")
-                .build()
-        );
     }
 
     @Override
-    public ResponseEntity<PaginatedResponseDto<List<TeacherDto>>> getTeachers(Pageable pageable) {
-        Page<Teacher> all = teacherRepository.findAll(pageable);
-        List<TeacherDto> list = all.stream().map(teacherMapper::toDto).toList();
-        PaginatedResponseDto<List<TeacherDto>> dtoPaginatedResponseDto = PaginatedResponseDto
-                .<List<TeacherDto>>builder()
-                .success(true)
-                .code(200)
-                .message("Teacher list retrieved successfully")
-                .page(pageable.getPageNumber())
-                .size(pageable.getPageSize())
-                .data(list)
-                .build();
-        return ResponseEntity.ok(dtoPaginatedResponseDto);
+    public List<TeacherDto> getTeachers(Pageable pageable) {
+        return teacherRepository.findAll(pageable).stream().
+                map(teacherMapper::toDto)
+                .toList();
     }
 
     @Override

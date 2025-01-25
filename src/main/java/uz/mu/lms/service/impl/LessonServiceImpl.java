@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.UserNotFoundException;
 import uz.mu.lms.model.*;
 import uz.mu.lms.projection.ScheduleProjection;
@@ -26,7 +25,7 @@ public class LessonServiceImpl implements LessonService {
     private final GroupRepository groupRepository;
 
     @Override
-    public ResponseDto<List<ScheduleProjection>> getLessonsForToday(LocalDate date) {
+    public List<ScheduleProjection> getLessonsForToday(LocalDate date) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -34,15 +33,7 @@ public class LessonServiceImpl implements LessonService {
         Student student = studentRepository.findByUser_Username(username)
                 .orElseThrow(() -> new UserNotFoundException("Student not found"));
 
-        List<ScheduleProjection> lessonsByDate = lessonRepository.findLessonsByDate(date, student.getGroup().getId());
-
-        return ResponseDto.<List<ScheduleProjection>>
-                builder()
-                .code(200)
-                .success(true)
-                .message("OK")
-                .data(lessonsByDate)
-                .build();
+        return lessonRepository.findLessonsByDate(date, student.getGroup().getId());
     }
 
     @Override

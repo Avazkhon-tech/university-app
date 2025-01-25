@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.DepartmentDto;
-import uz.mu.lms.dto.PaginatedResponseDto;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
 import uz.mu.lms.model.Department;
 import uz.mu.lms.model.Faculty;
@@ -27,26 +26,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentMapper departmentMapper;
 
     @Override
-    public ResponseEntity<PaginatedResponseDto<List<DepartmentDto>>> getAllDepartments(Pageable pageable) {
-        List<DepartmentDto> list = departmentRepository.findAll(pageable)
+    public List<DepartmentDto> getAllDepartments(Pageable pageable) {
+        return departmentRepository.findAll(pageable)
                 .stream()
                 .map(departmentMapper::toDto).toList();
-
-        var response = PaginatedResponseDto
-                .<List<DepartmentDto>>builder()
-                .code(200)
-                .message("Successfully retrieved departments")
-                .success(true)
-                .data(list)
-                .size(list.size())
-                .page(pageable.getPageNumber() + 1)
-                .build();
-
-        return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<DepartmentDto> createDepartment(DepartmentDto departmentDto) {
+    public DepartmentDto createDepartment(DepartmentDto departmentDto) {
         Optional<Faculty> faculty = facultyRepository.findById(departmentDto.faculty().id());
 
         Department entity = departmentMapper.toEntity(departmentDto);
@@ -61,8 +48,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         entity = departmentRepository.save(entity);
 
-        DepartmentDto dto = departmentMapper.toDto(entity);
+        return departmentMapper.toDto(entity);
 
-        return ResponseEntity.ok(dto);
     }
 }

@@ -22,18 +22,19 @@ public class CourseResource {
     private final CourseService courseService;
 
     @GetMapping
-    public ResponseEntity<PaginatedResponseDto<List<CourseDto>>> getCourses(@PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(courseService.getAllCourses(pageable));
+    public PaginatedResponseDto<List<CourseDto>> getCourses(@PageableDefault Pageable pageable) {
+        List<CourseDto> courses = courseService.getAllCourses(pageable);
+        return PaginatedResponseDto.success(pageable.getPageSize(), courses.size(), courses);
     }
 
     @GetMapping("/student")
-    public ResponseEntity<List<StudentCourseProjection>> getCourses(Authentication authentication) {
-        return ResponseEntity.ok(courseService.getCoursesStudent(authentication));
+    public ResponseDto<List<StudentCourseProjection>> getCourses() {
+        return ResponseDto.success(courseService.getCoursesStudent());
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto<CourseDto>> createCourse(@RequestBody CourseDto courseDto) {
-        return ResponseEntity.ok(courseService.createCourse(courseDto));
+    public ResponseDto<CourseDto> createCourse(@RequestBody CourseDto courseDto) {
+        return ResponseDto.success(courseService.createCourse(courseDto));
     }
 
 }

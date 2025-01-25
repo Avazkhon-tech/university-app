@@ -21,7 +21,7 @@ public class AcademicCalendarImpl implements AcademicCalendarService {
     private final AcademicCalendarMapper academicCalendarMapper;
     private final DepartmentRepository departmentRepository;
 
-    public ResponseDto<AcademicCalendarDto> createAcademicCalendar(AcademicCalendarDto academicCalendarDto) {
+    public AcademicCalendarDto createAcademicCalendar(AcademicCalendarDto academicCalendarDto) {
 
         if (academicCalendarRepository.existsByDepartmentId(academicCalendarDto.departmentId())) {
             throw new ResourceNotFoundException("Academic Calendar already exists for this department");
@@ -35,12 +35,7 @@ public class AcademicCalendarImpl implements AcademicCalendarService {
 
         AcademicCalendar save = academicCalendarRepository.save(entity);
 
-        return ResponseDto.<AcademicCalendarDto>builder()
-                .code(200)
-                .message("OK")
-                .success(true)
-                .data(academicCalendarMapper.toDto(save))
-                .build();
+        return academicCalendarMapper.toDto(save);
     }
 
 }

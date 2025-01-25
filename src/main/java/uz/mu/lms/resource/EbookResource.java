@@ -2,7 +2,6 @@ package uz.mu.lms.resource;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,29 +22,14 @@ public class EbookResource {
     private final EBookService eBookService;
 
     @GetMapping("/categories")
-    public ResponseEntity<ResponseDto<List<BookCategoryDto>>> getAllEBooksCategory() {
-        return ResponseEntity.ok(eBookService.getAllBookCategories());
+    public ResponseDto<List<BookCategoryDto>> getAllEBooksCategory() {
+        return ResponseDto.success(eBookService.getAllBookCategories());
     }
 
     @GetMapping
-    public ResponseEntity<PaginatedResponseDto<List<EBookDto>>> getAllEBooks(
-            @PageableDefault Pageable pageable,
-            @RequestParam Integer categoryId
-    ) {
-
-        List<EBookDto> allEBooks = eBookService.getAllEBooks(pageable, categoryId);
-
-        PaginatedResponseDto<List<EBookDto>> response = PaginatedResponseDto.<List<EBookDto>>
-                        builder()
-                .data(allEBooks)
-                .size(allEBooks.size())
-                .page(pageable.getPageNumber())
-                .message("OK")
-                .success(true)
-                .code(200)
-                .build();
-
-        return ResponseEntity.ok(response);
+    public PaginatedResponseDto<List<EBookDto>> getAllEBooks(@PageableDefault Pageable pageable, @RequestParam Integer categoryId) {
+        List<EBookDto> eBooks = eBookService.getAllEBooks(pageable, categoryId);
+        return PaginatedResponseDto.success(pageable.getPageNumber(), eBooks.size(), eBooks);
     }
 
     @PostMapping
@@ -59,8 +43,8 @@ public class EbookResource {
 
     // for admins
     @DeleteMapping("/{bookId}")
-    public ResponseEntity<ResponseDto<?>> deleteEBook(@PathVariable Integer bookId) {
-        ResponseDto<?> responseDto = eBookService.deleteEBook(bookId);
-        return ResponseEntity.ok(responseDto);
+    public ResponseDto<?> deleteEBook(@PathVariable Integer bookId) {
+        eBookService.deleteEBook(bookId);
+        return ResponseDto.success("Book has been deleted");
     }
 }

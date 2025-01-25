@@ -22,7 +22,7 @@ public class TimeslotResource {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto<TimeslotDto>> createTimeslot(@RequestBody TimeslotDto timeslotDto) {
-        return ResponseEntity.ok(timeslotService.createTimeslot(timeslotDto));
+    public ResponseDto<TimeslotDto> createTimeslot(@RequestBody TimeslotDto timeslotDto) {
+        return ResponseDto.success(timeslotService.createTimeslot(timeslotDto));
     }
 }

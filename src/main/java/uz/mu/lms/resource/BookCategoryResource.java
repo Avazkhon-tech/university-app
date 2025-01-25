@@ -21,15 +21,14 @@ public class BookCategoryResource {
     private final BookCategoryService bookCategoryService;
 
     @GetMapping
-    public ResponseEntity<ResponseDto<List<BookCategoryDto>>> getAllCategories() {
-        ResponseDto<List<BookCategoryDto>> allBookCategories = bookCategoryService.getAllBookCategories();
-        return ResponseEntity.ok(allBookCategories);
+    public ResponseDto<List<BookCategoryDto>> getAllCategories() {
+        List<BookCategoryDto> allBookCategories = bookCategoryService.getAllBookCategories();
+        return ResponseDto.success(allBookCategories);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto<BookCategoryDto>> addCategory(@RequestBody BookCategoryDto bookCategoryDto) {
-        ResponseDto<BookCategoryDto> bookCategory = bookCategoryService.createBookCategory(bookCategoryDto);
-        return ResponseEntity.ok(bookCategory);
+    public ResponseDto<BookCategoryDto> addCategory(@RequestBody BookCategoryDto bookCategoryDto) {
+        BookCategoryDto bookCategory = bookCategoryService.createBookCategory(bookCategoryDto);
+        return ResponseDto.success(bookCategory, "Book category has been created successfully");
     }
-
 }

@@ -1,9 +1,6 @@
 package uz.mu.lms.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
@@ -20,16 +17,9 @@ public class ContentServiceImpl implements ContentService {
 
     private final ContentRepository contentRepository;
 
-    public ResponseEntity<byte[]> retrieveContent(Integer id) {
-        Attachment byId = contentRepository.findById(id)
+    public Attachment retrieveContent(Integer id) {
+        return contentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Content with id " + id + " not found"));
-
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.parseMediaType(byId.getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
-                        byId.getFilename().substring(byId.getFilename().indexOf('_') + 1) + "\"")
-                .body(byId.getBytes());
     }
 
 

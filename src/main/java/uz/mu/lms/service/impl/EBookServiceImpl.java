@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.BookCategoryDto;
-import uz.mu.lms.dto.BorrowingDto;
 import uz.mu.lms.dto.EBookDto;
 import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
@@ -21,8 +20,6 @@ import uz.mu.lms.service.mapper.EBookMapper;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -36,19 +33,12 @@ public class EBookServiceImpl implements EBookService {
 
 
     @Override
-    public ResponseDto<List<BookCategoryDto>> getAllBookCategories() {
-        List<BookCategoryDto> list = eBookRepository.findAllBookCategories()
+    public List<BookCategoryDto> getAllBookCategories() {
+        return eBookRepository.findAllBookCategories()
                 .stream()
                 .map(bookCategoryMapper::toDto)
                 .toList();
 
-        return ResponseDto
-                .<List<BookCategoryDto>>builder()
-                .data(list)
-                .message("OK")
-                .code(200)
-                .success(true)
-                .build();
     }
 
     public List<EBookDto> getAllEBooks(Pageable pageable, Integer categoryId) {
@@ -83,19 +73,11 @@ public class EBookServiceImpl implements EBookService {
     }
 
     @Override
-    public ResponseDto<?> deleteEBook(Integer bookId) {
+    public void deleteEBook(Integer bookId) {
         if(!eBookRepository.existsById(bookId)) {
             throw new ResourceNotFoundException("Book with id " + bookId + " does not exist");
         }
-
         eBookRepository.deleteById(bookId);
-        return ResponseDto
-                .builder()
-                .message("Book with id " + bookId + " has been deleted")
-                .code(200)
-                .success(true)
-                .build();
-
     }
 }
 

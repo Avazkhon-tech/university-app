@@ -12,8 +12,6 @@ import uz.mu.lms.repository.*;
 import uz.mu.lms.service.GroupService;
 import uz.mu.lms.service.mapper.GroupMapper;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +32,7 @@ public class GroupServiceImpl implements GroupService {
 
 
     @Override
-    public ResponseDto<?> createGroup(GroupDto groupDto) {
+    public GroupDto createGroup(GroupDto groupDto) {
 
         Group group = groupMapper.toEntity(groupDto);
 
@@ -52,16 +50,11 @@ public class GroupServiceImpl implements GroupService {
 
         group.setCourses(courses);
         Group saved = groupRepository.save(group);
-
-        return ResponseDto.builder()
-                .code(200)
-                .success(true)
-                .message("Group with name %s and id %d has been created successfully".formatted(saved.getName(), saved.getId()))
-                .build();
+        return groupMapper.toDto(saved);
     }
 
     @Override
-    public ResponseDto<?> enrollStudentInGroup(Integer groupId, Integer studentId) {
+    public void enrollStudentInGroup(Integer groupId, Integer studentId) {
 
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student with id %s not found"
@@ -90,11 +83,6 @@ public class GroupServiceImpl implements GroupService {
         student.setGroup(group);
         studentRepository.save(student);
         groupRepository.save(group);
-        return ResponseDto
-                .builder()
-                .code(200)
-                .success(true)
-                .message("Student enrolled successfully")
-                .build();
+
     }
 }

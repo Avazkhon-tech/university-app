@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TimeslotService {
 
-    ResponseDto<TimeslotDto> createTimeslot(TimeslotDto timeslotDto);
+    TimeslotDto createTimeslot(TimeslotDto timeslotDto);
 
     ResponseDto<List<TimeslotDto>> getAllTimeslots();
 }

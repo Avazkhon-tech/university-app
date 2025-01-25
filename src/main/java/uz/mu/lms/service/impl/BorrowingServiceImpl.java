@@ -1,13 +1,11 @@
 package uz.mu.lms.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.BorrowingDto;
-import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.ResourceAlreadyExistsException;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
 import uz.mu.lms.exceptions.UserNotFoundException;
@@ -22,7 +20,6 @@ import uz.mu.lms.service.mapper.BorrowingMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +31,7 @@ public class BorrowingServiceImpl implements BorrowingService {
     private final BorrowingMapper borrowingMapper;
 
     @Override
-    public ResponseDto<?> borrowBook(Integer bookId) {
+    public void borrowBook(Integer bookId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -66,45 +63,27 @@ public class BorrowingServiceImpl implements BorrowingService {
             .dueDate(LocalDateTime.now().plusWeeks(2))
             .build();
 
-        Borrowing savedBorrowing = borrowingRepository.save(borrowing);
-        return ResponseDto.builder()
-                .code(200)
-                .success(true)
-                .message("You can collect the book from the library, borrowing id: " + savedBorrowing.getId())
-                .build();
+        borrowingRepository.save(borrowing);
+
     }
 
     @Override
-    public ResponseDto<?> returnBook(Integer borrowingId) {
+    public void returnBook(Integer borrowingId) {
         Borrowing borrowing = borrowingRepository.findByIdAndReturnedAtIsNull(borrowingId)
             .orElseThrow(() -> new ResourceNotFoundException("Borrowing record not found"));
-
 
         borrowing.setReturnedAt(LocalDateTime.now());
         borrowing.getBook().setQuantity(borrowing.getBook().getQuantity() + 1);
         borrowingRepository.save(borrowing);
-        return ResponseDto
-                .builder()
-                .code(200)
-                .success(true)
-                .message("Returned the book successfully")
-                .build();
     }
 
     @Override
-    public ResponseDto<List<BorrowingDto>> getBorrowedBooks(Pageable pageable) {
-        List<BorrowingDto> list = borrowingRepository.findByReturnedAtIsNull(pageable)
+    public List<BorrowingDto> getBorrowedBooks(Pageable pageable) {
+        return borrowingRepository.findByReturnedAtIsNull(pageable)
                 .stream()
                 .map(borrowingMapper::toDto)
                 .toList();
 
-        return ResponseDto.<List<BorrowingDto>>
-                builder()
-                .success(true)
-                .code(200)
-                .data(list)
-                .message("List of borrowings that have not been returned yet")
-                .build();
 
     }
 }

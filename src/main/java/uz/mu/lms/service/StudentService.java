@@ -1,12 +1,10 @@
 package uz.mu.lms.service;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
-import uz.mu.lms.dto.PaginatedResponseDto;
-import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.dto.StudentDto;
 import uz.mu.lms.dto.StudentProfileDto;
+import uz.mu.lms.model.Attachment;
 import uz.mu.lms.model.Student;
 
 import java.util.List;
@@ -14,21 +12,19 @@ import java.util.List;
 
 public interface StudentService {
 
+    StudentDto addStudent(StudentDto studentDto);
 
-    // TODO separate business logic from controller
-    ResponseEntity<ResponseDto<StudentDto>> addStudent(StudentDto studentDto);
+    void uploadProfileImage(MultipartFile file);
 
-    ResponseEntity<ResponseDto<StudentDto>> uploadProfileImage(MultipartFile file);
+    Attachment getProfileImage();
 
-    ResponseEntity<byte[]> getProfileImage();
+    void deleteStudent(Integer id);
 
-    ResponseEntity<ResponseDto<StudentDto>> deleteStudent(Integer id);
+    List<StudentDto> getAllStudents(Pageable pageable);
 
-    ResponseEntity<PaginatedResponseDto<List<StudentDto>>> getAllStudents(Pageable pageable);
+    StudentProfileDto getProfileInfo();
 
-    ResponseEntity<ResponseDto<StudentProfileDto>> getProfileInfo();
-
-    ResponseEntity<ResponseDto<StudentProfileDto>> updateProfileInfo(StudentProfileDto studentProfileDto);
+    StudentProfileDto updateProfileInfo(StudentProfileDto studentProfileDto);
 
     List<Student> findStudentsByGroupIds(List<Integer> groupIds);
 

@@ -19,28 +19,32 @@ public class AuthResource {
 
     // FOR ALL
     @PostMapping("/login")
-    public ResponseEntity<ResponseDto<Token>> login(@RequestBody LoginDto loginDto) {
-        return authService.login(loginDto);
+    public ResponseDto<Token> login(@RequestBody LoginDto loginDto) {
+        return ResponseDto.success(authService.login(loginDto), "Successfully logged in");
     }
 
     @PostMapping("/get-otp-email/{email}")
-    public ResponseDto<String> sendOTPbyEmail(@PathVariable String email) {
-        return authService.SendOTP(email, OtpMethod.EMAIL);
+    public ResponseDto<?> sendOTPbyEmail(@PathVariable String email) {
+        authService.SendOTP(email, OtpMethod.EMAIL);
+        return ResponseDto.success("Verification code has been sent to your email");
     }
 
     @PostMapping("/verify-otp-email")
-    public ResponseEntity<ResponseDto<Token>> verifyOTPEmail(@RequestBody LoginDto loginDto) {
-        return authService.verifyOTP(loginDto, OtpMethod.EMAIL);
+    public ResponseDto<Token> verifyOTPEmail(@RequestBody LoginDto loginDto) {
+        Token token = authService.verifyOTP(loginDto, OtpMethod.EMAIL);
+        return ResponseDto.success(token, "Successfully verified");
     }
 
     @PostMapping("/get-otp-sms/{phoneNumber}")
     public ResponseDto<String> SendOTPbyPhoneNumber(@PathVariable String phoneNumber) {
-        return authService.SendOTP(phoneNumber, OtpMethod.PHONE_NUMBER);
+        authService.SendOTP(phoneNumber, OtpMethod.PHONE_NUMBER);
+        return ResponseDto.success("Verification code has been sent to your phone number");
     }
 
     @PostMapping("/verify-otp-sms")
-    public ResponseEntity<ResponseDto<Token>> verifyOTPPhoneNumber(@RequestBody LoginDto loginDto) {
-        return authService.verifyOTP(loginDto, OtpMethod.PHONE_NUMBER);
+    public ResponseDto<Token> verifyOTPPhoneNumber(@RequestBody LoginDto loginDto) {
+        Token token = authService.verifyOTP(loginDto, OtpMethod.PHONE_NUMBER);
+        return ResponseDto.success(token, "Successfully verified");
     }
 
     @PostMapping("/reset-password")
@@ -48,6 +52,7 @@ public class AuthResource {
             @RequestBody ResetPasswordDto resetPasswordDto,
             @RequestHeader("Authorization") String token) {
 
-        return authService.resetPassword(resetPasswordDto, token);
+        authService.resetPassword(resetPasswordDto, token);
+        return ResponseDto.success("Password has been reset");
     }
 }

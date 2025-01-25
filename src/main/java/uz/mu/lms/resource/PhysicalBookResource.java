@@ -44,9 +44,9 @@ public class PhysicalBookResource {
 
 
     @GetMapping("/categories")
-    public ResponseEntity<ResponseDto<List<BookCategoryDto>>> getAllCategories() {
-        ResponseDto<List<BookCategoryDto>> list = physicalBookService.getPhysicalBookCategories();
-        return ResponseEntity.ok(list);
+    public ResponseDto<List<BookCategoryDto>> getAllCategories() {
+        List<BookCategoryDto> categories = physicalBookService.getPhysicalBookCategories();
+        return ResponseDto.success(categories);
     }
 
     @PostMapping
@@ -60,8 +60,8 @@ public class PhysicalBookResource {
 
     // for admins
     @DeleteMapping("/{bookId}")
-    public ResponseEntity<ResponseDto<?>> deleteEBook(@PathVariable Integer bookId) {
-        ResponseDto<?> responseDto = physicalBookService.deletePhysicalBook(bookId);
-        return ResponseEntity.ok(responseDto);
+    public ResponseDto<?> deleteEBook(@PathVariable Integer bookId) {
+        physicalBookService.deletePhysicalBook(bookId);
+        return ResponseDto.success("Book has been deleted");
     }
 }

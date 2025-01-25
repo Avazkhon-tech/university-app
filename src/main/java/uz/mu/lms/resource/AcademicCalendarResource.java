@@ -18,8 +18,7 @@ public class AcademicCalendarResource {
     private final AcademicCalendarService academicCalendarService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<AcademicCalendarDto>> createAcademicCalendar(@RequestBody AcademicCalendarDto academicCalendarDto) {
-        ResponseDto<AcademicCalendarDto> academicCalendar = academicCalendarService.createAcademicCalendar(academicCalendarDto);
-        return ResponseEntity.ok(academicCalendar);
+    public ResponseDto<AcademicCalendarDto> createAcademicCalendar(@RequestBody AcademicCalendarDto academicCalendarDto) {
+        return ResponseDto.success(academicCalendarService.createAcademicCalendar(academicCalendarDto));
     }
 }

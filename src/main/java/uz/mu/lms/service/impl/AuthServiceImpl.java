@@ -1,7 +1,6 @@
 package uz.mu.lms.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     private final OtpServiceFactory otpServiceFactory;
 
     @Override
-    public ResponseEntity<ResponseDto<Token>> login(LoginDto loginDto) {
+    public Token login(LoginDto loginDto) {
 
         try {
             authenticationManager.authenticate(
@@ -49,24 +48,17 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String generatedToken = jwtProvider.generateToken(loginDto.username());
-        ResponseDto<Token> responseDto = ResponseDto.<Token>builder()
-                .code(200)
-                .message("Successfully logged in")
-                .data(new Token(generatedToken))
-                .success(true)
-                .build();
-        return ResponseEntity.ok(responseDto);
+        return new Token(generatedToken);
     }
 
 
     @Override
-    public ResponseDto<String> SendOTP(String username, OtpMethod otpMethod) {
+    public void SendOTP(String username, OtpMethod otpMethod) {
         User user = getUser(otpMethod, username);
         OtpService otpService;
 
         otpService = otpServiceFactory.getOtpService(otpMethod);
         int generatedCode = otpService.sendOTP(username);
-
 
         // TODO this will be changed to send proper code once i find a sms provider
         TempPassword tempPassword = TempPassword
@@ -76,17 +68,10 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         tempPasswordRepository.save(tempPassword);
-
-        return ResponseDto.<String>builder()
-                .code(200)
-                .success(true)
-                .message("Verification code has been sent to your "
-                        + otpMethod.toString().toLowerCase().replace("_", " "))
-                .build();
     }
 
     @Override
-    public ResponseEntity<ResponseDto<Token>> verifyOTP(LoginDto loginDto, OtpMethod otpMethod) {
+    public Token verifyOTP(LoginDto loginDto, OtpMethod otpMethod) {
         String username = loginDto.username();
         User user = getUser(otpMethod, username);
 
@@ -101,18 +86,14 @@ public class AuthServiceImpl implements AuthService {
         }
 
         tempPasswordRepository.deleteById(tempPassword.get().getUserId());
+
         String generatedToken = jwtProvider.generateToken(user.getUsername());
-        return ResponseEntity.ok()
-                .body(ResponseDto.<Token>builder()
-                        .code(200)
-                        .data(new Token(generatedToken))
-                        .message("Successfully verified")
-                        .success(true)
-                        .build());
+
+        return new Token(generatedToken);
     }
 
     @Override
-    public ResponseDto<String> resetPassword(ResetPasswordDto resetPasswordDto, String token) {
+    public void resetPassword(ResetPasswordDto resetPasswordDto, String token) {
 
         String username = jwtProvider.extractUserName(token.replace("Bearer ", ""));
         User user = userRepository.findByUsername(username)
@@ -128,12 +109,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.setPassword(passwordEncoder.encode(resetPasswordDto.password()));
+
         userRepository.save(user);
-        return ResponseDto.<String>builder()
-                .code(200)
-                .message("Successfully updated the password")
-                .success(true)
-                .build();
     }
 
 

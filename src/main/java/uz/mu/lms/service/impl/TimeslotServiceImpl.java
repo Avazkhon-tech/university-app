@@ -21,7 +21,7 @@ public class TimeslotServiceImpl implements TimeslotService {
     private final TimeslotMapper timeslotMapper;
 
     @Override
-    public ResponseDto<TimeslotDto> createTimeslot(TimeslotDto timeslotDto) {
+    public TimeslotDto createTimeslot(TimeslotDto timeslotDto) {
 
         boolean exists = timeslotRepository.existsByOrderNumber(timeslotDto.orderNumber());
         if (exists) {
@@ -31,13 +31,7 @@ public class TimeslotServiceImpl implements TimeslotService {
 
         TimeSlot entity = timeslotMapper.toEntity(timeslotDto);
         TimeSlot save = timeslotRepository.save(entity);
-
-        return ResponseDto.<TimeslotDto>builder()
-                .success(true)
-                .code(200)
-                .message("Timeslot created")
-                .data(timeslotMapper.toDto(save))
-                .build();
+        return timeslotMapper.toDto(save);
     }
 
     @Override

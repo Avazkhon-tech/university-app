@@ -19,23 +19,19 @@ public class BorrowingResource {
     private final BorrowingService borrowingService;
 
     @PostMapping("/borrow")
-    public ResponseEntity<ResponseDto<?>> borrowBook(
-            @RequestParam Integer bookId) {
-
-        ResponseDto<?> response = borrowingService.borrowBook(bookId);
-        return ResponseEntity.status(response.code()).body(response);
+    public ResponseDto<?> borrowBook(@RequestParam Integer bookId) {
+        borrowingService.borrowBook(bookId);
+        return ResponseDto.success("You can collect the book from the library using your student ID.");
     }
 
     @PostMapping("/return")
-    public ResponseEntity<ResponseDto<?>> returnBook(
-            @RequestParam Integer borrowingId) {
-        ResponseDto<?> response = borrowingService.returnBook(borrowingId);
-        return ResponseEntity.status(response.code()).body(response);
+    public ResponseDto<?> returnBook(@RequestParam Integer borrowingId) {
+        borrowingService.returnBook(borrowingId);
+        return ResponseDto.success("Returned the book successfully.");
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto<List<BorrowingDto>>> getAllBooks(
-            @PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(borrowingService.getBorrowedBooks(pageable));
+    public ResponseDto<List<BorrowingDto>> getAllBooks(@PageableDefault Pageable pageable) {
+        return ResponseDto.success(borrowingService.getBorrowedBooks(pageable), "List of borrowings that have not been returned yet");
     }
 }

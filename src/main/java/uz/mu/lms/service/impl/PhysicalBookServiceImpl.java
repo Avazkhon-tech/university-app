@@ -6,11 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uz.mu.lms.dto.BookCategoryDto;
 import uz.mu.lms.dto.PhysicalBookDto;
-import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
 import uz.mu.lms.model.Attachment;
 import uz.mu.lms.model.BookCategory;
-import uz.mu.lms.model.EBook;
 import uz.mu.lms.model.PhysicalBook;
 import uz.mu.lms.repository.BookCategoryRepository;
 import uz.mu.lms.repository.PhysicalBookRepository;
@@ -61,33 +59,20 @@ public class PhysicalBookServiceImpl implements PhysicalBookService {
     }
 
     @Override
-    public ResponseDto<?> deletePhysicalBook(Integer bookId) {
+    public void deletePhysicalBook(Integer bookId) {
          if(!physicalBookRepository.existsById(bookId)) {
             throw new ResourceNotFoundException("Book with id " + bookId + " does not exist");
         }
 
         physicalBookRepository.deleteById(bookId);
-        return ResponseDto
-                .builder()
-                .message("Book with id " + bookId + " has been deleted")
-                .code(200)
-                .success(true)
-                .build();
     }
 
     @Override
-    public ResponseDto<List<BookCategoryDto>> getPhysicalBookCategories() {
-        List<BookCategoryDto> list = physicalBookRepository.findAllBookCategories()
+    public List<BookCategoryDto> getPhysicalBookCategories() {
+        return physicalBookRepository.findAllBookCategories()
                 .stream()
                 .map(bookCategoryMapper::toDto)
                 .toList();
-        ;
-        return ResponseDto.<List<BookCategoryDto>>builder()
-                .code(200)
-                .success(true)
-                .message("OK")
-                .data(list)
-                .build();
     }
 }
 
