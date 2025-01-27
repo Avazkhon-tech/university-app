@@ -34,6 +34,8 @@ public class Course {
 
     private Integer year;
 
+    private Integer ECTSCredits;
+
     private Integer creditHours;
 
     private Integer creditPoints;

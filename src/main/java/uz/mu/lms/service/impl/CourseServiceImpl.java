@@ -3,14 +3,12 @@ package uz.mu.lms.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import uz.mu.lms.dto.CourseDto;
-import uz.mu.lms.dto.UserDetailsDto;
-import uz.mu.lms.dto.ResponseDto;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
-import uz.mu.lms.exceptions.UserNotFoundException;
-import uz.mu.lms.model.*;
+import uz.mu.lms.model.Course;
+import uz.mu.lms.model.Department;
+import uz.mu.lms.model.Student;
 import uz.mu.lms.projection.StudentCourseProjection;
 import uz.mu.lms.repository.CourseRepository;
 import uz.mu.lms.repository.DepartmentRepository;
@@ -34,7 +32,6 @@ public class CourseServiceImpl implements CourseService {
     private final StudentService studentService;
     private final CourseRepository courseRepository;
     private final DepartmentRepository departmentRepository;
-    private final StudentRepository studentRepository;
     private final CourseMapper courseMapper;
 
     @Override

@@ -18,13 +18,15 @@ public record CourseDto(
     @NotBlank(message = "The department has to be specified")
     Integer departmentId,
 
+    @NotBlank(message = "Year has to be specified")
     Integer year,
 
+    @NotBlank(message = "Semester has to be specified")
     Integer semester,
 
-    Integer creditHours,
+    @NotBlank(message = "ECTS credits has to be specified")
+    Integer ECTSCredits,
 
-    Integer creditPoints,
-
+    @NotBlank(message = "Grading scale has to be specified")
     GradingScaleDto gradingScale
 ) {}

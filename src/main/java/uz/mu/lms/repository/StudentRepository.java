@@ -3,7 +3,14 @@ package uz.mu.lms.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
+import uz.mu.lms.dto.UserDetailsDto;
+import uz.mu.lms.dto.UserDto;
+import uz.mu.lms.exceptions.ResourceNotFoundException;
+import uz.mu.lms.exceptions.UserNotFoundException;
 import uz.mu.lms.model.Course;
 import uz.mu.lms.model.Student;
 import uz.mu.lms.projection.CourseGradeProjection;
@@ -53,4 +60,12 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
                 ) AS final
             """)
     CourseGradeProjection findCourseGradeByStudentId(@Param("studentId") Integer studentId, @Param("courseId") Integer courseId);
+
+    default Student findCurrentStudent() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        return findByUser_Username(username)
+                .orElseThrow(() -> new UserNotFoundException("Student with email " + username + " not found"));
+    }
 }
