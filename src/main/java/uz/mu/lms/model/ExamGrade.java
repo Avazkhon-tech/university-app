@@ -20,6 +20,6 @@ public class ExamGrade extends Grade {
     private Lesson lesson;
 
     @Enumerated(EnumType.STRING)
-    private ExamType gradingType;
+    private ExamType examType;
 
 }

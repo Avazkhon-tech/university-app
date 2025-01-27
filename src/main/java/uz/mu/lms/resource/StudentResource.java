@@ -9,14 +9,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import uz.mu.lms.dto.PaginatedResponseDto;
-import uz.mu.lms.dto.ResponseDto;
-import uz.mu.lms.dto.StudentDto;
-import uz.mu.lms.dto.StudentProfileDto;
+import uz.mu.lms.dto.*;
 import uz.mu.lms.model.Attachment;
+import uz.mu.lms.projection.CourseGradeProjection;
+import uz.mu.lms.projection.StudentCourseProjection;
 import uz.mu.lms.service.StudentService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/student")
@@ -69,5 +69,11 @@ public class StudentResource {
     @PostMapping("/profile-info")
     public ResponseDto<StudentProfileDto> updateProfileInfo(@Valid @RequestBody StudentProfileDto studentProfileDto) {
         return ResponseDto.success(studentService.updateProfileInfo(studentProfileDto));
+    }
+
+
+    @GetMapping("/course-summary")
+    public ResponseDto<Map<String, ScoreDto>> getCourseGrades(@RequestParam Integer courseId) {
+        return ResponseDto.success(studentService.getCourseGrades(courseId));
     }
 }

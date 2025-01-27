@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import uz.mu.lms.dto.ScoreDto;
 import uz.mu.lms.dto.StudentDto;
 import uz.mu.lms.dto.StudentProfileDto;
 import uz.mu.lms.exceptions.ResourceNotFoundException;
@@ -15,15 +16,23 @@ import uz.mu.lms.exceptions.FileNotSupportedException;
 import uz.mu.lms.exceptions.UserAlreadyExistsException;
 import uz.mu.lms.exceptions.UserNotFoundException;
 import uz.mu.lms.model.Attachment;
+import uz.mu.lms.model.Course;
+import uz.mu.lms.model.GradingScale;
 import uz.mu.lms.model.Student;
 import uz.mu.lms.model.enums.RoleName;
+import uz.mu.lms.projection.CourseGradeProjection;
+import uz.mu.lms.repository.CourseRepository;
 import uz.mu.lms.repository.RoleRepository;
 import uz.mu.lms.repository.StudentRepository;
 import uz.mu.lms.service.ContentService;
+import uz.mu.lms.service.CourseService;
 import uz.mu.lms.service.StudentService;
 import uz.mu.lms.service.mapper.StudentMapper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +43,9 @@ public class StudentServiceImpl implements StudentService {
     private final StudentMapper studentMapper;
     private final ContentService contentService;
     private final PasswordEncoder passwordEncoder;
+    private final CourseRepository courseRepository;
 
+    @Override
     public StudentDto addStudent(StudentDto studentDto) {
         if (studentRepository.existsByUser_Username(studentDto.userDto().getUsername())) {
             throw new UserAlreadyExistsException("Student with username " + studentDto.userDto().getUsername() + " already exists");
@@ -126,6 +137,55 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> findStudentsByGroupIds(List<Integer> groupIds) {
         return studentRepository.findStudentsByGroupIds(groupIds);
     }
+
+    @Override
+    public Map<String, ScoreDto> getCourseGrades(Integer courseId) {
+
+        CourseGradeProjection grade = studentRepository.findCourseGradeByStudentId(findCurrentStudent().getId(), courseId);
+
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new ResourceNotFoundException("Course with id " + courseId + " does not exist"));
+
+        GradingScale gradingScale = course.getGradingScale();
+
+        Map<String, ScoreDto> result = new HashMap<>();
+
+        ScoreDto attendance = ScoreDto.builder()
+                .earned(gradingScale.getAttendance() * grade.getAttendancePresent() / grade.getAttendanceTotal())
+                .total(gradingScale.getAttendance())
+                .build();
+
+        ScoreDto progress = ScoreDto.builder()
+                .earned(grade.getProgress())
+                .total(gradingScale.getProgress())
+                .build();
+
+        ScoreDto midterm = ScoreDto.builder()
+                .earned(grade.getMidterm())
+                .total(gradingScale.getMidterm())
+                .build();
+
+        ScoreDto finalExam = ScoreDto.builder()
+                .earned(grade.getFinal())
+                .total(gradingScale.getFinalExam())
+                .build();
+
+        ScoreDto overall = ScoreDto
+                .builder()
+                .earned(attendance.earned() + progress.earned() + midterm.earned() + finalExam.earned())
+                .total(attendance.total() + progress.total() + midterm.total() + finalExam.earned())
+                .build();
+
+        result.put("attendance", attendance);
+        result.put("progress", progress);
+        result.put("midterm", midterm);
+        result.put("finalExam", finalExam);
+        result.put("overall", overall);
+
+        return result;
+
+    }
+
 
     @Override
     public Student findCurrentStudent() {
