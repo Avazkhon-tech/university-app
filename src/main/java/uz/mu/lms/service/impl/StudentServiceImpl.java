@@ -170,7 +170,7 @@ public class StudentServiceImpl implements StudentService {
         ScoreDto overall = ScoreDto
                 .builder()
                 .earned(attendance.earned() + progress.earned() + midterm.earned() + finalExam.earned())
-                .total(attendance.total() + progress.total() + midterm.total() + finalExam.earned())
+                .total(attendance.total() + progress.total() + midterm.total() + finalExam.total())
                 .build();
 
         result.put("attendance", attendance);
