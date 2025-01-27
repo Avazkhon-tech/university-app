@@ -29,10 +29,7 @@ import uz.mu.lms.service.CourseService;
 import uz.mu.lms.service.StudentService;
 import uz.mu.lms.service.mapper.StudentMapper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -148,7 +145,7 @@ public class StudentServiceImpl implements StudentService {
 
         GradingScale gradingScale = course.getGradingScale();
 
-        Map<String, ScoreDto> result = new HashMap<>();
+        Map<String, ScoreDto> result = new LinkedHashMap<>();
 
         ScoreDto attendance = ScoreDto.builder()
                 .earned(gradingScale.getAttendance() * grade.getAttendancePresent() / grade.getAttendanceTotal())
