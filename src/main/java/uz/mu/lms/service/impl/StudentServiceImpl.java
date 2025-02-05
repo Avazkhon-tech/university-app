@@ -137,38 +137,48 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Map<String, ScoreDto> getCourseGrades(Integer courseId) {
-
         CourseGradeProjection grade = studentRepository.findCourseGradeByStudentId(findCurrentStudent().getId(), courseId);
 
-        Course course = courseRepository.findById(courseId).orElseThrow(
-                () -> new ResourceNotFoundException("Course with id " + courseId + " does not exist"));
+        if (grade == null) {
+            throw new ResourceNotFoundException("Grades not found for course with id " + courseId);
+        }
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseId + " does not exist"));
 
         GradingScale gradingScale = course.getGradingScale();
+        if (gradingScale == null) {
+            throw new IllegalStateException("Grading scale is not set for course with id " + courseId);
+        }
 
         Map<String, ScoreDto> result = new LinkedHashMap<>();
 
+        double attendanceTotal = gradingScale.getAttendance() != null ? gradingScale.getAttendance() : 0.0;
+        double attendanceEarned = (grade.getAttendancePresent() != null && grade.getAttendanceTotal() != null && grade.getAttendanceTotal() > 0)
+                ? attendanceTotal * grade.getAttendancePresent() / grade.getAttendanceTotal()
+                : 0.0;
+
         ScoreDto attendance = ScoreDto.builder()
-                .earned(gradingScale.getAttendance() * grade.getAttendancePresent() / grade.getAttendanceTotal())
-                .total(gradingScale.getAttendance())
+                .earned((int) attendanceEarned)
+                .total((int) attendanceTotal)
                 .build();
 
         ScoreDto progress = ScoreDto.builder()
-                .earned(grade.getProgress())
-                .total(gradingScale.getProgress())
+                .earned(grade.getProgress() != null ? grade.getProgress() : 0)
+                .total(gradingScale.getProgress() != null ? gradingScale.getProgress() : 0)
                 .build();
 
         ScoreDto midterm = ScoreDto.builder()
-                .earned(grade.getMidterm())
-                .total(gradingScale.getMidterm())
+                .earned(grade.getMidterm() != null ? grade.getMidterm() : 0)
+                .total(gradingScale.getMidterm() != null ? gradingScale.getMidterm() : 0)
                 .build();
 
         ScoreDto finalExam = ScoreDto.builder()
-                .earned(grade.getFinal())
-                .total(gradingScale.getFinalExam())
+                .earned(grade.getFinal() != null ? grade.getFinal() : 0)
+                .total(gradingScale.getFinalExam() != null ? gradingScale.getFinalExam() : 0)
                 .build();
 
-        ScoreDto overall = ScoreDto
-                .builder()
+        ScoreDto overall = ScoreDto.builder()
                 .earned(attendance.earned() + progress.earned() + midterm.earned() + finalExam.earned())
                 .total(attendance.total() + progress.total() + midterm.total() + finalExam.total())
                 .build();
@@ -180,8 +190,8 @@ public class StudentServiceImpl implements StudentService {
         result.put("overall", overall);
 
         return result;
-
     }
+
 
 
     @Override
